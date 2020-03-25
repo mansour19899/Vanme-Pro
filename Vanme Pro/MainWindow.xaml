@@ -4,9 +4,157 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Vanme_Pro"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" Height="900" Width="1600">
+        Title="MainWindow" Height="900" Width="1600" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <system:String x:Key="salam">0 0 0 40</system:String>
+        <Thickness x:Key="LabelMargin" Top="0" Left="0" Right="250" Bottom ="0" />
+        <Thickness x:Key="GrMargin" Top="20" Left="60" Right="0" Bottom ="0" />
+        <system:Double x:Key="myFont">20</system:Double>
+        <Style x:Key="lbl0" TargetType="Label" >
+            <Setter Property="FontSize" Value="25" />
+            <Setter Property="Foreground" Value="Blue"></Setter>
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="Margin" Value="20 0 0 0" />
+            <Setter Property="VerticalAlignment" Value="Bottom"></Setter>
+        </Style>
+        <Style x:Key="lbl1" TargetType="Label" >
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Margin" Value="0 0 10 0" />
+        </Style>
+        <Style x:Key="txt1" TargetType="TextBox" >
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Margin" Value="0 0 0 0" />
+        </Style>
+    </Window.Resources>
     <Grid>
-        
-    </Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="0.15*" />
+        </Grid.ColumnDefinitions>
+        <Border Grid.Column="1" Grid.Row="0" BorderBrush="LightSlateGray" BorderThickness="2 0 0 2">
+            <Image Grid.Column="1" Grid.Row="0" Source="Content/Images/LOGO-GOLD_WHITE_BLACK.jpg" ></Image>
+        </Border>
+
+        <Border Grid.Column="0" Grid.Row="0" BorderBrush="LightSlateGray" BorderThickness="0 0 0 2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.7*" />
+                    <RowDefinition Height="0.3*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Row="0" Grid.Column="0"   Source="Content/Images/icons8_purchase_order_96px.png" Stretch="Uniform" Margin="10 5 10 0"/>
+                <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Perchers Order"></Label>
+
+                <Image Grid.Row="0" Grid.Column="1"   Source="Content/Images/icons8_cargo_ship_64px.png" Stretch="Uniform" Margin="10 5 10 0"/>
+                <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="ASN Vourchers"></Label>
+
+                <Image Grid.Row="0" Grid.Column="2"   Source="Content/Images/icons8_borrow_book_64px.png" Stretch="Uniform" Margin="10 5 10 0"/>
+                <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goods Recive Note"></Label>
+
+
+            </Grid>
+
+        </Border>
+
+        <Border Grid.Column="1" Grid.Row="1" BorderBrush="LightSlateGray" BorderThickness="2 0 0 0" />
+
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.3*"/>
+                <RowDefinition Height="0.7*"/>
+            </Grid.RowDefinitions>
+            <UniformGrid Columns="4" Rows="1" Margin="0 5 0 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="PO Type" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="PO#" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="PO Type" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Ship to Store" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="From SO#" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
+
+                </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="PO Details" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Associate" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Vendor Code" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="PO Term" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Account #" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
+
+                </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="PO Dates" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Order Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Ship Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Cancel Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Last Edit Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
+
+                </Grid>
+           
+
+            </UniformGrid>
+
+        </Grid>
+       
+
+    </Grid> 
+
 </Window>
