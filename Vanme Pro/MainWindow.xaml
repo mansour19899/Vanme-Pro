@@ -6,25 +6,25 @@
         xmlns:local="clr-namespace:Vanme_Pro"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" Height="900" Width="1600" WindowStartupLocation="CenterOwner">
+        Title="MainWindow" Height="900" Width="1600" WindowStartupLocation="CenterOwner" Loaded="MainWindow_OnLoaded">
     <Window.Resources>
         <system:String x:Key="salam">0 0 0 40</system:String>
         <Thickness x:Key="LabelMargin" Top="0" Left="0" Right="250" Bottom ="0" />
         <Thickness x:Key="GrMargin" Top="20" Left="60" Right="0" Bottom ="0" />
         <system:Double x:Key="myFont">20</system:Double>
         <Style x:Key="lbl0" TargetType="Label" >
-            <Setter Property="FontSize" Value="25" />
+            <Setter Property="FontSize" Value="20" />
             <Setter Property="Foreground" Value="Blue"></Setter>
             <Setter Property="FontWeight" Value="Bold"></Setter>
             <Setter Property="Margin" Value="20 0 0 0" />
             <Setter Property="VerticalAlignment" Value="Bottom"></Setter>
         </Style>
         <Style x:Key="lbl1" TargetType="Label" >
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="Margin" Value="0 0 10 0" />
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="Margin" Value="0 0 5 0" />
         </Style>
         <Style x:Key="txt1" TargetType="TextBox" >
-            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontSize" Value="17" />
             <Setter Property="Margin" Value="0 0 0 0" />
         </Style>
     </Window.Resources>
@@ -76,11 +76,13 @@
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.3*"/>
-                <RowDefinition Height="0.7*"/>
+                <RowDefinition Height="0.4*"/>
+                <RowDefinition Height="0.3*"/>
             </Grid.RowDefinitions>
             <UniformGrid Columns="4" Rows="1" Margin="0 5 0 0">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
@@ -109,6 +111,7 @@
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -132,6 +135,7 @@
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -148,13 +152,81 @@
                     <TextBox Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
 
                 </Grid>
-           
-
             </UniformGrid>
+            <DataGrid  Name="GrdListItem" Margin="50 20 50 0" Grid.Row="1"  AutoGenerateColumns="False" FontSize="20"  SelectionUnit="FullRow" AlternatingRowBackground="LightGray" MouseDoubleClick="lvProducts_MouseDoubleClick" CellEditEnding="GrdListItem_CellEditEnding" Sorting="GrdListItem_Sorting">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Style Number" Binding="{Binding StyleNumber}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Vendor" Binding="{Binding Vendor}" Width="*"/>
+                    <DataGridTextColumn Header="Size" Binding="{Binding Size}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Price" Binding="{Binding price}" Width="*"/>
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding PO_QYT}" Width="*"/>
+                    <DataGridTextColumn Header="TotalPrice" Binding="{Binding Totalprice}" Width="*" IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <UniformGrid Grid.Row="2" Columns="3" Rows="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Miscellaneous" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Freight " VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Discount %" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Discount $ " VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Fee Type" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="5" Grid.Column="0" Content="Fee $" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="5" Grid.Column="1"  VerticalAlignment="Center" />
+                </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Fill Status" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Line Items" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Quantity Ordered" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="PO Term" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Account #" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
 
+                </Grid>
+                <StackPanel Orientation="Horizontal">
+                    <Label FontSize="18" Content="         Subtotal     " VerticalAlignment="Top"/>
+                    <StackPanel>
+                        <TextBox MinWidth="300" FontSize="18" />
+                        <TextBox FontSize="40" HorizontalContentAlignment="Center"/>
+                        <Label Content=" PO Total" FontSize="30" HorizontalAlignment="Center"></Label>
+                    </StackPanel>
+                </StackPanel>
+            </UniformGrid>
         </Grid>
-       
+      
 
-    </Grid> 
+    </Grid>
 
 </Window>
