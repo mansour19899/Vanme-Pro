@@ -158,6 +158,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Migrations\20200327034202_CreateSchoolDB.cs" />
+    <Compile Include="Migrations\20200327034202_CreateSchoolDB.Designer.cs">
+      <DependentUpon>20200327034202_CreateSchoolDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200328012621_smm.cs" />
+    <Compile Include="Migrations\20200328012621_smm.designer.cs">
+      <DependentUpon>20200328012621_smm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200328013219_smm1.cs" />
+    <Compile Include="Migrations\20200328013219_smm1.designer.cs">
+      <DependentUpon>20200328013219_smm1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200328024842_smm3.cs" />
+    <Compile Include="Migrations\20200328024842_smm3.designer.cs">
+      <DependentUpon>20200328024842_smm3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\dbContextModelSnapshot.cs" />
     <Compile Include="Models\Context\dbContext.cs" />
     <Compile Include="Models\DomainModels\Item.cs" />
     <Compile Include="Models\DomainModels\ProductMaster.cs" />

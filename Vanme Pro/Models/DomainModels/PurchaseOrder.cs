@@ -31,5 +31,7 @@ namespace Vanme_Pro.Models.DomainModels
         public decimal FeeType { get; set; }
         public decimal Fee { get; set; }
         public decimal PoTotal { get; set; }
+
+        public ICollection<Item> Items { get; set; }
     }
 }

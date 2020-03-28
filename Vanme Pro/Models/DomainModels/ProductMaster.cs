@@ -30,5 +30,8 @@ namespace Vanme_Pro.Models.DomainModels
 
         public string Note { get; set; }
 
+        public Vendor Vendor { get; set; }
+        public ICollection<Item> Items { get; set; }
+
     }
 }
