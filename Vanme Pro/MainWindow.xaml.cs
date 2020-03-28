@@ -14,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Vanme_Pro.Models.Context;
+using Vanme_Pro.Models.DomainModels;
 
 namespace Vanme_Pro
 {
@@ -23,33 +25,28 @@ namespace Vanme_Pro
     public partial class MainWindow : Window
     {
         private List<ItemTemp> GrdItemsTemp;
+        private dbContext db;
         public MainWindow()
         {
             InitializeComponent();
         }
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-           List< ItemTemp> db=new List<ItemTemp>()
-           {
-               new ItemTemp(){StyleNumber = "12.02.136876",price = 1.68m,PO_QYT = 0,Vendor = "Azir",Size = "12*12", Id=1},
-               new ItemTemp(){StyleNumber = "12.02.136877",price = 2.68m,PO_QYT = 0,Vendor = "Azir",Size = "12*12", Id=2},
-               new ItemTemp(){StyleNumber = "12.02.136878",price = 0.68m,PO_QYT = 0,Vendor = "Azir",Size = "12*12", Id=3},
-               new ItemTemp(){StyleNumber = "12.02.136879",price = 5.68m,PO_QYT = 0,Vendor = "Azir",Size = "12*12", Id=4},
-               new ItemTemp(){StyleNumber = "12.02.136871",price = 1.68m,PO_QYT = 0,Vendor = "Azir",Size = "12*12", Id=5},
-               new ItemTemp(){StyleNumber = "12.02.136872",price = 1.68m,PO_QYT = 0,Vendor = "Azir",Size = "12*12", Id=6},
-               new ItemTemp(){StyleNumber = "12.02.136886",price = 1.68m,PO_QYT = 0,Vendor = "Azir",Size = "12*12", Id=7},
-               new ItemTemp(){StyleNumber = "12.02.136896",price = 1.68m,PO_QYT = 0,Vendor = "Azir",Size = "12*12", Id=8},
-               new ItemTemp(){StyleNumber = "12.02.136846",price = 1.68m,PO_QYT = 0,Vendor = "Azir",Size = "12*12", Id=9},
-               new ItemTemp(){StyleNumber = "12.02.136836",price = 1.68m,PO_QYT = 0,Vendor = "Azir",Size = "12*12", Id=10},
-               new ItemTemp(){StyleNumber = "12.02.136826",price = 1.68m,PO_QYT = 0,Vendor = "Azir",Size = "12*12", Id=11},
-           };
-           GrdListItem.ItemsSource = db;
-            GrdItemsTemp = GrdListItem.ItemsSource.Cast<ItemTemp>().ToList();
+            PurchaseOrder PO=new PurchaseOrder(){Id = 1234};
+            txtPoNumber.Text = "1234"; 
+            db=new dbContext();
+
+            var productlList= db.Products.ToList();
+            lvProducts.ItemsSource = productlList;
+
+
+           GrdListItem.ItemsSource =null;
+          // GrdItemsTemp = GrdListItem.ItemsSource.Cast<ItemTemp>().ToList();
         }
 
         private void lvProducts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            
+            MessageBox.Show("Hi");
         }
 
         private void GrdListItem_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)

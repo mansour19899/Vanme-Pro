@@ -31,7 +31,7 @@ namespace Vanme_Pro.Models.DomainModels
         public  string Info2 { get; set; }
         public  string Note { get; set; }
 
-        public ICollection<ProductMaster> ProductMasters { get; set; }
+        public ICollection<PurchaseOrder> PurchaseOrders { get; set; }
 
     }
 }

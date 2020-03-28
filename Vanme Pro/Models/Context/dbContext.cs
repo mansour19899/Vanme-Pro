@@ -21,23 +21,21 @@ namespace Vanme_Pro.Models.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EFCore-smm;Trusted_Connection=True");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EFCore-smm4;Trusted_Connection=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Write Fluent API configurations here
+            
+            //----------------------------------- Items---------------------------------------
 
-            //Property Configurations
-            modelBuilder.Entity<ProductMaster>()
-                .HasKey(p => p.Id);
-
-            modelBuilder.Entity<Vendor>()
-                .HasKey(p => p.Id);
-
-            modelBuilder.Entity<ProductMaster>()
-                .HasOne<Vendor>(s => s.Vendor)
-                .WithMany(g => g.ProductMasters)
-                .HasForeignKey(s => s.Vendor_fk);
+            modelBuilder.Entity<Item>().Property(b => b.Id).ValueGeneratedNever();
+            modelBuilder.Entity<Item>().Property(b => b.PoQuantity).HasDefaultValue(0);
+            modelBuilder.Entity<Item>().Property(b => b.AsnQuantity).HasDefaultValue(0);
+            modelBuilder.Entity<Item>().Property(b => b.GrnQuantity).HasDefaultValue(0);
+            modelBuilder.Entity<Item>().Property(b => b.Price).HasDefaultValue(0);
+            modelBuilder.Entity<Item>().Property(b => b.Quantity).HasDefaultValue(0);
+            modelBuilder.Entity<Item>().Property(b => b.TotalPrice).HasDefaultValue(0);
+            modelBuilder.Entity<Item>().Property(b => b.Note).HasColumnType("text").HasDefaultValue("Note :  ");
 
             modelBuilder.Entity<Item>()
                 .HasOne<ProductMaster>(s => s.ProductMaster)
@@ -49,35 +47,40 @@ namespace Vanme_Pro.Models.Context
                 .WithMany(g => g.Items)
                 .HasForeignKey(s => s.Po_fk);
 
-
-
-            //----------------------------------- Items---------------------------------------
-
-            modelBuilder.Entity<Item>().Property(b => b.Id).ValueGeneratedNever();
-            modelBuilder.Entity<Item>().Property(b => b.PoQuantity).HasDefaultValue(0);
-            modelBuilder.Entity<Item>().Property(b => b.AsnQuantity).HasDefaultValue(0);
-            modelBuilder.Entity<Item>().Property(b => b.GrnQuantity).HasDefaultValue(0);
-            modelBuilder.Entity<Item>().Property(b => b.Price).HasDefaultValue(0);
-            modelBuilder.Entity<Item>().Property(b => b.Quantity).HasDefaultValue(0);
-            modelBuilder.Entity<Item>().Property(b => b.TotalPrice).HasDefaultValue(0);
-            modelBuilder.Entity<Item>().Property(b => b.Note).HasColumnType("text").HasDefaultValue("Note :  ");
-              
-
             //----------------------------------- Product Master------------------------------
+
+
+            modelBuilder.Entity<ProductMaster>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+            });
+
             //----------------------------------- Vendor--------------------------------------
 
             modelBuilder.Entity<Vendor>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e=>e.Id).ValueGeneratedNever();
-                entity.HasIndex(e => e.Id);
                 entity.Property(e => e.Note).HasColumnName("Note");
                 entity.Property(e => e.Id).HasColumnName("ID");
                 
             });
 
-
             //----------------------------------- Purchase Order------------------------------
+
+            modelBuilder.Entity<PurchaseOrder>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.HasOne<Vendor>(s => s.Vendor)
+                    .WithMany(g => g.PurchaseOrders)
+                    .HasForeignKey(s => s.Vendor_fk);
+
+            });
+
             //----------------------------------- new ---------------------------------------
         }
 

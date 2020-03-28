@@ -95,7 +95,7 @@
                     </Grid.ColumnDefinitions>
                     <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="PO Type" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="PO#" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
+                    <TextBox Name="txtPoNumber" Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="PO Type" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Ship to Store" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -226,7 +226,42 @@
             </UniformGrid>
         </Grid>
 
-      
+        <Grid Name="GrdProductList" Grid.Row="1" Grid.Column="0" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.2*"/>
+                <RowDefinition Height="0.8*"/>
+            </Grid.RowDefinitions>
+
+            <ListView SelectionMode="Single" Name="lvProducts" Grid.Row="1" Margin="40 0 40 40" FontSize="20" MouseDoubleClick="lvProducts_MouseDoubleClick">
+                <ListView.View>
+                    <GridView >
+                        <GridViewColumn Header="ALU" Width="120" DisplayMemberBinding="{Binding Path=Id}" />
+                        <GridViewColumn Header="StyleNumber" Width="200" DisplayMemberBinding="{Binding Path=StyleNumber}" />
+                        <GridViewColumn Header="UPC" Width="200" DisplayMemberBinding="{Binding Path=UPC}" />
+                        <GridViewColumn Header="Size" Width="150" DisplayMemberBinding="{Binding Path=Size}" />
+                        <GridViewColumn Header="Color" Width="200" DisplayMemberBinding="{Binding Path=Color}" />
+                    </GridView>
+                </ListView.View>
+
+                <!--<ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Label  Content="{Binding Id}"  />
+                            <Label  Content="       "  />
+                            <Label  Content="{Binding StyleNumber}"  />
+                            <Label  Content="       "  />
+                            <Label  Content="{Binding Size}"  />
+                            <Label  Content="       "  />
+                            <Label  Content="{Binding  Color}"  />
+                        </StackPanel>
+
+                    </DataTemplate>
+                </ListView.ItemTemplate>-->
+            </ListView>
+
+        </Grid>
+
+
 
     </Grid>
 
