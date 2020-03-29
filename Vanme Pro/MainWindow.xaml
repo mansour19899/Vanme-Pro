@@ -27,6 +27,11 @@
             <Setter Property="FontSize" Value="17" />
             <Setter Property="Margin" Value="0 0 0 0" />
         </Style>
+        <Style x:Key="lbl2" TargetType="Label" >
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Margin" Value="10 0 0 0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -71,9 +76,19 @@
 
         </Border>
 
-        <Border Grid.Column="1" Grid.Row="1" BorderBrush="LightSlateGray" BorderThickness="2 0 0 0" />
+        <Border Grid.Column="1" Grid.Row="1" BorderBrush="LightSlateGray" BorderThickness="2 0 0 0"/>
+        <UniformGrid Grid.Row="1" Grid.Column="1" Columns="1" Rows="10">
+            <StackPanel Orientation="Horizontal" Margin="10 10 10 10" MouseDown="StackPanel_MouseDown" >
+                <Image Source="Content/Images/icons8_add_new_52px_3.png"/>
+                <Label Content="Add Item" Style="{StaticResource lbl2}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="10 10 10 10" MouseDown="StackPanel_MouseDown_1"  >
+                <Image Source="Content/Images/icons8_save_60px.png"/>
+                <Label Content="Save" Style="{StaticResource lbl2}"/>
+            </StackPanel>
+        </UniformGrid>
 
-        <Grid Name="GrdNewPurchersOrder" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
+        <Grid Name="GrdNewPurchersOrder" Grid.Row="1" Grid.Column="0" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.3*"/>
                 <RowDefinition Height="0.4*"/>
@@ -153,14 +168,15 @@
 
                 </Grid>
             </UniformGrid>
-            <DataGrid  Name="GrdListItem" Margin="50 20 50 0" Grid.Row="1"  AutoGenerateColumns="False" FontSize="20"  SelectionUnit="FullRow" AlternatingRowBackground="LightGray" MouseDoubleClick="lvProducts_MouseDoubleClick" CellEditEnding="GrdListItem_CellEditEnding" Sorting="GrdListItem_Sorting">
+            <DataGrid  Name="DataGridItems" Margin="50 20 50 0" Grid.Row="1"  AutoGenerateColumns="False" FontSize="20"  SelectionUnit="FullRow" AlternatingRowBackground="LightGray" MouseDoubleClick="lvProducts_MouseDoubleClick" CellEditEnding="GrdListItem_CellEditEnding" Sorting="GrdListItem_Sorting">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Style Number" Binding="{Binding StyleNumber}" Width="*" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Vendor" Binding="{Binding Vendor}" Width="*"/>
-                    <DataGridTextColumn Header="Size" Binding="{Binding Size}" Width="*" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Price" Binding="{Binding price}" Width="*"/>
-                    <DataGridTextColumn Header="Quantity" Binding="{Binding PO_QYT}" Width="*"/>
-                    <DataGridTextColumn Header="TotalPrice" Binding="{Binding Totalprice}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Style Number" Binding="{Binding ProductMaster.StyleNumber}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="UPC" Binding="{Binding ProductMaster.UPC}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Color" Binding="{Binding ProductMaster.Color}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Size" Binding="{Binding ProductMaster.Size}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Price" Binding="{Binding PoPrice}" Width="*"/>
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding PoQuantity}" Width="*"/>
+                    <DataGridTextColumn Header="TotalPrice" Binding="{Binding PoTotalPerPrice}" Width="*" IsReadOnly="True"/>
                 </DataGrid.Columns>
             </DataGrid>
             <UniformGrid Grid.Row="2" Columns="3" Rows="1">
@@ -218,15 +234,15 @@
                 <StackPanel Orientation="Horizontal">
                     <Label FontSize="18" Content="         Subtotal     " VerticalAlignment="Top"/>
                     <StackPanel>
-                        <TextBox MinWidth="300" FontSize="18" />
-                        <TextBox FontSize="40" HorizontalContentAlignment="Center"/>
-                        <Label Content=" PO Total" FontSize="30" HorizontalAlignment="Center"></Label>
+                        <TextBox MinWidth="300" FontSize="18" IsReadOnly="True" />
+                        <TextBox Name="TxtTotalPrice" FontSize="40" HorizontalContentAlignment="Center" IsReadOnly="True"/>
+                        <Label Name="lblPoTotal" Content=" PO Total" FontSize="30" HorizontalAlignment="Center"></Label>
                     </StackPanel>
                 </StackPanel>
             </UniformGrid>
         </Grid>
 
-        <Grid Name="GrdProductList" Grid.Row="1" Grid.Column="0" Visibility="Visible">
+        <Grid Name="GrdProductList" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.2*"/>
                 <RowDefinition Height="0.8*"/>

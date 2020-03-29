@@ -25,7 +25,9 @@ namespace Vanme_Pro
     public partial class MainWindow : Window
     {
         private List<ItemTemp> GrdItemsTemp;
+        private List<Item> itemsList;
         private dbContext db;
+        private int StepAddItem = 1;
         public MainWindow()
         {
             InitializeComponent();
@@ -36,17 +38,36 @@ namespace Vanme_Pro
             txtPoNumber.Text = "1234"; 
             db=new dbContext();
 
+            itemsList = new List<Item>();
+
             var productlList= db.Products.ToList();
             lvProducts.ItemsSource = productlList;
 
 
-           GrdListItem.ItemsSource =null;
+           DataGridItems.ItemsSource =null;
           // GrdItemsTemp = GrdListItem.ItemsSource.Cast<ItemTemp>().ToList();
         }
 
         private void lvProducts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("Hi");
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+            while ((dep != null) && !(dep is ListViewItem))
+            {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+
+            if (dep == null)
+                return;
+
+            var wer = (ProductMaster)lvProducts.ItemContainerGenerator.ItemFromContainer(dep);
+            itemsList.Add(new Item(){Id  = StepAddItem,ProductMaster = wer,PoPrice = wer.Price.Value,PoQuantity = 0,PoTotalPrice = 0});
+            //var rr=new Item();
+            //var we = rr.ProductMaster.StyleNumber;
+            DataGridItems.ItemsSource = null;
+            DataGridItems.ItemsSource = itemsList;
+            GrdProductList.Visibility = Visibility.Hidden;
+            GrdNewPurchersOrder.Visibility = Visibility.Visible;
+            StepAddItem++;
         }
 
         private void GrdListItem_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -55,7 +76,7 @@ namespace Vanme_Pro
 
             DataGridColumn col1 = e.Column;
             DataGridRow row1 = e.Row;
-            ItemTemp t=e.Row.DataContext as ItemTemp;
+            Item t=e.Row.DataContext as Item;
 
             int row_index = ((DataGrid)sender).ItemContainerGenerator.IndexFromContainer(row1);
             int col_index = col1.DisplayIndex;
@@ -65,20 +86,27 @@ namespace Vanme_Pro
             if (header.CompareTo("Price") == 0)
             {
                 var Price = Convert.ToDecimal(((TextBox)e.EditingElement).Text);
-                GrdItemsTemp.FirstOrDefault(p => p.Id == t.Id).Totalprice = Convert.ToDecimal(t.PO_QYT * Price);
-                GrdItemsTemp.FirstOrDefault(p => p.Id == t.Id).price = Price;
+                itemsList.FirstOrDefault(p => p.Id == t.Id).PoTotalPerPrice = Convert.ToDecimal(t.PoQuantity * Price);
+                itemsList.FirstOrDefault(p => p.Id == t.Id).PoPrice = Price;
             }
             else
             {
                 var QyT = Convert.ToInt32(((TextBox)e.EditingElement).Text);
-                GrdItemsTemp.FirstOrDefault(p => p.Id == t.Id).Totalprice = Convert.ToDecimal(t.price * QyT);
-                GrdItemsTemp.FirstOrDefault(p => p.Id == t.Id).PO_QYT = QyT;
+                itemsList.FirstOrDefault(p => p.Id == t.Id).PoTotalPerPrice = Convert.ToDecimal(t.PoPrice * QyT);
+                itemsList.FirstOrDefault(p => p.Id == t.Id).PoQuantity = QyT;
             }
-           
-           
-            GrdListItem.ItemsSource=null;
-            GrdListItem.ItemsSource = GrdItemsTemp;
-            
+
+            DataGridItems.ItemsSource = null;
+            DataGridItems.ItemsSource=itemsList;
+
+            decimal SumPrice = 0;
+
+            foreach (Item item in itemsList)
+            {
+                SumPrice = item.PoTotalPerPrice + SumPrice;
+            }
+
+            TxtTotalPrice.Text = SumPrice.ToString();
             int x = 0;
 
 
@@ -87,6 +115,19 @@ namespace Vanme_Pro
         private void GrdListItem_Sorting(object sender, DataGridSortingEventArgs e)
         {
              //GrdItemsTemp = GrdListItem.ItemsSource.Cast<ItemTemp>().ToList();
+        }
+
+        private void StackPanel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            lvProducts.ItemsSource = db.Products.ToList();
+            GrdNewPurchersOrder.Visibility = Visibility.Hidden;
+            GrdProductList.Visibility = Visibility.Visible;
+
+        }
+
+        private void StackPanel_MouseDown_1(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }

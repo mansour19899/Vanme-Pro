@@ -24,10 +24,19 @@ namespace Vanme_Pro.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("AsnPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("AsnQuantity")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
+
+                    b.Property<decimal>("AsnTotalPerPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("AsnTotalPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("GrnQuantity")
                         .ValueGeneratedOnAdd()
@@ -39,31 +48,32 @@ namespace Vanme_Pro.Migrations
                         .HasColumnType("text")
                         .HasDefaultValue("Note :  ");
 
+                    b.Property<decimal>("PoPrice")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
                     b.Property<int>("PoQuantity")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<int>("Po_fk")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("PoTotalPerPrice")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,2)")
                         .HasDefaultValue(0m);
+
+                    b.Property<decimal>("PoTotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Po_fk")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductMaster_fk")
                         .HasColumnType("int");
 
-                    b.Property<int>("Quantity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<decimal>("TotalPrice")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m);
+                    b.Property<int>("TotalQuantity")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

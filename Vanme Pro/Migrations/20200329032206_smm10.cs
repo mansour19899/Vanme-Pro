@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Vanme_Pro.Migrations
 {
-    public partial class smm11 : Migration
+    public partial class smm10 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,7 @@ namespace Vanme_Pro.Migrations
                     Id = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     VendorCode = table.Column<int>(nullable: false),
-                    StyleNumbeer = table.Column<string>(nullable: true),
+                    StyleNumber = table.Column<string>(nullable: true),
                     SKU = table.Column<string>(nullable: true),
                     UPC = table.Column<string>(nullable: true),
                     Size = table.Column<string>(nullable: true),
@@ -118,9 +118,13 @@ namespace Vanme_Pro.Migrations
                     PoQuantity = table.Column<int>(nullable: false, defaultValue: 0),
                     AsnQuantity = table.Column<int>(nullable: false, defaultValue: 0),
                     GrnQuantity = table.Column<int>(nullable: false, defaultValue: 0),
-                    Price = table.Column<decimal>(nullable: false, defaultValue: 0m),
-                    Quantity = table.Column<int>(nullable: false, defaultValue: 0),
-                    TotalPrice = table.Column<decimal>(nullable: false, defaultValue: 0m),
+                    PoPrice = table.Column<decimal>(nullable: false, defaultValue: 0m),
+                    AsnPrice = table.Column<decimal>(nullable: false),
+                    TotalQuantity = table.Column<int>(nullable: false),
+                    PoTotalPerPrice = table.Column<decimal>(nullable: false, defaultValue: 0m),
+                    AsnTotalPerPrice = table.Column<decimal>(nullable: false),
+                    PoTotalPrice = table.Column<decimal>(nullable: false),
+                    AsnTotalPrice = table.Column<decimal>(nullable: false),
                     Note = table.Column<string>(type: "text", nullable: true, defaultValue: "Note :  ")
                 },
                 constraints: table =>

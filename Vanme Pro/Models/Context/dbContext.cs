@@ -21,7 +21,7 @@ namespace Vanme_Pro.Models.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EFCore-smm4;Trusted_Connection=True");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EFCore-smm5;Trusted_Connection=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,9 +32,9 @@ namespace Vanme_Pro.Models.Context
             modelBuilder.Entity<Item>().Property(b => b.PoQuantity).HasDefaultValue(0);
             modelBuilder.Entity<Item>().Property(b => b.AsnQuantity).HasDefaultValue(0);
             modelBuilder.Entity<Item>().Property(b => b.GrnQuantity).HasDefaultValue(0);
-            modelBuilder.Entity<Item>().Property(b => b.Price).HasDefaultValue(0);
-            modelBuilder.Entity<Item>().Property(b => b.Quantity).HasDefaultValue(0);
-            modelBuilder.Entity<Item>().Property(b => b.TotalPrice).HasDefaultValue(0);
+            modelBuilder.Entity<Item>().Property(b => b.PoPrice).HasDefaultValue(0);
+            modelBuilder.Entity<Item>().Property(b => b.PoQuantity).HasDefaultValue(0);
+            modelBuilder.Entity<Item>().Property(b => b.PoTotalPerPrice).HasDefaultValue(0);
             modelBuilder.Entity<Item>().Property(b => b.Note).HasColumnType("text").HasDefaultValue("Note :  ");
 
             modelBuilder.Entity<Item>()
