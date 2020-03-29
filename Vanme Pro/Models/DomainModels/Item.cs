@@ -17,11 +17,8 @@ namespace Vanme_Pro.Models.DomainModels
         public int GrnQuantity { get; set; }
         public decimal PoPrice { get; set; }
         public decimal AsnPrice { get; set; }
-        public int TotalQuantity { get; set; }
-        public decimal PoTotalPerPrice { get; set; }
-        public decimal AsnTotalPerPrice { get; set; }
-        public decimal PoTotalPrice { get; set; }
-        public decimal AsnTotalPrice { get; set; }
+        public decimal PoItemsPrice { get; set; }
+        public decimal AsnItemsPrice { get; set; }
         public string Note { get; set; }
 
         public ProductMaster ProductMaster { get; set; }

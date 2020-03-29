@@ -60,7 +60,7 @@ namespace Vanme_Pro
                 return;
 
             var wer = (ProductMaster)lvProducts.ItemContainerGenerator.ItemFromContainer(dep);
-            itemsList.Add(new Item(){Id  = StepAddItem,ProductMaster = wer,PoPrice = wer.Price.Value,PoQuantity = 0,PoTotalPrice = 0});
+            itemsList.Add(new Item(){Id  = StepAddItem,ProductMaster = wer,PoPrice = wer.Price.Value,PoQuantity = 0, PoItemsPrice = 0});
             //var rr=new Item();
             //var we = rr.ProductMaster.StyleNumber;
             DataGridItems.ItemsSource = null;
@@ -81,19 +81,19 @@ namespace Vanme_Pro
             int row_index = ((DataGrid)sender).ItemContainerGenerator.IndexFromContainer(row1);
             int col_index = col1.DisplayIndex;
 
-
+            var SelectItem = itemsList.FirstOrDefault(p => p.Id == t.Id);
             string header = col1.Header as string;
             if (header.CompareTo("Price") == 0)
             {
                 var Price = Convert.ToDecimal(((TextBox)e.EditingElement).Text);
-                itemsList.FirstOrDefault(p => p.Id == t.Id).PoTotalPerPrice = Convert.ToDecimal(t.PoQuantity * Price);
-                itemsList.FirstOrDefault(p => p.Id == t.Id).PoPrice = Price;
+                SelectItem.PoItemsPrice = Convert.ToDecimal(t.PoQuantity * Price);
+                SelectItem.PoPrice = Price;
             }
             else
             {
                 var QyT = Convert.ToInt32(((TextBox)e.EditingElement).Text);
-                itemsList.FirstOrDefault(p => p.Id == t.Id).PoTotalPerPrice = Convert.ToDecimal(t.PoPrice * QyT);
-                itemsList.FirstOrDefault(p => p.Id == t.Id).PoQuantity = QyT;
+                SelectItem.PoItemsPrice = Convert.ToDecimal(t.PoPrice * QyT);
+                SelectItem.PoQuantity = QyT;
             }
 
             DataGridItems.ItemsSource = null;
@@ -101,13 +101,14 @@ namespace Vanme_Pro
 
             decimal SumPrice = 0;
 
+
             foreach (Item item in itemsList)
             {
-                SumPrice = item.PoTotalPerPrice + SumPrice;
+                SumPrice = item.PoItemsPrice + SumPrice;
             }
 
             TxtTotalPrice.Text = SumPrice.ToString();
-            int x = 0;
+            
 
 
         }
@@ -127,7 +128,19 @@ namespace Vanme_Pro
 
         private void StackPanel_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
-
+            PurchaseOrder Po=new PurchaseOrder();
+            Po.Id = 1;
+            
+            //int lastId = db.Items.Max(p => p.Id);
+            int lastId = 0;
+            foreach (Item VARIABLE in itemsList)
+            {
+                lastId++;
+                VARIABLE.Id = lastId;
+                VARIABLE.ProductMaster_fk = VARIABLE.ProductMaster.Id;
+                VARIABLE.ProductMaster = null;
+                db.Items.Add(VARIABLE);
+            }
         }
     }
 }

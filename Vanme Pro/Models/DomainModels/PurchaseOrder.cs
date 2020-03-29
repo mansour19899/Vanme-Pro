@@ -10,7 +10,7 @@ namespace Vanme_Pro.Models.DomainModels
     {
 
         public int Id { get; set; }
-        public int? ItemCount { get; set; }
+        public int? ItemsCount { get; set; }
         public string PoNumber { get; set; }
         public int? Vendor_fk { get; set; }
         public string PoType { get; set; }
@@ -31,6 +31,7 @@ namespace Vanme_Pro.Models.DomainModels
         public decimal? FeeType { get; set; }
         public decimal? Fee { get; set; }
         public decimal? PoTotal { get; set; }
+        public decimal? AsnTotal { get; set; }
         public  bool? CreatedPO { get; set; }
         public  bool? CreatedAsn { get; set; }
         public  bool? CreatedGrn { get; set; }
