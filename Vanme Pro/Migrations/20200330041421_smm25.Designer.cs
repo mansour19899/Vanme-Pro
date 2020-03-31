@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vanme_Pro.Models.Context;
 
 namespace Vanme_Pro.Migrations
 {
     [DbContext(typeof(dbContext))]
-    partial class dbContextModelSnapshot : ModelSnapshot
+    [Migration("20200330041421_smm25")]
+    partial class smm25
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,8 +155,8 @@ namespace Vanme_Pro.Migrations
                     b.Property<decimal?>("AsnTotal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Asnumber")
-                        .HasColumnType("int");
+                    b.Property<long>("Asnumber")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Associate")
                         .HasColumnType("nvarchar(max)");
@@ -192,8 +194,8 @@ namespace Vanme_Pro.Migrations
                     b.Property<DateTime?>("GrnDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Grnumber")
-                        .HasColumnType("int");
+                    b.Property<long>("Grnumber")
+                        .HasColumnType("bigint");
 
                     b.Property<int?>("ItemsAsnCount")
                         .HasColumnType("int");
@@ -210,8 +212,8 @@ namespace Vanme_Pro.Migrations
                     b.Property<DateTime?>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PoNumber")
-                        .HasColumnType("int");
+                    b.Property<long>("PoNumber")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("PoTerms")
                         .HasColumnType("nvarchar(max)");

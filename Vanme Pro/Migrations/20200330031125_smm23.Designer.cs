@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vanme_Pro.Models.Context;
 
 namespace Vanme_Pro.Migrations
 {
     [DbContext(typeof(dbContext))]
-    partial class dbContextModelSnapshot : ModelSnapshot
+    [Migration("20200330031125_smm23")]
+    partial class smm23
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,9 +155,6 @@ namespace Vanme_Pro.Migrations
                     b.Property<decimal?>("AsnTotal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Asnumber")
-                        .HasColumnType("int");
-
                     b.Property<string>("Associate")
                         .HasColumnType("nvarchar(max)");
 
@@ -192,16 +191,7 @@ namespace Vanme_Pro.Migrations
                     b.Property<DateTime?>("GrnDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Grnumber")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ItemsAsnCount")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ItemsGrnCount")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ItemsPoCount")
+                    b.Property<int?>("ItemsCount")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("LastEditDate")
@@ -210,8 +200,8 @@ namespace Vanme_Pro.Migrations
                     b.Property<DateTime?>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PoNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("PoNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PoTerms")
                         .HasColumnType("nvarchar(max)");

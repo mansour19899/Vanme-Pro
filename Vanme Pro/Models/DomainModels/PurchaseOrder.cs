@@ -10,8 +10,9 @@ namespace Vanme_Pro.Models.DomainModels
     {
 
         public int Id { get; set; }
-        public int? ItemsCount { get; set; }
-        public string PoNumber { get; set; }
+        public int PoNumber { get; set; }
+        public int Asnumber { get; set; }
+        public int Grnumber { get; set; }
         public int? Vendor_fk { get; set; }
         public string PoType { get; set; }
         public string ShipToStore { get; set; }
@@ -35,6 +36,9 @@ namespace Vanme_Pro.Models.DomainModels
         public  bool? CreatedPO { get; set; }
         public  bool? CreatedAsn { get; set; }
         public  bool? CreatedGrn { get; set; }
+        public int? ItemsPoCount { get; set; }
+        public int? ItemsAsnCount { get; set; }
+        public int? ItemsGrnCount { get; set; }
 
         public ICollection<Item> Items { get; set; }
         public Vendor Vendor { get; set; }

@@ -5,7 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Vanme_Pro"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+     TextElement.FontWeight="Regular"
+     TextElement.FontSize="13"
+     TextOptions.TextFormattingMode="Ideal"
+     TextOptions.TextRenderingMode="Auto"
+     Background="{DynamicResource MaterialDesignPaper}"
+     FontFamily="{DynamicResource MaterialDesignFont}"
         Title="MainWindow" Height="900" Width="1600" WindowStartupLocation="CenterOwner" Loaded="MainWindow_OnLoaded">
     <Window.Resources>
         <system:String x:Key="salam">0 0 0 40</system:String>
@@ -47,8 +55,9 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="0.15*" />
         </Grid.ColumnDefinitions>
+        <materialDesign:Snackbar Grid.Row="1" x:Name="SnackbarResult" />
         <Border Grid.Column="1" Grid.Row="0" BorderBrush="LightSlateGray" BorderThickness="2 0 0 2">
-            <Image Grid.Column="1" Grid.Row="0" Source="Content/Images/LOGO-GOLD_WHITE_BLACK.jpg" ></Image>
+            <Image Name="btnLogo" Grid.Column="1" Grid.Row="0" Source="Content/Images/LOGO-GOLD_WHITE_BLACK.jpg" MouseDown="BtnLogo_OnMouseDown" />
         </Border>
 
         <Border Grid.Column="0" Grid.Row="0" BorderBrush="LightSlateGray" BorderThickness="0 0 0 2">
@@ -67,13 +76,13 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Image Grid.Row="0" Grid.Column="0"   Source="Content/Images/icons8_purchase_order_96px.png" Stretch="Uniform" Margin="10 5 10 0"/>
+                <Image Name="btnPurchaseOrder" Grid.Row="0" Grid.Column="0"   Source="Content/Images/icons8_purchase_order_96px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnPurchaseOrder_OnMouseDown"/>
                 <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Perchers Order"></Label>
 
-                <Image Grid.Row="0" Grid.Column="1"   Source="Content/Images/icons8_cargo_ship_64px.png" Stretch="Uniform" Margin="10 5 10 0"/>
+                <Image Name="btnAsnVorchers" Grid.Row="0" Grid.Column="1"   Source="Content/Images/icons8_cargo_ship_64px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnAsnVorchers_OnMouseDown"/>
                 <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="ASN Vourchers"></Label>
 
-                <Image Grid.Row="0" Grid.Column="2"   Source="Content/Images/icons8_borrow_book_64px.png" Stretch="Uniform" Margin="10 5 10 0"/>
+                <Image Name="btnGrn" Grid.Row="0" Grid.Column="2"   Source="Content/Images/icons8_borrow_book_64px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnGrn_OnMouseDown"/>
                 <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goods Recive Note"></Label>
 
 
@@ -83,13 +92,21 @@
 
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="LightSlateGray" BorderThickness="2 0 0 0"/>
         <UniformGrid Grid.Row="1" Grid.Column="1" Columns="1" Rows="10">
+            <StackPanel Name="btnNewPurchaseOrder" Orientation="Horizontal" Margin="10 10 10 10" MouseDown="BtnNewPurchaseOrder_OnMouseDown" >
+                <Image Source="Content/Images/icons8_create_document_60px_1.png"/>
+                <Label Content="New PO" Style="{StaticResource lbl2}"/>
+            </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="10 10 10 10" MouseDown="StackPanel_MouseDown" >
                 <Image Source="Content/Images/icons8_add_new_52px_3.png"/>
                 <Label Content="Add Item" Style="{StaticResource lbl2}"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="10 10 10 10" MouseDown="StackPanel_MouseDown_1"  >
+            <StackPanel Name="btnSave" Orientation="Horizontal" Margin="10 10 10 10" MouseDown="BtnSave_OnMouseDown"  >
                 <Image Source="Content/Images/icons8_save_60px.png"/>
-                <Label Content="Save" Style="{StaticResource lbl2}"/>
+                <Label Name="lblSave" Content="Save" Style="{StaticResource lbl2}"/>
+            </StackPanel>
+            <StackPanel Name="btnRemove" Orientation="Horizontal" Margin="10 10 10 10" MouseDown="BtnRemove_OnMouseDown"  >
+                <Image Source="Content/Images/icons8_remove_60px_2.png"/>
+                <Label Name="lblRemove" Content="Remove" Style="{StaticResource lbl2}"/>
             </StackPanel>
         </UniformGrid>
 
@@ -141,7 +158,12 @@
                     <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Associate" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Vendor Code" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
+                    <ComboBox Name="cmbVendor" Grid.Row="2" Grid.Column="1"
+                              materialDesign:TextFieldAssist.HasClearButton="True"
+                                          IsEditable="True"
+                                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                          materialDesign:TextFieldAssist.SuffixText="sw"
+                              DisplayMemberPath="Name" SelectedValuePath="Id"/>
                     <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="PO Term" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Account #" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -163,17 +185,17 @@
                     </Grid.ColumnDefinitions>
                     <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="PO Dates" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Order Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <DatePicker  Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center"/>
+                    <DatePicker Name="dpiOrderDate" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center"/>
                     <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Ship Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <DatePicker  Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center" />
+                    <DatePicker Name="dpiShipDate" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Cancel Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <DatePicker  Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center" />
+                    <DatePicker Name="dpiCancelDate" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Last Edit Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox  Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
 
                 </Grid>
             </UniformGrid>
-            <DataGrid  Name="DataGridItems" Margin="50 20 50 0" Grid.Row="1"  AutoGenerateColumns="False" FontSize="20"  SelectionUnit="FullRow" AlternatingRowBackground="LightGray" MouseDoubleClick="lvProducts_MouseDoubleClick" CellEditEnding="GrdListItem_CellEditEnding" Sorting="GrdListItem_Sorting">
+            <DataGrid  Name="DataGridItems" Margin="50 20 50 0" Grid.Row="1"  AutoGenerateColumns="False" FontSize="20"  SelectionUnit="FullRow" AlternatingRowBackground="LightBlue" MouseDoubleClick="lvProducts_MouseDoubleClick" CellEditEnding="GrdListItem_CellEditEnding" Sorting="GrdListItem_Sorting">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Style Number" Binding="{Binding ProductMaster.StyleNumber}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="UPC" Binding="{Binding ProductMaster.UPC}" Width="*" IsReadOnly="True"/>
@@ -245,6 +267,42 @@
                     </StackPanel>
                 </StackPanel>
             </UniformGrid>
+        </Grid>
+        <Grid Name="GrdPurchesOrderList" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.2*"/>
+                <RowDefinition Height="0.8*"/>
+            </Grid.RowDefinitions>
+
+            <ListView SelectionMode="Single" Name="lvPurchase" Grid.Row="1" Margin="40 0 40 40" FontSize="20" MouseDoubleClick="LvPurchase_OnMouseDoubleClick">
+                <ListView.View>
+                    <GridView >
+                        <GridViewColumn Header="ALU" Width="120" DisplayMemberBinding="{Binding Path=Id}" />
+                        <GridViewColumn Header="Purchase Number" Width="200" DisplayMemberBinding="{Binding Path=PoNumber}" />
+                        <GridViewColumn Header="Asn Number" Width="200" DisplayMemberBinding="{Binding Path=Asnumber}" />
+                        <GridViewColumn Header="Grn Number" Width="200" DisplayMemberBinding="{Binding Path=Grnumber}" />
+                        <GridViewColumn Header="Vendor" Width="200" DisplayMemberBinding="{Binding Path=Vendor.Name}" />
+                        <GridViewColumn Header="Order Date" Width="340" DisplayMemberBinding="{Binding Path=OrderDate}" />
+                        <GridViewColumn Header="Quantity" Width="300" DisplayMemberBinding="{Binding Path=ItemsPoCount}" />
+                    </GridView>
+                </ListView.View>
+
+                <!--<ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Label  Content="{Binding Id}"  />
+                            <Label  Content="       "  />
+                            <Label  Content="{Binding StyleNumber}"  />
+                            <Label  Content="       "  />
+                            <Label  Content="{Binding Size}"  />
+                            <Label  Content="       "  />
+                            <Label  Content="{Binding  Color}"  />
+                        </StackPanel>
+
+                    </DataTemplate>
+                </ListView.ItemTemplate>-->
+            </ListView>
+
         </Grid>
 
         <Grid Name="GrdProductList" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
