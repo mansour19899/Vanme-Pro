@@ -80,7 +80,7 @@
                 <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Perchers Order"></Label>
 
                 <Image Name="btnAsnVorchers" Grid.Row="0" Grid.Column="1"   Source="Content/Images/icons8_cargo_ship_64px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnAsnVorchers_OnMouseDown"/>
-                <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="ASN Vourchers"></Label>
+                <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goods In Transit"></Label>
 
                 <Image Name="btnGrn" Grid.Row="0" Grid.Column="2"   Source="Content/Images/icons8_borrow_book_64px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnGrn_OnMouseDown"/>
                 <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goods Recive Note"></Label>
@@ -279,7 +279,7 @@
                     <GridView >
                         <GridViewColumn Header="ALU" Width="120" DisplayMemberBinding="{Binding Path=Id}" />
                         <GridViewColumn Header="Purchase Number" Width="200" DisplayMemberBinding="{Binding Path=PoNumber}" />
-                        <GridViewColumn Header="Asn Number" Width="200" DisplayMemberBinding="{Binding Path=Asnumber}" />
+                        <GridViewColumn Header="Goods In Transit" Width="200" DisplayMemberBinding="{Binding Path=Asnumber}"/>
                         <GridViewColumn Header="Grn Number" Width="200" DisplayMemberBinding="{Binding Path=Grnumber}" />
                         <GridViewColumn Header="Vendor" Width="200" DisplayMemberBinding="{Binding Path=Vendor.Name}" />
                         <GridViewColumn Header="Order Date" Width="340" DisplayMemberBinding="{Binding Path=OrderDate}" />

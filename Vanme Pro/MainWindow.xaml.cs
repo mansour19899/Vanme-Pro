@@ -37,6 +37,7 @@ namespace Vanme_Pro
         private State state = State.Save;
         private PurchaseOrder SelectedPurchaseOrder;
         private List<Item> RemoveItemsList=new List<Item>();
+        private SnackbarMessageQueue myMessageQueue;
         public MainWindow()
         {
             InitializeComponent();
@@ -58,6 +59,9 @@ namespace Vanme_Pro
             cmbVendor.ItemsSource = tre;
 
             DataGridItems.ItemsSource = null;
+
+            myMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(4000));
+            SnackbarResult.MessageQueue = myMessageQueue;
             // GrdItemsTemp = GrdListItem.ItemsSource.Cast<ItemTemp>().ToList();
         }
 
@@ -258,6 +262,7 @@ namespace Vanme_Pro
 
         private void BtnSave_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            string message = "";
             int vendorfk = 0;
             bool SaveMode = true;
             if (state == State.Update)
@@ -285,6 +290,7 @@ namespace Vanme_Pro
                     Po.CreatedPO = true;
                     db.PurchaseOrders.Add(Po);
                     db.SaveChanges();
+                    message = "Purchase Order Saved";
 
                 }
                 else
@@ -301,8 +307,10 @@ namespace Vanme_Pro
                         Po.PoTotal = Convert.ToDecimal(TxtTotalPrice.Text);
                     if (ItemsCountInPO != 0)
                         Po.ItemsPoCount = ItemsCountInPO;
+                    Po.LastEditDate=DateTime.Now;
                     db.PurchaseOrders.Update(Po);
                     db.SaveChanges();
+                    message = "Purchase Order Updated";
                 }
 
                 
@@ -353,10 +361,10 @@ namespace Vanme_Pro
 
                     }
                 }
+                db.SaveChanges();
                 AddNewitemsList.Clear();
                 RemoveItemsList.Clear();
-                db.SaveChanges();
-
+                myMessageQueue.Enqueue(message);
             }
 
         }
@@ -379,9 +387,7 @@ namespace Vanme_Pro
 
         private void BtnLogo_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("salam");
-            SnackbarMessageQueue myMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(4000));
-            SnackbarResult.MessageQueue = myMessageQueue;
+
             myMessageQueue.Enqueue("Wow, easy!");
         }
     }
