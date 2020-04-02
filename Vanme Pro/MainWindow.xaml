@@ -79,9 +79,9 @@
                 <Image Name="btnPurchaseOrder" Grid.Row="0" Grid.Column="0"   Source="Content/Images/icons8_purchase_order_96px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnPurchaseOrder_OnMouseDown"/>
                 <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Perchers Order"></Label>
 
-                <Image Name="btnAsnVorchers" Grid.Row="0" Grid.Column="1"   Source="Content/Images/icons8_cargo_ship_64px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnAsnVorchers_OnMouseDown"/>
+                <Image Name="btnAsnVorchers" Grid.Row="0" Grid.Column="1"   Source="Content/Images/icons8_cargo_ship_64px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnAsnVorchers_OnMouseDown" />
                 <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goods In Transit"></Label>
-
+                <!--<Rectangle Margin="20 5 20 5" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Fill="#FF2CB026"/>-->
                 <Image Name="btnGrn" Grid.Row="0" Grid.Column="2"   Source="Content/Images/icons8_borrow_book_64px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnGrn_OnMouseDown"/>
                 <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goods Recive Note"></Label>
 
@@ -110,7 +110,7 @@
             </StackPanel>
         </UniformGrid>
 
-        <Grid Name="GrdNewPurchersOrder" Grid.Row="1" Grid.Column="0" Visibility="Visible">
+        <Grid Name="GrdNewPurchersOrder" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.3*"/>
                 <RowDefinition Height="0.4*"/>
@@ -130,8 +130,8 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="PO Type" />
-                    <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="PO#" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <Label Name="lblSubHeader1" Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Type" />
+                    <Label Name="lblNumber" Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="PO # " VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Name="txtPoNumber" Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="PO Type" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
@@ -154,7 +154,7 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="PO Details" />
+                    <Label Name="lblSubHeader2" Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Details" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Associate" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Vendor Code" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -183,15 +183,15 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="PO Dates" />
-                    <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Order Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Dates" />
+                    <Label Name="lblOrderDate" Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Order Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <DatePicker Name="dpiOrderDate" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center"/>
                     <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Ship Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <DatePicker Name="dpiShipDate" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Cancel Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <DatePicker Name="dpiCancelDate" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Last Edit Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox  Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
+                    <TextBox Name="txtLastEdit" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
 
                 </Grid>
             </UniformGrid>
@@ -202,8 +202,9 @@
                     <DataGridTextColumn Header="Color" Binding="{Binding ProductMaster.Color}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Size" Binding="{Binding ProductMaster.Size}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Price" Binding="{Binding PoPrice}" Width="*"/>
-                    <DataGridTextColumn Header="Quantity" Binding="{Binding PoQuantity}" Width="*"/>
-                    <DataGridTextColumn Header="TotalPrice" Binding="{Binding PoItemsPrice}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Previous Quantity" Binding="{Binding PreviousQuantity}" Width="*" Foreground="#FF9C8F8F" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Quantity ( PO )" Binding="{Binding CurrentQuantity}" Width="*"/>
+                    <DataGridTextColumn Header="TotalPrice" Binding="{Binding TotalItemPrice}" Width="*" IsReadOnly="True"/>
                 </DataGrid.Columns>
             </DataGrid>
             <UniformGrid Grid.Row="2" Columns="3" Rows="1">

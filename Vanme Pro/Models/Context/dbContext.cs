@@ -35,6 +35,10 @@ namespace Vanme_Pro.Models.Context
             modelBuilder.Entity<Item>().Property(b => b.PoPrice).HasDefaultValue(0);
             modelBuilder.Entity<Item>().Property(b => b.PoQuantity).HasDefaultValue(0);
             modelBuilder.Entity<Item>().Property(b => b.PoItemsPrice).HasDefaultValue(0);
+            modelBuilder.Entity<Item>().Ignore(p => p.PreviousQuantity);
+            modelBuilder.Entity<Item>().Ignore(p => p.CurrentQuantity);
+            modelBuilder.Entity<Item>().Ignore(p => p.TotalItemPrice);
+
            // modelBuilder.Entity<Item>().Property(b => b.Note).HasColumnType("text").HasDefaultValue("Note :  ");
 
             modelBuilder.Entity<Item>()

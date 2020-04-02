@@ -186,6 +186,10 @@
     <Compile Include="Migrations\20200330193839_smm40.designer.cs">
       <DependentUpon>20200330193839_smm40.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200401064348_smm45.cs" />
+    <Compile Include="Migrations\20200401064348_smm45.designer.cs">
+      <DependentUpon>20200401064348_smm45.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\dbContextModelSnapshot.cs" />
     <Compile Include="Models\Context\dbContext.cs" />
     <Compile Include="Models\DomainModels\Item.cs" />
