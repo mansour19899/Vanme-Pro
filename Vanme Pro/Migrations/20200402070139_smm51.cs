@@ -2,7 +2,7 @@
 
 namespace Vanme_Pro.Migrations
 {
-    public partial class smm40 : Migration
+    public partial class smm51 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

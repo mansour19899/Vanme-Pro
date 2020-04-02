@@ -24,6 +24,9 @@ namespace Vanme_Pro.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
+                    b.Property<string>("Aile")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("AsnItemsPrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -35,6 +38,9 @@ namespace Vanme_Pro.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
+                    b.Property<string>("Bin")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("GrnQuantity")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -44,9 +50,7 @@ namespace Vanme_Pro.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PoItemsPrice")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m);
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PoPrice")
                         .ValueGeneratedOnAdd()
@@ -64,11 +68,16 @@ namespace Vanme_Pro.Migrations
                     b.Property<int>("ProductMaster_fk")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Warehouse_fk")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Po_fk");
 
                     b.HasIndex("ProductMaster_fk");
+
+                    b.HasIndex("Warehouse_fk");
 
                     b.ToTable("Items");
                 });
@@ -308,6 +317,28 @@ namespace Vanme_Pro.Migrations
                     b.ToTable("Vendors");
                 });
 
+            modelBuilder.Entity("Vanme_Pro.Models.DomainModels.Warehouse", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Warehouse");
+                });
+
             modelBuilder.Entity("Vanme_Pro.Models.DomainModels.Item", b =>
                 {
                     b.HasOne("Vanme_Pro.Models.DomainModels.PurchaseOrder", "PurchaseOrder")
@@ -321,6 +352,10 @@ namespace Vanme_Pro.Migrations
                         .HasForeignKey("ProductMaster_fk")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Vanme_Pro.Models.DomainModels.Warehouse", "Warehouse")
+                        .WithMany("Items")
+                        .HasForeignKey("Warehouse_fk");
                 });
 
             modelBuilder.Entity("Vanme_Pro.Models.DomainModels.PurchaseOrder", b =>

@@ -10,8 +10,8 @@ using Vanme_Pro.Models.Context;
 namespace Vanme_Pro.Migrations
 {
     [DbContext(typeof(dbContext))]
-    [Migration("20200329032206_smm10")]
-    partial class smm10
+    [Migration("20200402070748_smm52")]
+    partial class smm52
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,6 +26,12 @@ namespace Vanme_Pro.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
+                    b.Property<string>("Aile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("AsnItemsPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("AsnPrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -34,11 +40,8 @@ namespace Vanme_Pro.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<decimal>("AsnTotalPerPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("AsnTotalPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Bin")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GrnQuantity")
                         .ValueGeneratedOnAdd()
@@ -46,9 +49,12 @@ namespace Vanme_Pro.Migrations
                         .HasDefaultValue(0);
 
                     b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PoItemsPrice")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("Note :  ");
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
 
                     b.Property<decimal>("PoPrice")
                         .ValueGeneratedOnAdd()
@@ -60,28 +66,23 @@ namespace Vanme_Pro.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<decimal>("PoTotalPerPrice")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0m);
-
-                    b.Property<decimal>("PoTotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("Po_fk")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductMaster_fk")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalQuantity")
-                        .HasColumnType("int");
+                    b.Property<int?>("Warehouse_fk")
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.HasKey("Id");
 
                     b.HasIndex("Po_fk");
 
                     b.HasIndex("ProductMaster_fk");
+
+                    b.HasIndex("Warehouse_fk");
 
                     b.ToTable("Items");
                 });
@@ -161,6 +162,12 @@ namespace Vanme_Pro.Migrations
                     b.Property<DateTime?>("AsnDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal?>("AsnTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Asnumber")
+                        .HasColumnType("int");
+
                     b.Property<string>("Associate")
                         .HasColumnType("nvarchar(max)");
 
@@ -197,7 +204,16 @@ namespace Vanme_Pro.Migrations
                     b.Property<DateTime?>("GrnDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ItemCount")
+                    b.Property<int>("Grnumber")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ItemsAsnCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ItemsGrnCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ItemsPoCount")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("LastEditDate")
@@ -206,8 +222,8 @@ namespace Vanme_Pro.Migrations
                     b.Property<DateTime?>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PoNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PoNumber")
+                        .HasColumnType("int");
 
                     b.Property<string>("PoTerms")
                         .HasColumnType("nvarchar(max)");
@@ -306,6 +322,28 @@ namespace Vanme_Pro.Migrations
                     b.ToTable("Vendors");
                 });
 
+            modelBuilder.Entity("Vanme_Pro.Models.DomainModels.Warehouse", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Warehouse");
+                });
+
             modelBuilder.Entity("Vanme_Pro.Models.DomainModels.Item", b =>
                 {
                     b.HasOne("Vanme_Pro.Models.DomainModels.PurchaseOrder", "PurchaseOrder")
@@ -319,6 +357,10 @@ namespace Vanme_Pro.Migrations
                         .HasForeignKey("ProductMaster_fk")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Vanme_Pro.Models.DomainModels.Warehouse", "Warehouse")
+                        .WithMany("Items")
+                        .HasForeignKey("Warehouse_fk");
                 });
 
             modelBuilder.Entity("Vanme_Pro.Models.DomainModels.PurchaseOrder", b =>

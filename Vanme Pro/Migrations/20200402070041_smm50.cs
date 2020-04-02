@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Vanme_Pro.Migrations
 {
-    public partial class smm10 : Migration
+    public partial class smm50 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -68,12 +68,28 @@ namespace Vanme_Pro.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Warehouse",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Address = table.Column<string>(nullable: true),
+                    Tel = table.Column<string>(nullable: true),
+                    Note = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Warehouse", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PurchaseOrders",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false),
-                    ItemCount = table.Column<int>(nullable: true),
-                    PoNumber = table.Column<string>(nullable: true),
+                    PoNumber = table.Column<int>(nullable: false),
+                    Asnumber = table.Column<int>(nullable: false),
+                    Grnumber = table.Column<int>(nullable: false),
                     Vendor_fk = table.Column<int>(nullable: true),
                     PoType = table.Column<string>(nullable: true),
                     ShipToStore = table.Column<string>(nullable: true),
@@ -93,9 +109,13 @@ namespace Vanme_Pro.Migrations
                     FeeType = table.Column<decimal>(nullable: true),
                     Fee = table.Column<decimal>(nullable: true),
                     PoTotal = table.Column<decimal>(nullable: true),
+                    AsnTotal = table.Column<decimal>(nullable: true),
                     CreatedPO = table.Column<bool>(nullable: true),
                     CreatedAsn = table.Column<bool>(nullable: true),
-                    CreatedGrn = table.Column<bool>(nullable: true)
+                    CreatedGrn = table.Column<bool>(nullable: true),
+                    ItemsPoCount = table.Column<int>(nullable: true),
+                    ItemsAsnCount = table.Column<int>(nullable: true),
+                    ItemsGrnCount = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -115,17 +135,17 @@ namespace Vanme_Pro.Migrations
                     Id = table.Column<int>(nullable: false),
                     Po_fk = table.Column<int>(nullable: false),
                     ProductMaster_fk = table.Column<int>(nullable: false),
+                    Warehouse_fk = table.Column<int>(nullable: true),
                     PoQuantity = table.Column<int>(nullable: false, defaultValue: 0),
                     AsnQuantity = table.Column<int>(nullable: false, defaultValue: 0),
                     GrnQuantity = table.Column<int>(nullable: false, defaultValue: 0),
                     PoPrice = table.Column<decimal>(nullable: false, defaultValue: 0m),
                     AsnPrice = table.Column<decimal>(nullable: false),
-                    TotalQuantity = table.Column<int>(nullable: false),
-                    PoTotalPerPrice = table.Column<decimal>(nullable: false, defaultValue: 0m),
-                    AsnTotalPerPrice = table.Column<decimal>(nullable: false),
-                    PoTotalPrice = table.Column<decimal>(nullable: false),
-                    AsnTotalPrice = table.Column<decimal>(nullable: false),
-                    Note = table.Column<string>(type: "text", nullable: true, defaultValue: "Note :  ")
+                    PoItemsPrice = table.Column<decimal>(nullable: false, defaultValue: 0m),
+                    AsnItemsPrice = table.Column<decimal>(nullable: false),
+                    Note = table.Column<string>(nullable: true),
+                    Aile = table.Column<string>(nullable: true),
+                    Bin = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -142,6 +162,12 @@ namespace Vanme_Pro.Migrations
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Items_Warehouse_Warehouse_fk",
+                        column: x => x.Warehouse_fk,
+                        principalTable: "Warehouse",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -153,6 +179,11 @@ namespace Vanme_Pro.Migrations
                 name: "IX_Items_ProductMaster_fk",
                 table: "Items",
                 column: "ProductMaster_fk");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_Warehouse_fk",
+                table: "Items",
+                column: "Warehouse_fk");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PurchaseOrders_Vendor_fk",
@@ -170,6 +201,9 @@ namespace Vanme_Pro.Migrations
 
             migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Warehouse");
 
             migrationBuilder.DropTable(
                 name: "Vendors");

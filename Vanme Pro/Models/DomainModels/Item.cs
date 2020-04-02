@@ -12,6 +12,7 @@ namespace Vanme_Pro.Models.DomainModels
         public int Id { get; set; }
         public int Po_fk { get; set; }
         public int ProductMaster_fk { get; set; }
+        public int? Warehouse_fk { get; set; }
         public int PreviousQuantity { get; set; }
         public int CurrentQuantity { get; set; }
         public int PoQuantity { get; set; }
@@ -23,9 +24,12 @@ namespace Vanme_Pro.Models.DomainModels
         public decimal PoItemsPrice { get; set; }
         public decimal AsnItemsPrice { get; set; }
         public string Note { get; set; }
+        public string Aile { get; set; }
+        public string Bin { get; set; }
 
         public ProductMaster ProductMaster { get; set; }
         public PurchaseOrder PurchaseOrder { get; set; }
+        public Warehouse Warehouse { get; set; }
 
     }
 }
