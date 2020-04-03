@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vanme_Pro.Models.Context;
 
 namespace Vanme_Pro.Migrations
 {
     [DbContext(typeof(dbContext))]
-    partial class dbContextModelSnapshot : ModelSnapshot
+    [Migration("20200403004944_smm66")]
+    partial class smm66
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -170,9 +172,6 @@ namespace Vanme_Pro.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CancelDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("CreateOrder")
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("CreatedAsn")

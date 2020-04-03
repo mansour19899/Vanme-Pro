@@ -23,6 +23,8 @@ namespace Vanme_Pro.Models.DomainModels
         public decimal TotalItemPrice { get; set; }
         public decimal PoItemsPrice { get; set; }
         public decimal AsnItemsPrice { get; set; }
+        public int? Diffrent { get; set; }
+        private bool? Alert { get; set; }
         public string Note { get; set; }
         public string Aile { get; set; }
         public string Bin { get; set; }

@@ -108,6 +108,10 @@
                 <Image Source="Content/Images/icons8_remove_60px_2.png"/>
                 <Label Name="lblRemove" Content="Remove" Style="{StaticResource lbl2}"/>
             </StackPanel>
+            <StackPanel Name="btnDone" Orientation="Horizontal" Margin="10 10 10 10" MouseDown="BtnDone_OnMouseDown"  >
+                <Image Source="Content/Images/icons8_checked_checkbox_60px.png"/>
+                <Label Name="lblDone" Content="Done" Style="{StaticResource lbl2}"/>
+            </StackPanel>
         </UniformGrid>
 
         <Grid Name="GrdNewPurchersOrder" Grid.Row="1" Grid.Column="0" Visibility="Hidden">

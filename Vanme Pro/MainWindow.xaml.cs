@@ -83,16 +83,13 @@ namespace Vanme_Pro
 
             {
                 itemsList.Add(new Item() { Id = StepAddItem, ProductMaster = wer, PoPrice = wer.Price.Value, PoQuantity = 0, PoItemsPrice = 0 });
-                //DataGridItems.ItemsSource = null;
-                //DataGridItems.ItemsSource = itemsList;
+
                 FillDataGrid(itemsList);
             }
 
             else
             {
                 AddNewitemsList.Add(new Item() { Id = StepAddItem, ProductMaster = wer, PoPrice = wer.Price.Value, PoQuantity = 0, PoItemsPrice = 0 });
-                //DataGridItems.ItemsSource = null;
-                //DataGridItems.ItemsSource = itemsList.Concat(AddNewitemsList).ToList();
                 FillDataGrid(itemsList.Concat(AddNewitemsList).ToList());
 
             }
@@ -189,7 +186,7 @@ namespace Vanme_Pro
                 //    SumPrice = item.AsnItemsPrice + SumPrice;
                 //    ItemsCountInPO = item.AsnQuantity + ItemsCountInPO;
                 //}
-                
+
             }
             else
             {
@@ -216,7 +213,7 @@ namespace Vanme_Pro
                 }
                 TxtTotalPrice.Text = SumPrice.ToString();
             }
-            else if(Mode==ReceiptStatus.Asn)
+            else if (Mode == ReceiptStatus.Asn)
             {
                 foreach (Item item in items)
                 {
@@ -226,7 +223,7 @@ namespace Vanme_Pro
                 TxtTotalPrice.Text = SumPrice.ToString();
             }
 
-           
+
         }
 
 
@@ -237,6 +234,7 @@ namespace Vanme_Pro
 
         private void StackPanel_MouseDown(object sender, MouseButtonEventArgs e)
         {
+
             lvProducts.ItemsSource = db.Products.ToList();
             GrdNewPurchersOrder.Visibility = Visibility.Hidden;
             GrdProductList.Visibility = Visibility.Visible;
@@ -255,6 +253,8 @@ namespace Vanme_Pro
                 return;
 
             SelectedPurchaseOrder = (PurchaseOrder)lvPurchase.ItemContainerGenerator.ItemFromContainer(dep);
+            state = State.Update;
+            lblSave.Content = "Update";
             FillPerchaseOrderPage(SelectedPurchaseOrder);
         }
 
@@ -262,6 +262,7 @@ namespace Vanme_Pro
 
         private void FillPerchaseOrderPage(PurchaseOrder pOrder)
         {
+
             AddNewitemsList = new List<Item>();
             itemsList.Clear();
             if (pOrder.Items != null)
@@ -304,7 +305,8 @@ namespace Vanme_Pro
                 dpiCancelDate.SelectedDate = pOrder.CancelDate;
                 lblPoTotal.Content = "GIT Total";
                 lblOrderDate.Content = "GIT Date ";
-                txtLastEdit.Text = pOrder.LastEditDate.Value.ToLongDateString();
+                if (pOrder.LastEditDate != null)
+                    txtLastEdit.Text = pOrder.LastEditDate.Value.ToLongDateString();
                 lblNumber.Content = "GIT # ";
                 FillDataGrid(itemsList);
             }
@@ -313,7 +315,7 @@ namespace Vanme_Pro
                 txtPoNumber.Text = pOrder.Grnumber.ShowGrnNumber();
                 cmbVendor.SelectedValue = pOrder.Vendor_fk;
                 TxtTotalPrice.Text = pOrder.AsnTotal.ToString();
-                dpiOrderDate.SelectedDate = pOrder.AsnDate;
+                dpiOrderDate.SelectedDate = pOrder.GrnDate;
                 dpiShipDate.SelectedDate = pOrder.ShipDate;
                 dpiCancelDate.SelectedDate = pOrder.CancelDate;
                 lblPoTotal.Content = "GIT Total";
@@ -386,6 +388,8 @@ namespace Vanme_Pro
         }
         private void BtnNewPurchaseOrder_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            state = State.Save;
+            lblSave.Content = "Save";
             FillPerchaseOrderPage(new PurchaseOrder());
             GrdPurchesOrderList.Visibility = Visibility.Hidden;
             GrdNewPurchersOrder.Visibility = Visibility.Visible;
@@ -516,9 +520,48 @@ namespace Vanme_Pro
 
         private void BtnSave_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            SaveAndUpdate(false);
+
+        }
+
+        private void BtnRemove_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            RemoveItemsList.Clear();
+            RemoveItemsList = DataGridItems.SelectedItems.Cast<Item>().ToList();
+            List<Item> tempRemove = RemoveItemsList.ToList();
+            bool tt = false;
+            foreach (Item VARIABLE in tempRemove)
+            {
+                itemsList.Remove(VARIABLE);
+               tt= AddNewitemsList.Remove(VARIABLE);
+               if (tt)
+                   RemoveItemsList.Remove(VARIABLE);
+
+            }
+            List<Item> t = itemsList.Concat(AddNewitemsList).ToList();
+            CalculateTotalPriceItemsCount(t);
+            DataGridItems.ItemsSource = t;
+        }
+
+        private void BtnLogo_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DataGridItems.Columns[0].Header = "Mansour";
+            myMessageQueue.Enqueue("Wow, easy!");
+        }
+
+        private void BtnDone_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            SaveAndUpdate(true);
+
+        }
+
+        void SaveAndUpdate(bool done)
+        {
             string message = "";
             int vendorfk = 0;
             bool SaveMode = true;
+            bool Save = false;
+
             if (state == State.Update)
             {
                 SaveMode = false;
@@ -526,106 +569,126 @@ namespace Vanme_Pro
             PurchaseOrder Po = new PurchaseOrder();
             if (Mode == ReceiptStatus.PO)
             {
-                if (SaveMode)
+
+                if (state == State.Save)
                 {
                     Po.Id = db.PurchaseOrders.Max(p => p.Id) + 1;
-                    Po.PoNumber = db.PurchaseOrders.Max(p => p.PoNumber) + 1;
-                    vendorfk = Convert.ToInt32(cmbVendor.SelectedValue);
-                    if (vendorfk != 0)
-                        Po.Vendor_fk = vendorfk;
-                    Po.OrderDate = dpiOrderDate.SelectedDate;
-                    Po.ShipDate = dpiShipDate.SelectedDate;
-                    Po.CancelDate = dpiCancelDate.SelectedDate;
-                    Po.LastEditDate = DateTime.Now;
-                    if (!string.IsNullOrWhiteSpace(TxtTotalPrice.Text))
-                        Po.PoTotal = Convert.ToDecimal(TxtTotalPrice.Text);
-                    if (ItemsCountInPO != 0)
-                        Po.ItemsPoCount = ItemsCountInPO;
-                    Po.CreatedPO = true;
-                    db.PurchaseOrders.Add(Po);
-                    db.SaveChanges();
-                    message = "Purchase Order Saved";
-
+                    Po.CreateOrder = DateTime.Now;
+                    Save = true;
                 }
                 else
                 {
                     Po = SelectedPurchaseOrder;
-                    vendorfk = Convert.ToInt32(cmbVendor.SelectedValue);
-                    if (vendorfk != 0)
-                        Po.Vendor_fk = vendorfk;
-                    Po.OrderDate = dpiOrderDate.SelectedDate;
-                    Po.ShipDate = dpiShipDate.SelectedDate;
-                    Po.CancelDate = dpiCancelDate.SelectedDate;
-                    Po.LastEditDate = DateTime.Now;
-                    if (!string.IsNullOrWhiteSpace(TxtTotalPrice.Text))
-                        Po.PoTotal = Convert.ToDecimal(TxtTotalPrice.Text);
-                    if (ItemsCountInPO != 0)
-                        Po.ItemsPoCount = ItemsCountInPO;
-                    Po.LastEditDate = DateTime.Now;
-                    db.PurchaseOrders.Update(Po);
-                    db.SaveChanges();
-                    message = "Purchase Order Updated";
                 }
 
-
-
-                int lastId = db.Items.Max(p => p.Id);
-                foreach (Item VARIABLE in itemsList)
+                if (Po.PoNumber == 0 && done)
+                    Po.PoNumber = db.PurchaseOrders.Max(p => p.Asnumber) + 1;
+                vendorfk = Convert.ToInt32(cmbVendor.SelectedValue);
+                if (vendorfk != 0)
+                    Po.Vendor_fk = vendorfk;
+                Po.OrderDate = dpiOrderDate.SelectedDate;
+                Po.ShipDate = dpiShipDate.SelectedDate;
+                Po.CancelDate = dpiCancelDate.SelectedDate;
+                Po.LastEditDate = DateTime.Now;
+                if (!string.IsNullOrWhiteSpace(TxtTotalPrice.Text))
+                    Po.PoTotal = Convert.ToDecimal(TxtTotalPrice.Text);
+                if (ItemsCountInPO != 0)
+                    Po.ItemsPoCount = ItemsCountInPO;
+                if (Save)
                 {
-
-                    if (SaveMode)
+                    db.PurchaseOrders.Add(Po);
+                    db.SaveChanges();
+                    foreach (Item VARIABLE in itemsList)
                     {
-                        lastId++;
-                        VARIABLE.Id = lastId;
-                        VARIABLE.Po_fk = Po.Id;
-                        VARIABLE.ProductMaster_fk = VARIABLE.ProductMaster.Id;
-                        VARIABLE.ProductMaster = null;
+
                         db.Items.Add(VARIABLE);
+
+                    }
+                }
+
+                else
+                {
+                    db.PurchaseOrders.Update(Po);
+                    db.SaveChanges();
+                    foreach (Item VARIABLE in itemsList)
+                    {
+
+                        db.Items.Update(VARIABLE);
+
+                    }
+                }
+
+                if (Po.CreatedPO == true)
+                {
+                    MessageBox.Show("You Can not change after Done");
+                }
+                else
+                {
+                    if (done)
+                        Po.CreatedPO = true;
+
+
+                    if (done)
+                    {
+                        message = "Purchase Order Done";
+                    }
+                    else if (Save)
+                    {
+                        message = "Purchase Order Saved";
                     }
                     else
                     {
-                        db.Items.Update(VARIABLE);
+                        message = "Purchase Order Updated";
                     }
 
-                }
 
-                if (AddNewitemsList.Count > 0)
-                {
-                    lastId = db.Items.Max(p => p.Id);
-                    foreach (var VARIABLE in AddNewitemsList)
+
+                    if (AddNewitemsList.Count > 0)
                     {
-                        lastId++;
-                        VARIABLE.Id = lastId;
-                        VARIABLE.Po_fk = Po.Id;
-                        VARIABLE.ProductMaster_fk = VARIABLE.ProductMaster.Id;
-                        VARIABLE.ProductMaster = null;
-                        db.Items.Add(VARIABLE);
+                        int lastId = db.Items.Max(p => p.Id);
+                        foreach (var VARIABLE in AddNewitemsList)
+                        {
+                            lastId++;
+                            VARIABLE.Id = lastId;
+                            VARIABLE.Po_fk = Po.Id;
+                            VARIABLE.ProductMaster_fk = VARIABLE.ProductMaster.Id;
+                            VARIABLE.ProductMaster = null;
+                            db.Items.Add(VARIABLE);
+                        }
+
                     }
 
-                }
-
-                if (RemoveItemsList.Count > 0)
-                {
-                    foreach (var VARIABLE in RemoveItemsList)
+                    if (RemoveItemsList.Count > 0)
                     {
-                        db.Items.Remove(VARIABLE);
-                        //Po.Items.FirstOrDefault(p => p.Id == VARIABLE.Id).Note = "Remove From:  "+Po.PoNumber.ShowPoNumber();
-                        //Po.Items.FirstOrDefault(p => p.Id == VARIABLE.Id).Po_fk=1;
-
-
+                        foreach (var VARIABLE in RemoveItemsList)
+                        {
+                            db.Items.Remove(VARIABLE);
+                        }
                     }
+                    db.SaveChanges();
+                    AddNewitemsList.Clear();
+                    RemoveItemsList.Clear();
+                    myMessageQueue.Enqueue(message);
+
                 }
-                db.SaveChanges();
-                AddNewitemsList.Clear();
-                RemoveItemsList.Clear();
-                SelectedPurchaseOrder = Po;
-                myMessageQueue.Enqueue(message);
+
+
             }
 
             else if (Mode == ReceiptStatus.Asn)
             {
-                Po = SelectedPurchaseOrder;
-                if (Po.Asnumber == 0)
+                if (state == State.Save)
+                {
+                    Po.Id = db.PurchaseOrders.Max(p => p.Id) + 1;
+                    Po.CreateOrder=DateTime.Now;
+                    Save = true;
+                }
+                else
+                {
+                    Po = SelectedPurchaseOrder;
+                }
+
+                if (Po.Asnumber == 0 && done)
                     Po.Asnumber = db.PurchaseOrders.Max(p => p.Asnumber) + 1;
                 vendorfk = Convert.ToInt32(cmbVendor.SelectedValue);
                 if (vendorfk != 0)
@@ -638,68 +701,91 @@ namespace Vanme_Pro
                     Po.AsnTotal = Convert.ToDecimal(TxtTotalPrice.Text);
                 if (ItemsCountInPO != 0)
                     Po.ItemsAsnCount = ItemsCountInPO;
-                Po.LastEditDate = DateTime.Now;
-                Po.CreatedAsn = true;
-                db.PurchaseOrders.Update(Po);
-                db.SaveChanges();
-                message = "Goods In Transit Updated";
-
-
-                int lastId = db.Items.Max(p => p.Id);
-                foreach (Item VARIABLE in itemsList)
+                if (Save)
                 {
-
-                    if (SaveMode)
+                    Po.CreatedPO = true;
+                    db.PurchaseOrders.Add(Po);
+                    db.SaveChanges();
+                    foreach (Item VARIABLE in itemsList)
                     {
-                        lastId++;
-                        VARIABLE.Id = lastId;
-                        VARIABLE.Po_fk = Po.Id;
-                        VARIABLE.ProductMaster_fk = VARIABLE.ProductMaster.Id;
-                        VARIABLE.ProductMaster = null;
+
                         db.Items.Add(VARIABLE);
+
+                    }
+                }
+
+                else
+                {
+                    db.PurchaseOrders.Update(Po);
+                    db.SaveChanges();
+                    foreach (Item VARIABLE in itemsList)
+                    {
+
+                        db.Items.Update(VARIABLE);
+
+                    }
+                }
+
+
+                if (Po.CreatedAsn == true)
+                {
+                    MessageBox.Show("You Can not change after Done");
+                }
+                else
+                {
+                    if (done)
+                        Po.CreatedAsn = true;
+
+
+                    if (done)
+                    {
+                        message = "Goods In Transit Done";
+                    }
+                    else if(Save)
+                    {
+                        message = "Goods In Transit Saved";
                     }
                     else
                     {
-                        db.Items.Update(VARIABLE);
+                        message = "Goods In Transit Updated";
                     }
 
-                }
 
-                if (AddNewitemsList.Count > 0)
-                {
-                    lastId = db.Items.Max(p => p.Id);
-                    foreach (var VARIABLE in AddNewitemsList)
+
+                    if (AddNewitemsList.Count > 0)
                     {
-                        lastId++;
-                        VARIABLE.Id = lastId;
-                        VARIABLE.Po_fk = Po.Id;
-                        VARIABLE.ProductMaster_fk = VARIABLE.ProductMaster.Id;
-                        VARIABLE.ProductMaster = null;
-                        db.Items.Add(VARIABLE);
+                        int lastId = db.Items.Max(p => p.Id);
+                        foreach (var VARIABLE in AddNewitemsList)
+                        {
+                            lastId++;
+                            VARIABLE.Id = lastId;
+                            VARIABLE.Po_fk = Po.Id;
+                            VARIABLE.ProductMaster_fk = VARIABLE.ProductMaster.Id;
+                            VARIABLE.ProductMaster = null;
+                            db.Items.Add(VARIABLE);
+                        }
+
                     }
 
-                }
-
-                if (RemoveItemsList.Count > 0)
-                {
-                    foreach (var VARIABLE in RemoveItemsList)
+                    if (RemoveItemsList.Count > 0)
                     {
-                        db.Items.Remove(VARIABLE);
-                        //Po.Items.FirstOrDefault(p => p.Id == VARIABLE.Id).Note = "Remove From:  "+Po.PoNumber.ShowPoNumber();
-                        //Po.Items.FirstOrDefault(p => p.Id == VARIABLE.Id).Po_fk=1;
-
-
+                        foreach (var VARIABLE in RemoveItemsList)
+                        {
+                            db.Items.Remove(VARIABLE);
+                        }
                     }
+                    db.SaveChanges();
+                    AddNewitemsList.Clear();
+                    RemoveItemsList.Clear();
+                    myMessageQueue.Enqueue(message);
+
                 }
-                db.SaveChanges();
-                AddNewitemsList.Clear();
-                RemoveItemsList.Clear();
-                myMessageQueue.Enqueue(message);
+
             }
             else if (Mode == ReceiptStatus.Grn)
             {
                 Po = SelectedPurchaseOrder;
-                if (Po.Grnumber == 0)
+                if (Po.Grnumber == 0 && done)
                     Po.Grnumber = db.PurchaseOrders.Max(p => p.Grnumber) + 1;
                 vendorfk = Convert.ToInt32(cmbVendor.SelectedValue);
                 //if (vendorfk != 0)
@@ -713,31 +799,37 @@ namespace Vanme_Pro
                 if (ItemsCountInPO != 0)
                     Po.ItemsGrnCount = ItemsCountInPO;
                 Po.LastEditDate = DateTime.Now;
-                Po.CreatedGrn = true;
+                if (done)
+                    Po.CreatedGrn = true;
                 db.PurchaseOrders.Update(Po);
                 db.SaveChanges();
-                message = "Goods Recive Note Updated";
+                if (done)
+                {
+                    message = "Goods Recive Note Done";
+                }
+                else
+                {
+                    message = "Goods Recive Note Updated";
+                }
 
 
-                int lastId = db.Items.Max(p => p.Id);
+
                 foreach (Item VARIABLE in itemsList)
                 {
                     db.Items.Update(VARIABLE);
-                    //if (SaveMode)
-                    //{
-                    //    //lastId++;
-                    //    //VARIABLE.Id = lastId;
-                    //    //VARIABLE.Po_fk = Po.Id;
-                    //    //VARIABLE.ProductMaster_fk = VARIABLE.ProductMaster.Id;
-                    //    //VARIABLE.ProductMaster = null;
-                    //    //db.Items.Add(VARIABLE);
-                    //}
-                    //else
-                    //{
-                    //    db.Items.Update(VARIABLE);
-                    //}
 
                 }
+
+                if (Po.CreatedGrn == false)
+                {
+                    foreach (Item VARIABLE in itemsList)
+                    {
+                        VARIABLE.ProductMaster.Income += VARIABLE.GrnQuantity;
+                        VARIABLE.ProductMaster.Inventory += VARIABLE.GrnQuantity;
+
+                    }
+                }
+
                 db.SaveChanges();
                 AddNewitemsList.Clear();
                 RemoveItemsList.Clear();
@@ -747,29 +839,6 @@ namespace Vanme_Pro
             {
 
             }
-
-        }
-
-        private void BtnRemove_OnMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            RemoveItemsList.Clear();
-            RemoveItemsList = DataGridItems.SelectedItems.Cast<Item>().ToList(); ;
-
-            foreach (Item VARIABLE in RemoveItemsList)
-            {
-                itemsList.Remove(VARIABLE);
-                AddNewitemsList.Remove(VARIABLE);
-
-            }
-            List<Item> t = itemsList.Concat(AddNewitemsList).ToList();
-            CalculateTotalPriceItemsCount(t);
-            DataGridItems.ItemsSource = t;
-        }
-
-        private void BtnLogo_OnMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            DataGridItems.Columns[0].Header = "Mansour";
-            myMessageQueue.Enqueue("Wow, easy!");
         }
     }
 }

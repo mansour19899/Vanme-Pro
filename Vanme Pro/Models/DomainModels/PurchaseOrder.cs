@@ -25,6 +25,7 @@ namespace Vanme_Pro.Models.DomainModels
         public DateTime? GrnDate { get; set; }
         public DateTime? ShipDate { get; set; }
         public DateTime? CancelDate { get; set; }
+        public DateTime? CreateOrder { get; set; }
         public DateTime? LastEditDate { get; set; }
         public decimal? Freight { get; set; }
         public decimal? DiscountPercent { get; set; }
