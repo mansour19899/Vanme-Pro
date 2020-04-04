@@ -28,6 +28,7 @@ namespace Vanme_Pro.Models.DomainModels
         public string Note { get; set; }
         public string Aile { get; set; }
         public string Bin { get; set; }
+        public bool? Checked { get; set; }
 
         public ProductMaster ProductMaster { get; set; }
         public PurchaseOrder PurchaseOrder { get; set; }

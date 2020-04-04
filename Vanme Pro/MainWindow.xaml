@@ -92,11 +92,11 @@
 
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="LightSlateGray" BorderThickness="2 0 0 0"/>
         <UniformGrid Grid.Row="1" Grid.Column="1" Columns="1" Rows="10">
-            <StackPanel Name="btnNewPurchaseOrder" Orientation="Horizontal" Margin="10 10 10 10" MouseDown="BtnNewPurchaseOrder_OnMouseDown" >
+            <StackPanel Name="btnNewPurchaseOrder" Orientation="Horizontal" Margin="10 10 10 10" MouseDown="BtnNewPurchaseOrder_OnMouseDown"  >
                 <Image Source="Content/Images/icons8_create_document_60px_1.png"/>
-                <Label Content="New PO" Style="{StaticResource lbl2}"/>
+                <Label Name="lblNewPo" Content="New PO" Style="{StaticResource lbl2}"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="10 10 10 10" MouseDown="StackPanel_MouseDown" >
+            <StackPanel Name="btnAddItem" Orientation="Horizontal" Margin="10 10 10 10" MouseDown="StackPanel_MouseDown" >
                 <Image Source="Content/Images/icons8_add_new_52px_3.png"/>
                 <Label Content="Add Item" Style="{StaticResource lbl2}"/>
             </StackPanel>
@@ -199,7 +199,7 @@
 
                 </Grid>
             </UniformGrid>
-            <DataGrid  Name="DataGridItems" Margin="50 20 50 0" Grid.Row="1"  AutoGenerateColumns="False" FontSize="20"  SelectionUnit="FullRow" AlternatingRowBackground="LightBlue" MouseDoubleClick="lvProducts_MouseDoubleClick" CellEditEnding="GrdListItem_CellEditEnding" Sorting="GrdListItem_Sorting">
+            <DataGrid  Name="DataGridItems" Margin="50 20 50 0" Grid.Row="1"  AutoGenerateColumns="False" CanUserAddRows="False" FontSize="20"  SelectionUnit="FullRow" AlternatingRowBackground="LightBlue" MouseDoubleClick="lvProducts_MouseDoubleClick" CellEditEnding="GrdListItem_CellEditEnding" Sorting="GrdListItem_Sorting">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Style Number" Binding="{Binding ProductMaster.StyleNumber}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="UPC" Binding="{Binding ProductMaster.UPC}" Width="*" IsReadOnly="True"/>
