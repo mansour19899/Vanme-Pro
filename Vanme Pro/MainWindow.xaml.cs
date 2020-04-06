@@ -52,8 +52,9 @@ namespace Vanme_Pro
 
             itemsList = new List<Item>();
 
-            var productlList = db.Products.ToList();
-            lvProducts.ItemsSource = productlList;
+         //   var productlList = db.Products.ToList();
+            var productlList = db.Products;
+            lvProducts.ItemsSource = productlList.ToList();
 
 
 
@@ -227,20 +228,15 @@ namespace Vanme_Pro
             ItemsCountInPO = 0;
             if (Mode == ReceiptStatus.PO)
             {
-                foreach (Item item in items)
-                {
-                    SumPrice = item.PoItemsPrice + SumPrice;
-                    ItemsCountInPO = item.PoQuantity + ItemsCountInPO;
-                }
+                SumPrice = items.Sum(p => p.PoItemsPrice);
+                ItemsCountInPO = items.Sum(p => p.PoQuantity);
+
                 TxtTotalPrice.Text = SumPrice.ToString();
             }
             else if (Mode == ReceiptStatus.Asn)
             {
-                foreach (Item item in items)
-                {
-                    SumPrice = item.AsnItemsPrice + SumPrice;
-                    ItemsCountInPO = item.AsnQuantity + ItemsCountInPO;
-                }
+                SumPrice = items.Sum(p => p.AsnItemsPrice);
+                ItemsCountInPO = items.Sum(p => p.AsnQuantity);
                 TxtTotalPrice.Text = SumPrice.ToString();
             }
 
@@ -475,31 +471,39 @@ namespace Vanme_Pro
 
             if (IsViewDetail)
             {
-                if (Mode == ReceiptStatus.Asn)
-                {
 
-                    lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedPO == true)
-                        .Include(p => p.Items).Include(p => p.Vendor).ToList();
-                    GrdNewPurchersOrder.Visibility = Visibility.Hidden;
-                    GrdPurchesOrderList.Visibility = Visibility.Visible;
-                    IsViewDetail = false;
-                    SetSideBar();
-                }
-                else if (Mode == ReceiptStatus.PO)
+                switch (Mode)
                 {
-                    Mode = ReceiptStatus.Asn;
-                    lblNewPo.Content = "New GIT";
-                    FillPerchaseOrderPage(SelectedPurchaseOrder);
-                }
-                else if (Mode == ReceiptStatus.Grn)
-                {
-                    Mode = ReceiptStatus.Asn;
-                    lblNewPo.Content = "New GIT";
-                    FillPerchaseOrderPage(SelectedPurchaseOrder);
-                }
-                else
-                {
+                    case ReceiptStatus.Asn:
+                        {
+                            lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedPO == true)
+                                .Include(p => p.Items).Include(p => p.Vendor).ToList();
+                            GrdNewPurchersOrder.Visibility = Visibility.Hidden;
+                            GrdPurchesOrderList.Visibility = Visibility.Visible;
+                            IsViewDetail = false;
+                            SetSideBar();
 
+                            break;
+                        }
+                    case ReceiptStatus.PO:
+                        {
+                            Mode = ReceiptStatus.Asn;
+                            lblNewPo.Content = "New GIT";
+                            FillPerchaseOrderPage(SelectedPurchaseOrder);
+                            break;
+                        }
+                    case ReceiptStatus.Grn:
+                        {
+                            Mode = ReceiptStatus.Asn;
+                            lblNewPo.Content = "New GIT";
+                            FillPerchaseOrderPage(SelectedPurchaseOrder);
+                            break;
+                        }
+                    default:
+                        {
+                            MessageBox.Show("Error 534");
+                            break;
+                        }
                 }
             }
             else
@@ -681,7 +685,6 @@ namespace Vanme_Pro
                     else
                     {
                         db.PurchaseOrders.Update(Po);
-                        db.SaveChanges();
                         foreach (Item VARIABLE in itemsList)
                         {
 
