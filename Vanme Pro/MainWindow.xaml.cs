@@ -33,7 +33,7 @@ namespace Vanme_Pro
         private int StepAddItem = 1;
         decimal SumPrice = 0;
         private int ItemsCountInPO = 0;
-        private ReceiptStatus Mode = ReceiptStatus.PO;
+        private Mode Mode = Mode.PO;
         private State state = State.Save;
         private PurchaseOrder SelectedPurchaseOrder;
         private List<Item> RemoveItemsList = new List<Item>();
@@ -52,7 +52,7 @@ namespace Vanme_Pro
 
             itemsList = new List<Item>();
 
-         //   var productlList = db.Products.ToList();
+            //   var productlList = db.Products.ToList();
             var productlList = db.Products;
             lvProducts.ItemsSource = productlList.ToList();
 
@@ -137,7 +137,7 @@ namespace Vanme_Pro
             string header = col1.Header as string;
 
 
-            if (Mode == ReceiptStatus.PO)
+            if (Mode == Mode.PO)
             {
                 if (SelectedPurchaseOrder.CreatedPO == true || SelectedPurchaseOrder.CreatedAsn == true)
                 {
@@ -161,7 +161,7 @@ namespace Vanme_Pro
 
 
             }
-            else if (Mode == ReceiptStatus.Asn)
+            else if (Mode == Mode.Asn)
             {
                 if (SelectedPurchaseOrder.CreatedAsn == true)
                 {
@@ -186,7 +186,7 @@ namespace Vanme_Pro
 
 
             }
-            else if (Mode == ReceiptStatus.Grn)
+            else if (Mode == Mode.Grn)
             {
                 if (SelectedPurchaseOrder.CreatedGrn == true)
                 {
@@ -226,14 +226,14 @@ namespace Vanme_Pro
         {
             SumPrice = 0;
             ItemsCountInPO = 0;
-            if (Mode == ReceiptStatus.PO)
+            if (Mode == Mode.PO)
             {
                 SumPrice = items.Sum(p => p.PoItemsPrice);
                 ItemsCountInPO = items.Sum(p => p.PoQuantity);
 
                 TxtTotalPrice.Text = SumPrice.ToString();
             }
-            else if (Mode == ReceiptStatus.Asn)
+            else if (Mode == Mode.Asn)
             {
                 SumPrice = items.Sum(p => p.AsnItemsPrice);
                 ItemsCountInPO = items.Sum(p => p.AsnQuantity);
@@ -266,7 +266,7 @@ namespace Vanme_Pro
             if (pOrder.Items != null)
                 itemsList = pOrder.Items.ToList();
 
-            if (Mode == ReceiptStatus.PO)
+            if (Mode == Mode.PO)
             {
                 txtPoNumber.Text = pOrder.PoNumber.ShowPoNumber();
                 cmbVendor.SelectedValue = pOrder.Vendor_fk;
@@ -292,13 +292,9 @@ namespace Vanme_Pro
                     lblSave.Content = "Update";
                 }
 
-                btnNewPurchaseOrder.Visibility = Visibility.Visible;
-                btnAddItem.Visibility = Visibility.Visible;
-                btnSave.Visibility = Visibility.Visible;
-                btnRemove.Visibility = Visibility.Visible;
-                btnDone.Visibility = Visibility.Visible;
+                ShowSideBar(Mode.PO, 1);
             }
-            else if (Mode == ReceiptStatus.Asn)
+            else if (Mode == Mode.Asn)
             {
                 txtPoNumber.Text = pOrder.Asnumber.ShowAsnNumber();
                 cmbVendor.SelectedValue = pOrder.Vendor_fk;
@@ -313,13 +309,9 @@ namespace Vanme_Pro
                 lblNumber.Content = "GIT # ";
                 FillDataGrid(itemsList);
 
-                btnNewPurchaseOrder.Visibility = Visibility.Visible;
-                btnAddItem.Visibility = Visibility.Visible;
-                btnSave.Visibility = Visibility.Visible;
-                btnRemove.Visibility = Visibility.Visible;
-                btnDone.Visibility = Visibility.Visible;
+                ShowSideBar(Mode.Asn, 2);
             }
-            else if (Mode == ReceiptStatus.Grn)
+            else if (Mode == Mode.Grn)
             {
                 txtPoNumber.Text = pOrder.Grnumber.ShowGrnNumber();
                 cmbVendor.SelectedValue = pOrder.Vendor_fk;
@@ -334,11 +326,7 @@ namespace Vanme_Pro
                 lblNumber.Content = "GRN # ";
                 FillDataGrid(itemsList);
 
-                btnNewPurchaseOrder.Visibility = Visibility.Collapsed;
-                btnAddItem.Visibility = Visibility.Collapsed;
-                btnSave.Visibility = Visibility.Visible;
-                btnRemove.Visibility = Visibility.Collapsed;
-                btnDone.Visibility = Visibility.Visible;
+                ShowSideBar(Mode.Grn, 2);
             }
             else
             {
@@ -356,7 +344,7 @@ namespace Vanme_Pro
 
         void FillDataGrid(List<Item> list, bool Pre = true)
         {
-            if (Mode == ReceiptStatus.PO)
+            if (Mode == Mode.PO)
             {
                 DataGridItems.Columns[5].Header = "Previous Quantity";
                 DataGridItems.Columns[6].Header = "Quantity ( PO )";
@@ -368,7 +356,7 @@ namespace Vanme_Pro
                     VARIABLE.TotalItemPrice = VARIABLE.PoItemsPrice;
                 }
             }
-            else if (Mode == ReceiptStatus.Asn)
+            else if (Mode == Mode.Asn)
             {
                 DataGridItems.Columns[5].Header = "Quantity ( PO )";
                 DataGridItems.Columns[6].Header = "Quantity ( GIT )";
@@ -381,7 +369,7 @@ namespace Vanme_Pro
                     VARIABLE.TotalItemPrice = VARIABLE.AsnItemsPrice;
                 }
             }
-            else if (Mode == ReceiptStatus.Grn)
+            else if (Mode == Mode.Grn)
             {
                 DataGridItems.Columns[5].Header = "Quantity ( GIT )";
                 DataGridItems.Columns[6].Header = "Quantity ( GRN )";
@@ -417,24 +405,24 @@ namespace Vanme_Pro
 
             if (IsViewDetail)
             {
-                if (Mode == ReceiptStatus.PO)
+                if (Mode == Mode.PO)
                 {
 
                     lvPurchase.ItemsSource = db.PurchaseOrders.Include(p => p.Items).Include(p => p.Vendor).ToList();
                     GrdNewPurchersOrder.Visibility = Visibility.Hidden;
                     GrdPurchesOrderList.Visibility = Visibility.Visible;
-                    SetSideBar();
+                    ShowSideBar(Mode.PO);
                     IsViewDetail = false;
                 }
-                else if (Mode == ReceiptStatus.Asn)
+                else if (Mode == Mode.Asn)
                 {
-                    Mode = ReceiptStatus.PO;
+                    Mode = Mode.PO;
                     lblNewPo.Content = "New PO";
                     FillPerchaseOrderPage(SelectedPurchaseOrder);
                 }
-                else if (Mode == ReceiptStatus.Grn)
+                else if (Mode == Mode.Grn)
                 {
-                    Mode = ReceiptStatus.PO;
+                    Mode = Mode.PO;
                     lblNewPo.Content = "New PO";
                     FillPerchaseOrderPage(SelectedPurchaseOrder);
                 }
@@ -445,23 +433,15 @@ namespace Vanme_Pro
             }
             else
             {
-                Mode = ReceiptStatus.PO;
+                Mode = Mode.PO;
                 lblNewPo.Content = "New PO";
                 lvPurchase.ItemsSource = db.PurchaseOrders.Include(p => p.Items).Include(p => p.Vendor).ToList();
                 GrdNewPurchersOrder.Visibility = Visibility.Hidden;
                 GrdPurchesOrderList.Visibility = Visibility.Visible;
-                SetSideBar();
+                ShowSideBar(Mode.PO);
 
             }
 
-            void SetSideBar()
-            {
-                btnNewPurchaseOrder.Visibility = Visibility.Visible;
-                btnAddItem.Visibility = Visibility.Collapsed;
-                btnSave.Visibility = Visibility.Collapsed;
-                btnRemove.Visibility = Visibility.Collapsed;
-                btnDone.Visibility = Visibility.Collapsed;
-            }
 
         }
 
@@ -474,27 +454,27 @@ namespace Vanme_Pro
 
                 switch (Mode)
                 {
-                    case ReceiptStatus.Asn:
+                    case Mode.Asn:
                         {
                             lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedPO == true)
                                 .Include(p => p.Items).Include(p => p.Vendor).ToList();
                             GrdNewPurchersOrder.Visibility = Visibility.Hidden;
                             GrdPurchesOrderList.Visibility = Visibility.Visible;
                             IsViewDetail = false;
-                            SetSideBar();
+                            ShowSideBar(Mode.Asn);
 
                             break;
                         }
-                    case ReceiptStatus.PO:
+                    case Mode.PO:
                         {
-                            Mode = ReceiptStatus.Asn;
+                            Mode = Mode.Asn;
                             lblNewPo.Content = "New GIT";
                             FillPerchaseOrderPage(SelectedPurchaseOrder);
                             break;
                         }
-                    case ReceiptStatus.Grn:
+                    case Mode.Grn:
                         {
-                            Mode = ReceiptStatus.Asn;
+                            Mode = Mode.Asn;
                             lblNewPo.Content = "New GIT";
                             FillPerchaseOrderPage(SelectedPurchaseOrder);
                             break;
@@ -508,24 +488,17 @@ namespace Vanme_Pro
             }
             else
             {
-                Mode = ReceiptStatus.Asn;
+                Mode = Mode.Asn;
                 lblNewPo.Content = "New GIT";
 
                 lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedPO == true)
                     .Include(p => p.Items).Include(p => p.Vendor).ToList();
                 GrdNewPurchersOrder.Visibility = Visibility.Hidden;
                 GrdPurchesOrderList.Visibility = Visibility.Visible;
-                SetSideBar();
+                ShowSideBar(Mode.Asn);
             }
 
-            void SetSideBar()
-            {
-                btnNewPurchaseOrder.Visibility = Visibility.Visible;
-                btnAddItem.Visibility = Visibility.Collapsed;
-                btnSave.Visibility = Visibility.Collapsed;
-                btnRemove.Visibility = Visibility.Collapsed;
-                btnDone.Visibility = Visibility.Collapsed;
-            }
+
 
         }
 
@@ -535,7 +508,7 @@ namespace Vanme_Pro
 
             if (IsViewDetail)
             {
-                if (Mode == ReceiptStatus.Grn)
+                if (Mode == Mode.Grn)
                 {
 
                     lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedAsn == true)
@@ -543,16 +516,16 @@ namespace Vanme_Pro
                     GrdNewPurchersOrder.Visibility = Visibility.Hidden;
                     GrdPurchesOrderList.Visibility = Visibility.Visible;
                     IsViewDetail = false;
-                    SetSideBar();
+                    ShowSideBar(Mode.Grn);
                 }
-                else if (Mode == ReceiptStatus.PO)
+                else if (Mode == Mode.PO)
                 {
-                    Mode = ReceiptStatus.Grn;
+                    Mode = Mode.Grn;
                     FillPerchaseOrderPage(SelectedPurchaseOrder);
                 }
-                else if (Mode == ReceiptStatus.Asn)
+                else if (Mode == Mode.Asn)
                 {
-                    Mode = ReceiptStatus.Grn;
+                    Mode = Mode.Grn;
                     FillPerchaseOrderPage(SelectedPurchaseOrder);
                 }
                 else
@@ -563,24 +536,82 @@ namespace Vanme_Pro
             }
             else
             {
-                Mode = ReceiptStatus.Grn;
+                Mode = Mode.Grn;
 
                 lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedAsn == true)
                     .Include(p => p.Items).Include(p => p.Vendor).ToList();
                 GrdNewPurchersOrder.Visibility = Visibility.Hidden;
                 GrdPurchesOrderList.Visibility = Visibility.Visible;
-                SetSideBar();
+                ShowSideBar(Mode.Grn);
 
             }
-            void SetSideBar()
+
+        }
+
+        void ShowSideBar(Mode mode, int sub = 1)
+        {
+            switch (mode)
             {
-                btnNewPurchaseOrder.Visibility = Visibility.Collapsed;
-                btnAddItem.Visibility = Visibility.Collapsed;
-                btnSave.Visibility = Visibility.Collapsed;
-                btnRemove.Visibility = Visibility.Collapsed;
-                btnDone.Visibility = Visibility.Collapsed;
-            }
+                case Mode.PO:
+                    if (sub == 2)
+                    {
+                        btnNewPurchaseOrder.Visibility = Visibility.Visible;
+                        btnAddItem.Visibility = Visibility.Visible;
+                        btnSave.Visibility = Visibility.Visible;
+                        btnRemove.Visibility = Visibility.Visible;
+                        btnDone.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        btnNewPurchaseOrder.Visibility = Visibility.Visible;
+                        btnAddItem.Visibility = Visibility.Collapsed;
+                        btnSave.Visibility = Visibility.Collapsed;
+                        btnRemove.Visibility = Visibility.Collapsed;
+                        btnDone.Visibility = Visibility.Collapsed;
+                    }
+                    break;
+                case Mode.Asn:
+                    if (sub == 2)
+                    {
+                        btnNewPurchaseOrder.Visibility = Visibility.Visible;
+                        btnAddItem.Visibility = Visibility.Visible;
+                        btnSave.Visibility = Visibility.Visible;
+                        btnRemove.Visibility = Visibility.Visible;
+                        btnDone.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        btnNewPurchaseOrder.Visibility = Visibility.Visible;
+                        btnAddItem.Visibility = Visibility.Collapsed;
+                        btnSave.Visibility = Visibility.Collapsed;
+                        btnRemove.Visibility = Visibility.Collapsed;
+                        btnDone.Visibility = Visibility.Collapsed;
+                    }
 
+                    break;
+                case Mode.Grn:
+                    if (sub == 2)
+                    {
+                        btnNewPurchaseOrder.Visibility = Visibility.Collapsed;
+                        btnAddItem.Visibility = Visibility.Collapsed;
+                        btnSave.Visibility = Visibility.Visible;
+                        btnRemove.Visibility = Visibility.Collapsed;
+                        btnDone.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        btnNewPurchaseOrder.Visibility = Visibility.Collapsed;
+                        btnAddItem.Visibility = Visibility.Collapsed;
+                        btnSave.Visibility = Visibility.Collapsed;
+                        btnRemove.Visibility = Visibility.Collapsed;
+                        btnDone.Visibility = Visibility.Collapsed;
+                    }
+
+                    break;
+                case Mode.Sale:
+
+                    break;
+            }
         }
 
         private void BtnSave_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -632,7 +663,7 @@ namespace Vanme_Pro
                 SaveMode = false;
             }
             PurchaseOrder Po = new PurchaseOrder();
-            if (Mode == ReceiptStatus.PO)
+            if (Mode == Mode.PO)
             {
 
                 if (state == State.Save)
@@ -745,7 +776,7 @@ namespace Vanme_Pro
 
             }
 
-            else if (Mode == ReceiptStatus.Asn)
+            else if (Mode == Mode.Asn)
             {
                 if (state == State.Save)
                 {
@@ -865,7 +896,7 @@ namespace Vanme_Pro
 
 
             }
-            else if (Mode == ReceiptStatus.Grn)
+            else if (Mode == Mode.Grn)
             {
 
                 Po = SelectedPurchaseOrder;

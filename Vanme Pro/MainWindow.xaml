@@ -309,7 +309,6 @@
             </ListView>
 
         </Grid>
-
         <Grid Name="GrdProductList" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.2*"/>

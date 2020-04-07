@@ -11,10 +11,11 @@ namespace Vanme_Pro_Tests
         {
             int x = 3;
             int y = 4;
-
+            
             var z = x + y;
 
             Assert.AreEqual(z, 7);
         }
+        
     }
 }

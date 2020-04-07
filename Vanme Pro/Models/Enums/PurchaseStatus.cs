@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Vanme_Pro
 {
-    public enum ReceiptStatus
+    public enum Mode
         {
             PO = 1,
             Asn = 2,
             Grn = 3,
-            nothing=4
+            Sale=4,
 
         }
 

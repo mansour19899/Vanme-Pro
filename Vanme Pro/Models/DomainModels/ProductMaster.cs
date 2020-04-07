@@ -22,6 +22,7 @@ namespace Vanme_Pro.Models.DomainModels
         public string MadeIn { get; set; }
         public Nullable<decimal> Cost { get; set; }
         public Nullable<decimal> Price { get; set; }
+        public Nullable<decimal> ReceiptPrice { get; set; }
         public string Margin { get; set; }
         public int Inventory { get; set; }
         public int Income { get; set; }
