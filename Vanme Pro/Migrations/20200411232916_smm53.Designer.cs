@@ -10,8 +10,8 @@ using Vanme_Pro.Models.Context;
 namespace Vanme_Pro.Migrations
 {
     [DbContext(typeof(dbContext))]
-    [Migration("20200403004944_smm66")]
-    partial class smm66
+    [Migration("20200411232916_smm53")]
+    partial class smm53
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,13 +21,81 @@ namespace Vanme_Pro.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Vanme_Pro.Models.DomainModels.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Address1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Address2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Address3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("BirthDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Company")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CreatedBy_fk")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EditedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Gender")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastSaleDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Customers");
+                });
+
             modelBuilder.Entity("Vanme_Pro.Models.DomainModels.Item", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<string>("Aile")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool?>("Alert")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<decimal>("AsnItemsPrice")
                         .HasColumnType("decimal(18,2)");
@@ -40,8 +108,13 @@ namespace Vanme_Pro.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<string>("Bin")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool?>("Checked")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("Diffrent")
                         .HasColumnType("int");
@@ -73,18 +146,45 @@ namespace Vanme_Pro.Migrations
                     b.Property<int>("ProductMaster_fk")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Warehouse_fk")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Po_fk");
 
                     b.HasIndex("ProductMaster_fk");
 
+                    b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("Vanme_Pro.Models.DomainModels.ProductInventoryWarehouse", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Aile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Bin")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Inventory")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OnTheWayInventory")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductMaster_fk")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Warehouse_fk")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductMaster_fk");
+
                     b.HasIndex("Warehouse_fk");
 
-                    b.ToTable("Items");
+                    b.ToTable("ProductInventoryWarehouses");
                 });
 
             modelBuilder.Entity("Vanme_Pro.Models.DomainModels.ProductMaster", b =>
@@ -110,6 +210,9 @@ namespace Vanme_Pro.Migrations
                     b.Property<int>("Inventory")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("LastUpdateInventory")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("MadeIn")
                         .HasColumnType("nvarchar(max)");
 
@@ -129,6 +232,9 @@ namespace Vanme_Pro.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("ReceiptPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("SKU")
@@ -159,6 +265,15 @@ namespace Vanme_Pro.Migrations
                     b.Property<string>("Account")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ApproveAsnUser_fk")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ApproveGrnUser_fk")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ApprovePoUser_fk")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("AsnDate")
                         .HasColumnType("datetime2");
 
@@ -172,6 +287,9 @@ namespace Vanme_Pro.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CancelDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("CreateOrder")
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("CreatedAsn")
@@ -200,6 +318,9 @@ namespace Vanme_Pro.Migrations
 
                     b.Property<decimal?>("Freight")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("FromWarehouse_fk")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("GrnDate")
                         .HasColumnType("datetime2");
@@ -240,14 +361,72 @@ namespace Vanme_Pro.Migrations
                     b.Property<string>("ShipToStore")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ToWarehouse_fk")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Vendor_fk")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApproveAsnUser_fk");
+
+                    b.HasIndex("ApproveGrnUser_fk");
+
+                    b.HasIndex("ApprovePoUser_fk");
+
+                    b.HasIndex("FromWarehouse_fk");
+
+                    b.HasIndex("ToWarehouse_fk");
+
                     b.HasIndex("Vendor_fk");
 
                     b.ToTable("PurchaseOrders");
+                });
+
+            modelBuilder.Entity("Vanme_Pro.Models.DomainModels.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAdmin")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsCashier")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsVisitor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Lavel")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NickName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("0");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Vanme_Pro.Models.DomainModels.Vendor", b =>
@@ -341,7 +520,7 @@ namespace Vanme_Pro.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Warehouse");
+                    b.ToTable("Warehouses");
                 });
 
             modelBuilder.Entity("Vanme_Pro.Models.DomainModels.Item", b =>
@@ -357,14 +536,41 @@ namespace Vanme_Pro.Migrations
                         .HasForeignKey("ProductMaster_fk")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Vanme_Pro.Models.DomainModels.ProductInventoryWarehouse", b =>
+                {
+                    b.HasOne("Vanme_Pro.Models.DomainModels.ProductMaster", "ProductMaster")
+                        .WithMany("ProductInventoryWarehouses")
+                        .HasForeignKey("ProductMaster_fk");
 
                     b.HasOne("Vanme_Pro.Models.DomainModels.Warehouse", "Warehouse")
-                        .WithMany("Items")
+                        .WithMany("ProductInventoryWarehouses")
                         .HasForeignKey("Warehouse_fk");
                 });
 
             modelBuilder.Entity("Vanme_Pro.Models.DomainModels.PurchaseOrder", b =>
                 {
+                    b.HasOne("Vanme_Pro.Models.DomainModels.User", "UserCreateAsn")
+                        .WithMany("CreateAsn")
+                        .HasForeignKey("ApproveAsnUser_fk");
+
+                    b.HasOne("Vanme_Pro.Models.DomainModels.User", "UserCreateGrn")
+                        .WithMany("CreateGrn")
+                        .HasForeignKey("ApproveGrnUser_fk");
+
+                    b.HasOne("Vanme_Pro.Models.DomainModels.User", "UserCreatePo")
+                        .WithMany("CreatePo")
+                        .HasForeignKey("ApprovePoUser_fk");
+
+                    b.HasOne("Vanme_Pro.Models.DomainModels.Warehouse", "FromWarehouse")
+                        .WithMany("POFromWarehouse")
+                        .HasForeignKey("FromWarehouse_fk");
+
+                    b.HasOne("Vanme_Pro.Models.DomainModels.Warehouse", "ToWarehouse")
+                        .WithMany("PoToWareHose")
+                        .HasForeignKey("ToWarehouse_fk");
+
                     b.HasOne("Vanme_Pro.Models.DomainModels.Vendor", "Vendor")
                         .WithMany("PurchaseOrders")
                         .HasForeignKey("Vendor_fk");

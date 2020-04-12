@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace Vanme_Pro.Models.DomainModels
 {
@@ -15,6 +16,14 @@ namespace Vanme_Pro.Models.DomainModels
         public string UserName { get; set; }
         public string Password { get; set; }
         public int Lavel { get; set; }
+        public bool IsAdmin { get; set; }
+        public bool IsVisitor { get; set; }
+        public bool IsCashier { get; set; }
+        //public bool IsCashier { get; set; }
+
+        public ICollection<PurchaseOrder> CreatePo { get; set; }
+        public ICollection<PurchaseOrder> CreateAsn { get; set; }
+        public ICollection<PurchaseOrder> CreateGrn { get; set; }
 
     }
 }

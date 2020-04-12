@@ -14,6 +14,8 @@ namespace Vanme_Pro.Models.DomainModels
         public string Address { get; set; }
         public string Tel { get; set; }
         public string Note { get; set; }
-        public ICollection<Item> Items { get; set; }
+        public ICollection<PurchaseOrder> PoToWareHose { get; set; }
+        public ICollection<PurchaseOrder> POFromWarehouse { get; set; }
+        public ICollection<ProductInventoryWarehouse> ProductInventoryWarehouses { get; set; }
     }
 }

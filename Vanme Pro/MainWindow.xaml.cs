@@ -40,6 +40,7 @@ namespace Vanme_Pro
         private SnackbarMessageQueue myMessageQueue;
         private bool IsViewDetail = false;
         private bool IsDone = false;
+        private User user;
         public MainWindow()
         {
             InitializeComponent();
@@ -49,17 +50,22 @@ namespace Vanme_Pro
             PurchaseOrder PO = new PurchaseOrder() { Id = 1234 };
             txtPoNumber.Text = "1234";
             db = new dbContext();
-
+            ShowSideBar(Mode);
             itemsList = new List<Item>();
-
+            AddNewitemsList = new List<Item>();
             //   var productlList = db.Products.ToList();
             var productlList = db.Products;
+
             lvProducts.ItemsSource = productlList.ToList();
 
+            user = db.Users.FirstOrDefault();
 
+            var VendorList = db.Vendors.ToList();
+            cmbVendor.ItemsSource = VendorList;
 
-            var tre = db.Vendors.ToList();
-            cmbVendor.ItemsSource = tre;
+            var StoreList = db.Warehouses.ToList();
+            cmbShipToStore.ItemsSource = StoreList;
+            cmbShipFrom.ItemsSource = StoreList;
 
             DataGridItems.ItemsSource = null;
 
@@ -84,14 +90,30 @@ namespace Vanme_Pro
             if (state == State.Save)
 
             {
-                itemsList.Add(new Item() { Id = StepAddItem, ProductMaster = wer, PoPrice = wer.Price.Value, PoQuantity = 0, PoItemsPrice = 0 });
+                if (itemsList.Any(p => p.ProductMaster.Id == wer.Id))
+                {
+
+                }
+                else
+                {
+                    itemsList.Add(new Item() { Id = StepAddItem, ProductMaster_fk = wer.Id,ProductMaster = wer, PoPrice = wer.Price.Value, AsnPrice = wer.Price.Value, PoQuantity = 0, PoItemsPrice = 0 });
+                }
+                   
 
                 FillDataGrid(itemsList);
             }
 
             else
             {
-                AddNewitemsList.Add(new Item() { Id = StepAddItem, ProductMaster = wer, PoPrice = wer.Price.Value, PoQuantity = 0, PoItemsPrice = 0 });
+                if (AddNewitemsList.Any(p => p.ProductMaster.Id == wer.Id)|| itemsList.Any(p => p.ProductMaster.Id == wer.Id))
+                {
+
+                }
+                else
+                {
+                    AddNewitemsList.Add(new Item() { Id = StepAddItem, ProductMaster = wer, PoPrice = wer.Price.Value, AsnPrice = wer.Price.Value, PoQuantity = 0, PoItemsPrice = 0 });
+                }
+                    
                 FillDataGrid(itemsList.Concat(AddNewitemsList).ToList());
 
             }
@@ -125,6 +147,8 @@ namespace Vanme_Pro
 
             Items = itemsList.Concat(AddNewitemsList).ToList();
 
+
+
             int x = 0;
             DataGridColumn col1 = e.Column;
             DataGridRow row1 = e.Row;
@@ -136,6 +160,8 @@ namespace Vanme_Pro
             var SelectItem = Items.FirstOrDefault(p => p.Id == t.Id);
             string header = col1.Header as string;
 
+            if (state == State.Save)
+                SelectedPurchaseOrder = new PurchaseOrder();
 
             if (Mode == Mode.PO)
             {
@@ -150,6 +176,7 @@ namespace Vanme_Pro
                         var Price = Convert.ToDecimal(((TextBox)e.EditingElement).Text);
                         SelectItem.PoItemsPrice = Convert.ToDecimal(t.CurrentQuantity * Price);
                         SelectItem.PoPrice = Price;
+                        SelectItem.AsnPrice = Price;
                     }
                     else
                     {
@@ -178,7 +205,7 @@ namespace Vanme_Pro
                     else
                     {
                         var QyT = Convert.ToInt32(((TextBox)e.EditingElement).Text);
-                        SelectItem.AsnItemsPrice = Convert.ToDecimal(t.PoPrice * QyT);
+                        SelectItem.AsnItemsPrice = Convert.ToDecimal(t.AsnPrice * QyT);
                         SelectItem.AsnQuantity = QyT;
                     }
                 }
@@ -261,7 +288,6 @@ namespace Vanme_Pro
         private void FillPerchaseOrderPage(PurchaseOrder pOrder)
         {
 
-            AddNewitemsList = new List<Item>();
             itemsList.Clear();
             if (pOrder.Items != null)
                 itemsList = pOrder.Items.ToList();
@@ -274,6 +300,8 @@ namespace Vanme_Pro
                 dpiOrderDate.SelectedDate = pOrder.OrderDate;
                 dpiShipDate.SelectedDate = pOrder.ShipDate;
                 dpiCancelDate.SelectedDate = pOrder.CancelDate;
+                cmbShipFrom.SelectedValue = pOrder.FromWarehouse_fk;
+                cmbShipToStore.SelectedValue = pOrder.ToWarehouse_fk;
                 if (pOrder.LastEditDate != null)
                     txtLastEdit.Text = pOrder.LastEditDate.Value.ToLongDateString();
                 lblOrderDate.Content = "Order Date ";
@@ -292,12 +320,14 @@ namespace Vanme_Pro
                     lblSave.Content = "Update";
                 }
 
-                ShowSideBar(Mode.PO, 1);
+                ShowSideBar(Mode.PO, 2);
             }
             else if (Mode == Mode.Asn)
             {
                 txtPoNumber.Text = pOrder.Asnumber.ShowAsnNumber();
                 cmbVendor.SelectedValue = pOrder.Vendor_fk;
+                cmbShipFrom.SelectedValue = pOrder.FromWarehouse_fk;
+                cmbShipToStore.SelectedValue = pOrder.ToWarehouse_fk;
                 TxtTotalPrice.Text = pOrder.AsnTotal.ToString();
                 dpiOrderDate.SelectedDate = pOrder.AsnDate;
                 dpiShipDate.SelectedDate = pOrder.ShipDate;
@@ -315,6 +345,8 @@ namespace Vanme_Pro
             {
                 txtPoNumber.Text = pOrder.Grnumber.ShowGrnNumber();
                 cmbVendor.SelectedValue = pOrder.Vendor_fk;
+                cmbShipFrom.SelectedValue = pOrder.FromWarehouse_fk;
+                cmbShipToStore.SelectedValue = pOrder.ToWarehouse_fk;
                 TxtTotalPrice.Text = pOrder.AsnTotal.ToString();
                 dpiOrderDate.SelectedDate = pOrder.GrnDate;
                 dpiShipDate.SelectedDate = pOrder.ShipDate;
@@ -354,6 +386,7 @@ namespace Vanme_Pro
                         VARIABLE.PreviousQuantity = VARIABLE.PoQuantity;
                     VARIABLE.CurrentQuantity = VARIABLE.PoQuantity;
                     VARIABLE.TotalItemPrice = VARIABLE.PoItemsPrice;
+                    VARIABLE.Price = VARIABLE.PoPrice;
                 }
             }
             else if (Mode == Mode.Asn)
@@ -367,6 +400,7 @@ namespace Vanme_Pro
                     VARIABLE.PreviousQuantity = VARIABLE.PoQuantity;
                     VARIABLE.CurrentQuantity = VARIABLE.AsnQuantity;
                     VARIABLE.TotalItemPrice = VARIABLE.AsnItemsPrice;
+                    VARIABLE.Price = VARIABLE.AsnPrice;
                 }
             }
             else if (Mode == Mode.Grn)
@@ -380,6 +414,7 @@ namespace Vanme_Pro
                     VARIABLE.PreviousQuantity = VARIABLE.AsnQuantity;
                     VARIABLE.CurrentQuantity = VARIABLE.GrnQuantity;
                     VARIABLE.TotalItemPrice = VARIABLE.AsnItemsPrice;
+                    VARIABLE.Price = VARIABLE.AsnPrice;
                 }
             }
             else
@@ -402,14 +437,16 @@ namespace Vanme_Pro
         }
         private void BtnPurchaseOrder_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            AddNewitemsList.Clear();
+            RemoveItemsList.Clear();
             if (IsViewDetail)
             {
                 if (Mode == Mode.PO)
                 {
 
-                    lvPurchase.ItemsSource = db.PurchaseOrders.Include(p => p.Items).Include(p => p.Vendor).ToList();
+                    lvPurchase.ItemsSource = db.PurchaseOrders.Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
                     GrdNewPurchersOrder.Visibility = Visibility.Hidden;
+                    GrdProductList.Visibility = Visibility.Hidden;
                     GrdPurchesOrderList.Visibility = Visibility.Visible;
                     ShowSideBar(Mode.PO);
                     IsViewDetail = false;
@@ -435,7 +472,8 @@ namespace Vanme_Pro
             {
                 Mode = Mode.PO;
                 lblNewPo.Content = "New PO";
-                lvPurchase.ItemsSource = db.PurchaseOrders.Include(p => p.Items).Include(p => p.Vendor).ToList();
+                lvPurchase.ItemsSource = db.PurchaseOrders.Include(p => p.Items).ThenInclude(p=>p.ProductMaster).Include(p => p.Vendor).ToList();
+                GrdProductList.Visibility = Visibility.Hidden;
                 GrdNewPurchersOrder.Visibility = Visibility.Hidden;
                 GrdPurchesOrderList.Visibility = Visibility.Visible;
                 ShowSideBar(Mode.PO);
@@ -448,7 +486,8 @@ namespace Vanme_Pro
 
         private void BtnAsnVorchers_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            AddNewitemsList.Clear();
+            RemoveItemsList.Clear();
             if (IsViewDetail)
             {
 
@@ -457,8 +496,9 @@ namespace Vanme_Pro
                     case Mode.Asn:
                         {
                             lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedPO == true)
-                                .Include(p => p.Items).Include(p => p.Vendor).ToList();
+                                .Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
                             GrdNewPurchersOrder.Visibility = Visibility.Hidden;
+                            GrdProductList.Visibility = Visibility.Hidden;
                             GrdPurchesOrderList.Visibility = Visibility.Visible;
                             IsViewDetail = false;
                             ShowSideBar(Mode.Asn);
@@ -492,7 +532,8 @@ namespace Vanme_Pro
                 lblNewPo.Content = "New GIT";
 
                 lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedPO == true)
-                    .Include(p => p.Items).Include(p => p.Vendor).ToList();
+                    .Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
+                GrdProductList.Visibility = Visibility.Hidden;
                 GrdNewPurchersOrder.Visibility = Visibility.Hidden;
                 GrdPurchesOrderList.Visibility = Visibility.Visible;
                 ShowSideBar(Mode.Asn);
@@ -504,7 +545,8 @@ namespace Vanme_Pro
 
         private void BtnGrn_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            AddNewitemsList.Clear();
+            RemoveItemsList.Clear();
 
             if (IsViewDetail)
             {
@@ -512,8 +554,9 @@ namespace Vanme_Pro
                 {
 
                     lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedAsn == true)
-                        .Include(p => p.Items).Include(p => p.Vendor).ToList();
+                        .Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
                     GrdNewPurchersOrder.Visibility = Visibility.Hidden;
+                    GrdProductList.Visibility = Visibility.Hidden;
                     GrdPurchesOrderList.Visibility = Visibility.Visible;
                     IsViewDetail = false;
                     ShowSideBar(Mode.Grn);
@@ -539,7 +582,8 @@ namespace Vanme_Pro
                 Mode = Mode.Grn;
 
                 lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedAsn == true)
-                    .Include(p => p.Items).Include(p => p.Vendor).ToList();
+                    .Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
+                GrdProductList.Visibility = Visibility.Hidden;
                 GrdNewPurchersOrder.Visibility = Visibility.Hidden;
                 GrdPurchesOrderList.Visibility = Visibility.Visible;
                 ShowSideBar(Mode.Grn);
@@ -671,6 +715,7 @@ namespace Vanme_Pro
                     Po.Id = db.PurchaseOrders.Max(p => p.Id) + 1;
                     Po.CreateOrder = DateTime.Now;
                     Save = true;
+                    state = State.Update;
                 }
                 else
                 {
@@ -684,13 +729,20 @@ namespace Vanme_Pro
                 else
                 {
                     if (Po.PoNumber == 0 && done)
+                    {
                         Po.PoNumber = db.PurchaseOrders.Max(p => p.PoNumber) + 1;
+                        Po.ApprovePoUser_fk = user.Id;
+                        Po.CreatedPO = true;
+                    }
+
                     vendorfk = Convert.ToInt32(cmbVendor.SelectedValue);
                     if (vendorfk != 0)
                         Po.Vendor_fk = vendorfk;
                     Po.OrderDate = dpiOrderDate.SelectedDate;
                     Po.ShipDate = dpiShipDate.SelectedDate;
                     Po.CancelDate = dpiCancelDate.SelectedDate;
+                    Po.FromWarehouse_fk = Convert.ToInt32(cmbShipFrom.SelectedValue);
+                    Po.ToWarehouse_fk = Convert.ToInt32(cmbShipToStore.SelectedValue);
                     Po.LastEditDate = DateTime.Now;
                     if (!string.IsNullOrWhiteSpace(TxtTotalPrice.Text))
                         Po.PoTotal = Convert.ToDecimal(TxtTotalPrice.Text);
@@ -700,7 +752,9 @@ namespace Vanme_Pro
                     {
                         db.PurchaseOrders.Add(Po);
                         db.SaveChanges();
+                        SelectedPurchaseOrder = Po;
                         int lastId = db.Items.Max(p => p.Id);
+
                         foreach (Item VARIABLE in itemsList)
                         {
                             lastId++;
@@ -724,8 +778,6 @@ namespace Vanme_Pro
                         }
                     }
 
-                    if (done)
-                        Po.CreatedPO = true;
 
 
                     if (done)
@@ -758,7 +810,7 @@ namespace Vanme_Pro
 
                     }
 
-                    if (RemoveItemsList.Count > 0)
+                    if (RemoveItemsList.Count > 0 && !Save)
                     {
                         foreach (var VARIABLE in RemoveItemsList)
                         {
@@ -766,6 +818,7 @@ namespace Vanme_Pro
                         }
                     }
                     db.SaveChanges();
+                    itemsList.AddRange(AddNewitemsList);
                     AddNewitemsList.Clear();
                     RemoveItemsList.Clear();
                     myMessageQueue.Enqueue(message);
@@ -796,13 +849,20 @@ namespace Vanme_Pro
                 else
                 {
                     if (Po.Asnumber == 0 && done)
+                    {
                         Po.Asnumber = db.PurchaseOrders.Max(p => p.Asnumber) + 1;
+                        Po.ApproveAsnUser_fk = user.Id;
+                        Po.CreatedAsn = true;
+                    }
+
                     vendorfk = Convert.ToInt32(cmbVendor.SelectedValue);
                     if (vendorfk != 0)
                         Po.Vendor_fk = vendorfk;
                     Po.AsnDate = dpiOrderDate.SelectedDate;
                     Po.ShipDate = dpiShipDate.SelectedDate;
                     Po.CancelDate = dpiCancelDate.SelectedDate;
+                    Po.FromWarehouse_fk = Convert.ToInt32(cmbShipFrom.SelectedValue);
+                    Po.ToWarehouse_fk = Convert.ToInt32(cmbShipToStore.SelectedValue);
                     Po.LastEditDate = DateTime.Now;
                     if (!string.IsNullOrWhiteSpace(TxtTotalPrice.Text))
                         Po.AsnTotal = Convert.ToDecimal(TxtTotalPrice.Text);
@@ -838,8 +898,6 @@ namespace Vanme_Pro
                         }
                     }
 
-                    if (done)
-                        Po.CreatedAsn = true;
 
                     if (done)
                     {
@@ -880,13 +938,34 @@ namespace Vanme_Pro
                     }
                     if (done)
                     {
+                        var ree = db.ProductInventoryWarehouses.Max(p => p.Id);
+
                         foreach (Item VARIABLE in itemsList.Concat(AddNewitemsList))
                         {
+                            ree++;
+                            ProductInventoryWarehouse re = db.ProductInventoryWarehouses.SingleOrDefault(p =>
+                                p.ProductMaster_fk == VARIABLE.ProductMaster_fk &&
+                                p.Warehouse_fk == VARIABLE.PurchaseOrder.ToWarehouse_fk);
+                            if (re != null)
+                            {
+                                re.OnTheWayInventory += VARIABLE.AsnQuantity;
+                                db.ProductInventoryWarehouses.Update(re);
+                            }
+                            else
+                            {
+                                re = new ProductInventoryWarehouse();
+                                re.Id = ree;
+                                re.ProductMaster_fk = VARIABLE.ProductMaster_fk;
+                                re.Warehouse_fk = VARIABLE.PurchaseOrder.ToWarehouse_fk;
+                                re.OnTheWayInventory = VARIABLE.AsnQuantity;
+                                db.ProductInventoryWarehouses.Add(re);
+                            }
                             VARIABLE.ProductMaster.OnTheWayInventory += VARIABLE.AsnQuantity;
 
                         }
                     }
                     db.SaveChanges();
+                    itemsList.AddRange(AddNewitemsList);
                     AddNewitemsList.Clear();
                     RemoveItemsList.Clear();
                     myMessageQueue.Enqueue(message);
@@ -908,15 +987,19 @@ namespace Vanme_Pro
                 else
                 {
                     if (Po.Grnumber == 0 && done)
+                    {
                         Po.Grnumber = db.PurchaseOrders.Max(p => p.Grnumber) + 1;
+                        Po.ApproveGrnUser_fk = user.Id;
+                        Po.CreatedGrn = true;
+                    }
+
                     vendorfk = Convert.ToInt32(cmbVendor.SelectedValue);
                     Po.GrnDate = dpiOrderDate.SelectedDate;
                     Po.LastEditDate = DateTime.Now;
                     if (ItemsCountInPO != 0)
                         Po.ItemsGrnCount = ItemsCountInPO;
                     Po.LastEditDate = DateTime.Now;
-                    if (done)
-                        Po.CreatedGrn = true;
+
                     db.PurchaseOrders.Update(Po);
                     db.SaveChanges();
                     if (done)
@@ -938,21 +1021,26 @@ namespace Vanme_Pro
 
                     if (done)
                     {
+                        ProductInventoryWarehouse ree;
                         foreach (Item VARIABLE in itemsList)
                         {
+                            ree = db.ProductInventoryWarehouses.SingleOrDefault(p =>
+                                 p.ProductMaster_fk == VARIABLE.ProductMaster_fk &&
+                                 p.Warehouse_fk == VARIABLE.PurchaseOrder.ToWarehouse_fk);
+                            if (ree != null)
+                            {
+                                ree.Inventory += VARIABLE.GrnQuantity;
+                                ree.OnTheWayInventory -= VARIABLE.AsnQuantity;
+                            }
                             VARIABLE.ProductMaster.Income += VARIABLE.GrnQuantity;
                             VARIABLE.ProductMaster.Inventory += VARIABLE.GrnQuantity;
                             VARIABLE.ProductMaster.OnTheWayInventory -= VARIABLE.AsnQuantity;
-                            //VARIABLE.Diffrent = VARIABLE.AsnQuantity - VARIABLE.GrnQuantity;
-                            //if (VARIABLE.Diffrent.Value > 0)
-                            //    VARIABLE.Checked = true;
+
                         }
                     }
 
 
                     db.SaveChanges();
-                    AddNewitemsList.Clear();
-                    RemoveItemsList.Clear();
                     myMessageQueue.Enqueue(message);
                 }
 

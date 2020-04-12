@@ -40,8 +40,19 @@ namespace Vanme_Pro.Models.DomainModels
         public int? ItemsPoCount { get; set; }
         public int? ItemsAsnCount { get; set; }
         public int? ItemsGrnCount { get; set; }
+        public int? ToWarehouse_fk { get; set; }
+        public int? FromWarehouse_fk { get; set; }
+        public int? ApprovePoUser_fk{ get; set; }
+        public int? ApproveAsnUser_fk { get; set; }
+        public int? ApproveGrnUser_fk { get; set; }
+
 
         public ICollection<Item> Items { get; set; }
         public Vendor Vendor { get; set; }
+        public User UserCreatePo { get; set; }
+        public User UserCreateAsn { get; set; }
+        public User UserCreateGrn { get; set; }
+        public Warehouse ToWarehouse { get; set; }
+        public Warehouse FromWarehouse { get; set; }
     }
 }

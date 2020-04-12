@@ -80,11 +80,12 @@
                 <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Perchers Order"></Label>
 
                 <Image Name="btnAsnVorchers" Grid.Row="0" Grid.Column="1"   Source="Content/Images/icons8_cargo_ship_64px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnAsnVorchers_OnMouseDown" />
-                <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goods In Transit"></Label>
+                <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goods In Transit"/>
                 <!--<Rectangle Margin="20 5 20 5" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Fill="#FF2CB026"/>-->
                 <Image Name="btnGrn" Grid.Row="0" Grid.Column="2"   Source="Content/Images/icons8_borrow_book_64px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnGrn_OnMouseDown"/>
                 <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goods Recive Note"></Label>
-
+                <Image Name="btnSale" Grid.Row="0" Grid.Column="3" Grid.RowSpan="2"   Source="Content/Images/icons8_ticket_purchase_52px_1.png" Stretch="Uniform" Margin="10 20 10 20" MouseDown="BtnAsnVorchers_OnMouseDown" />
+                <Label Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Sale"/>
 
             </Grid>
 
@@ -137,10 +138,20 @@
                     <Label Name="lblSubHeader1" Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Type" />
                     <Label Name="lblNumber" Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="PO # " VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Name="txtPoNumber" Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
-                    <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="PO Type" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Ship From" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <ComboBox Name="cmbShipFrom" Grid.Row="2" Grid.Column="1"
+                              materialDesign:TextFieldAssist.HasClearButton="True"
+                              IsEditable="True"
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                              materialDesign:TextFieldAssist.SuffixText="sw"
+                              DisplayMemberPath="Name" SelectedValuePath="Id"/>
                     <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Ship to Store" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
+                    <ComboBox Name="cmbShipToStore" Grid.Row="3" Grid.Column="1"
+                              materialDesign:TextFieldAssist.HasClearButton="True"
+                              IsEditable="True"
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                              materialDesign:TextFieldAssist.SuffixText="sw"
+                              DisplayMemberPath="Name" SelectedValuePath="Id" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="From SO#" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
 
@@ -205,7 +216,7 @@
                     <DataGridTextColumn Header="UPC" Binding="{Binding ProductMaster.UPC}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Color" Binding="{Binding ProductMaster.Color}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Size" Binding="{Binding ProductMaster.Size}" Width="*" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Price" Binding="{Binding PoPrice}" Width="*"/>
+                    <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="*"/>
                     <DataGridTextColumn Header="Previous Quantity" Binding="{Binding PreviousQuantity}" Width="*" Foreground="#FF9C8F8F" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Quantity ( PO )" Binding="{Binding CurrentQuantity}" Width="*"/>
                     <DataGridTextColumn Header="TotalPrice" Binding="{Binding TotalItemPrice}" Width="*" IsReadOnly="True"/>
@@ -273,6 +284,180 @@
                 </StackPanel>
             </UniformGrid>
         </Grid>
+
+        <Grid Name="GrdSale" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.3*"/>
+                <RowDefinition Height="0.3*"/>
+                <RowDefinition Height="0.15*"/>
+                <RowDefinition Height="0.4*"/>
+            </Grid.RowDefinitions>
+            <UniformGrid Columns="3" Rows="1" Margin="0 5 0 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Name="lblSubHeader11" Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Customer Information" Grid.ColumnSpan="2"/>
+                    <Label Name="lblNumber11" Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Bill To Customer Lookup   " VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Name="txtBillToCustomerLookup" Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Bill To Full Name" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Name="txtBillToFullName" Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Bill To Customer ID" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Name="txtBillToCustomerID" Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Bill To Phone 1" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Name="txtBillToPhone1" Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
+
+                </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label  Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Receipt Information" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Receipt Type" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox  Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Receipt # " VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Sales Order " VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Cashier " VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
+
+                </Grid>
+                <StackPanel>
+                    <Label Content="Style Image" />
+                    <Border Height="150">
+                        <Image Name="imgSaleItem" Source="Content/Images/icons8_add_new_52px_3.png" Stretch="Uniform" />
+                    </Border>
+                </StackPanel>
+            </UniformGrid>
+            <DataGrid  Name="DataGridSaleItems" Margin="50 10 50 0" Grid.Row="1"  AutoGenerateColumns="False" CanUserAddRows="False" FontSize="20"  SelectionUnit="FullRow" AlternatingRowBackground="LightBlue" MouseDoubleClick="lvProducts_MouseDoubleClick" CellEditEnding="GrdListItem_CellEditEnding" Sorting="GrdListItem_Sorting">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Lookup" Binding="{Binding ProductMaster.StyleNumber}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="UPC" Binding="{Binding ProductMaster.UPC}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Desc1" Binding="{Binding ProductMaster.UPC}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header=" Rcpt Price" Binding="{Binding PoPrice}" Width="*"/>
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding CurrentQuantity}" Width="*"/>
+                    <DataGridTextColumn Header="Color" Binding="{Binding ProductMaster.Color}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Size" Binding="{Binding ProductMaster.Size}" Width="*" IsReadOnly="True"/>
+
+                </DataGrid.Columns>
+            </DataGrid>
+            <UniformGrid Grid.Row="2" Columns="5" Rows="1">
+                <Button
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Height="70"
+                    Width="200"
+                    FontSize="20"
+                    materialDesign:ButtonAssist.CornerRadius="25"
+                    ToolTip="MaterialDesignRaisedDarkButton with Round Corners" Background="#FFA00303">
+                    <TextBlock
+                        Text="Remove Item" />
+                </Button>
+                <Button
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Height="70"
+                    Width="200"
+                    FontSize="20"
+                    materialDesign:ButtonAssist.CornerRadius="25"
+                    ToolTip="MaterialDesignRaisedDarkButton with Round Corners">
+                    <TextBlock
+                        Text="Return Item" />
+                </Button>
+                <Button
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Height="70"
+                    Width="200"
+                    FontSize="20"
+                    materialDesign:ButtonAssist.CornerRadius="25"
+                    ToolTip="MaterialDesignRaisedDarkButton with Round Corners">
+                    <TextBlock
+                        Text="Void Item" />
+                </Button>
+                <Button
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Height="70"
+                    Width="200"
+                    FontSize="20"
+                    materialDesign:ButtonAssist.CornerRadius="25"
+                    ToolTip="MaterialDesignRaisedDarkButton with Round Corners">
+                    <TextBlock
+                        Text="Break kit" />
+                </Button>
+                <Button
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Height="70"
+                    Width="200"
+                    FontSize="20"
+                    materialDesign:ButtonAssist.CornerRadius="25"
+                    ToolTip="MaterialDesignRaisedDarkButton with Round Corners" Background="#FF569720">
+                    <TextBlock
+                        Text="Tender" />
+                </Button>
+            </UniformGrid>
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <GroupBox
+                    Header="POS  Flags" Margin="16">
+                    <TextBlock>
+                        My Content
+                    </TextBlock>
+                </GroupBox>
+                <GroupBox Grid.Column="1"
+                    Header="Comments" Margin="16">
+                    <TextBlock>
+                        My Content
+                    </TextBlock>
+                </GroupBox>
+                <Grid Grid.Column="2" Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label  Style="{StaticResource lbl1 }" Grid.Row="0" Grid.Column="0" Content="Subtotal   " VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Name="txtSubtotalSalesItem" Style="{StaticResource txt1}" Grid.Row="0" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Total Tax $   " VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Name="txtBillToFullName4" Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Discount %   " VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Name="txtBillToCustomerID4" Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Fee Name   " VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Name="txtBillToPhone14" Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
+                    <Rectangle Grid.Row="4" Grid.Column="1" Fill="#FF353553" />
+                    <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Receipt Total" FontWeight="Bold" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Name="txtReceiptTotal" Grid.Row="4" Grid.Column="1" FontSize="35" Foreground="Azure" HorizontalContentAlignment="Center" IsReadOnly="True"> 247.72</TextBox>
+
+                </Grid>
+
+            </Grid>
+
+        </Grid>
+
         <Grid Name="GrdPurchesOrderList" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.2*"/>
@@ -309,6 +494,7 @@
             </ListView>
 
         </Grid>
+
         <Grid Name="GrdProductList" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.2*"/>

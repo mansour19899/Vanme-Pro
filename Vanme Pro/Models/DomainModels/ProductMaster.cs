@@ -25,6 +25,7 @@ namespace Vanme_Pro.Models.DomainModels
         public Nullable<decimal> ReceiptPrice { get; set; }
         public string Margin { get; set; }
         public int Inventory { get; set; }
+        public DateTime LastUpdateInventory { get; set; }
         public int Income { get; set; }
         public int Outcome { get; set; }
         public int OnTheWayInventory { get; set; }
@@ -34,6 +35,7 @@ namespace Vanme_Pro.Models.DomainModels
         public string Note { get; set; }
 
         public ICollection<Item> Items { get; set; }
+        public ICollection<ProductInventoryWarehouse> ProductInventoryWarehouses { get; set; }
 
     }
 }
