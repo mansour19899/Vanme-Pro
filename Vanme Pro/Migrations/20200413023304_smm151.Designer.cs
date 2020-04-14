@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vanme_Pro.Models.Context;
 
 namespace Vanme_Pro.Migrations
 {
     [DbContext(typeof(dbContext))]
-    partial class dbContextModelSnapshot : ModelSnapshot
+    [Migration("20200413023304_smm151")]
+    partial class smm151
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -309,20 +311,20 @@ namespace Vanme_Pro.Migrations
                     b.Property<bool?>("CreatedPO")
                         .HasColumnType("bit");
 
-                    b.Property<decimal?>("CustomsDuty")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal?>("DiscountDollers")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("DiscountPercent")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal?>("Fee")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("FeeType")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("FormSO")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Forwarding")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("Freight")
                         .HasColumnType("decimal(18,2)");
@@ -333,17 +335,8 @@ namespace Vanme_Pro.Migrations
                     b.Property<DateTime?>("GrnDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("GrnTotal")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("Grnumber")
                         .HasColumnType("int");
-
-                    b.Property<decimal?>("Handling")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("Insurance")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("ItemsAsnCount")
                         .HasColumnType("int");
@@ -354,20 +347,11 @@ namespace Vanme_Pro.Migrations
                     b.Property<int?>("ItemsPoCount")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("LandTransport")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime?>("LastEditDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("OrderDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<decimal?>("Others")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Percent")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PoNumber")
                         .HasColumnType("int");
@@ -389,9 +373,6 @@ namespace Vanme_Pro.Migrations
 
                     b.Property<int?>("ToWarehouse_fk")
                         .HasColumnType("int");
-
-                    b.Property<decimal?>("TotalCharges")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("Vendor_fk")
                         .HasColumnType("int");

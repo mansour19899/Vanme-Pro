@@ -170,6 +170,22 @@
     <Compile Include="Migrations\20200412000545_smm54.designer.cs">
       <DependentUpon>20200412000545_smm54.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200413023304_smm151.cs" />
+    <Compile Include="Migrations\20200413023304_smm151.designer.cs">
+      <DependentUpon>20200413023304_smm151.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200413024146_smm152.cs" />
+    <Compile Include="Migrations\20200413024146_smm152.designer.cs">
+      <DependentUpon>20200413024146_smm152.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200413061610_smm154.cs" />
+    <Compile Include="Migrations\20200413061610_smm154.designer.cs">
+      <DependentUpon>20200413061610_smm154.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200414030446_smm172.cs" />
+    <Compile Include="Migrations\20200414030446_smm172.designer.cs">
+      <DependentUpon>20200414030446_smm172.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\dbContextModelSnapshot.cs" />
     <Compile Include="Models\Context\dbContext.cs" />
     <Compile Include="Models\DomainModels\Customer.cs" />
@@ -182,6 +198,7 @@
     <Compile Include="Models\DomainModels\Vendor.cs" />
     <Compile Include="Models\DomainModels\Warehouse.cs" />
     <Compile Include="Models\Enums\PurchaseStatus.cs" />
+    <Compile Include="Models\ViewModels\CalculateMiscellaneous.cs" />
     <Compile Include="TempDatabase.cs" />
     <Compile Include="Utility\CreateID.cs" />
     <Compile Include="Utility\ImageResizer.cs" />

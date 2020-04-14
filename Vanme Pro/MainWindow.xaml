@@ -45,6 +45,42 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+        <Style x:Key="txtMain" TargetType="TextBox">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <!--<Setter Property="MinHeight" Value="20"/>
+            <Setter Property="MinWidth" Value="150"/>-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border"
+                                CornerRadius="2"
+                                BorderBrush="#000"
+                                BorderThickness="1"
+                                Background="#fff"
+                        >
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Focusable="false"
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#909090"/>
+                                <!--<Setter Property="Foreground" Value="Red" />
+                                <Setter Property="FontWeight" Value="Bold" />-->
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="true">
+                                <!--<Setter Property="Foreground" Value="Blue" />-->
+                                <Setter Property="BorderBrush" TargetName="border" Value="Blue"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -220,24 +256,34 @@
                     <DataGridTextColumn Header="Previous Quantity" Binding="{Binding PreviousQuantity}" Width="*" Foreground="#FF9C8F8F" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Quantity ( PO )" Binding="{Binding CurrentQuantity}" Width="*"/>
                     <DataGridTextColumn Header="TotalPrice" Binding="{Binding TotalItemPrice}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Cost" Binding="{Binding Cost}" Width="*" IsReadOnly="True"/>
                 </DataGrid.Columns>
             </DataGrid>
             <UniformGrid Grid.Row="2" Columns="3" Rows="1">
-                <Grid>
+                <StackPanel>
+                    <Button
+                        Name="btnTotalCharges"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                        Height="50"
+                        materialDesign:ButtonAssist.CornerRadius="25"
+                        ToolTip="You Must Complete It"
+                        MaxWidth="300"
+                        Click="BtnTotalCharges_OnClick">
+                        <TextBlock
+                            Text="Import Charges" />
+                    </Button>
+                    <Label Name="lblTotalChargesDetails" Content="salam" HorizontalContentAlignment="Center"></Label>
+                </StackPanel>
+                <!--<Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Miscellaneous" />
+
+                    
+                    --><!--<Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Miscellaneous"  />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Freight " VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Discount %" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -247,8 +293,8 @@
                     <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Fee Type" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="5" Grid.Column="0" Content="Fee $" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Style="{StaticResource txt1}" Grid.Row="5" Grid.Column="1"  VerticalAlignment="Center" />
-                </Grid>
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="5" Grid.Column="1"  VerticalAlignment="Center" />--><!--
+                </Grid>-->
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -450,7 +496,7 @@
                     <TextBox Name="txtBillToPhone14" Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
                     <Rectangle Grid.Row="4" Grid.Column="1" Fill="#FF353553" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Receipt Total" FontWeight="Bold" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Name="txtReceiptTotal" Grid.Row="4" Grid.Column="1" FontSize="35" Foreground="Azure" HorizontalContentAlignment="Center" IsReadOnly="True"> 247.72</TextBox>
+                    <TextBox Name="txtReceiptTotal" Grid.Row="4" Grid.Column="1" FontSize="35" Foreground="Azure" HorizontalContentAlignment="Center" IsReadOnly="True">247.72</TextBox>
 
                 </Grid>
 
@@ -527,6 +573,59 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>-->
             </ListView>
+
+        </Grid>
+        <Grid Name="GrdTotalCharges" Background="#80B9ADAD" RowSpan="2" ColumnSpan="2" Visibility="Hidden" >
+            <Border  MinWidth="400" MinHeight="600" MaxWidth="800"  VerticalAlignment="Center" Background="White" CornerRadius="20" Padding="60">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Label  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Freight" FontSize="20" Margin="0 0 15 0"  VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <TextBox Name="txtFright" Grid.Row="0" Grid.Column="2"  Style="{StaticResource txtMain}" LostFocus="txtFrright_LostFocus" KeyDown="txtFright_KeyDown"  />
+                    <Label  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Discount %" FontSize="20" Margin="0 0 15 0"  VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <Label Name="lblDiscountPercent" Grid.Row="1" Grid.Column="3"  Content="   20 %" FontSize="20" Margin="0 0 15 0"  VerticalAlignment="Center" HorizontalAlignment="Left" />
+                    <TextBox Name="txtDiscountPercent"  Grid.Row="1" Grid.Column="2"  Style="{StaticResource txtMain}" LostFocus="txtDiscountPercent_LostFocus" KeyDown="txtDiscountPercent_KeyDown" />
+                    <Label  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Discount $" FontSize="20" Margin="0 0 15 0"  VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <TextBox Name="txtDiscountDollers" Grid.Row="2" Grid.Column="2"  Style="{StaticResource txtMain}" LostFocus="txtDiscountDollers_LostFocus" KeyDown="txtDiscountDollers_KeyDown" />
+                    <Label  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="Insurance" FontSize="20" Margin="0 0 15 0"  VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <TextBox Name="txtInsurance" Grid.Row="3" Grid.Column="2"  Style="{StaticResource txtMain}" LostFocus="txtInsurance_LostFocus" KeyDown="txtInsurance_KeyDown" />
+                    <Label  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="Customs Duty" FontSize="20" Margin="0 0 15 0"  VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <TextBox Name="txtCustomsDuty" Grid.Row="4" Grid.Column="2"  Style="{StaticResource txtMain}" LostFocus="txtCustomsDuty_LostFocus" KeyDown="txtCustomsDuty_KeyDown" />
+                    <Label  Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Content="Handling" FontSize="20" Margin="0 0 15 0"  VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <TextBox Name="txtHandling" Grid.Row="5" Grid.Column="2"  Style="{StaticResource txtMain}" LostFocus="txtHandling_LostFocus" KeyDown="txtHandling_KeyDown" />
+                    <Label  Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Content="Forwarding" FontSize="20" Margin="0 0 15 0"  VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <TextBox Name="txtForwarding" Grid.Row="6" Grid.Column="2"  Style="{StaticResource txtMain}" LostFocus="txtForwarding_LostFocus" KeyDown="txtForwarding_KeyDown" />
+                    <Label  Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Content="Land Transport" FontSize="20" Margin="0 0 15 0"  VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <TextBox Name="txtLandTransport" Grid.Row="7" Grid.Column="2"  Style="{StaticResource txtMain}" LostFocus="txtLandTransport_LostFocus" KeyDown="txtLandTransport_KeyDown"  />
+                    <Label  Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Content="Others" FontSize="20" Margin="0 0 15 0"  VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <TextBox Name="txtOthers" Grid.Row="8" Grid.Column="2"  Style="{StaticResource txtMain}" LostFocus="txtOthers_LostFocus" KeyDown="txtOthers_KeyDown" />
+                    <Label Name="lblTotalFreight" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Content="" FontSize="20" Margin="0 0 15 0"  VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    <Button Name="btnOkCharges" Content="OK" Grid.Row="9" Grid.Column="4" Margin="10" Click="BtnOkCharges_OnClick" />
+                    <Button Name="btnClearCharges" Content="Clear" Grid.Row="9" Grid.Column="0" Margin="10" Background="#FFBB2A13" BorderBrush="#FFBB2A13" />
+
+
+
+                </Grid>
+            </Border>
+
 
         </Grid>
 

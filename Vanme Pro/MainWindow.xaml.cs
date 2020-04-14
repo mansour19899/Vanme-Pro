@@ -18,6 +18,7 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.EntityFrameworkCore;
 using Vanme_Pro.Models.Context;
 using Vanme_Pro.Models.DomainModels;
+using Vanme_Pro.Models.ViewModels;
 
 namespace Vanme_Pro
 {
@@ -41,6 +42,8 @@ namespace Vanme_Pro
         private bool IsViewDetail = false;
         private bool IsDone = false;
         private User user;
+        private CalculateMiscellaneous calculateMiscellaneous = new CalculateMiscellaneous();
+        private decimal TotalCharges = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -96,24 +99,24 @@ namespace Vanme_Pro
                 }
                 else
                 {
-                    itemsList.Add(new Item() { Id = StepAddItem, ProductMaster_fk = wer.Id,ProductMaster = wer, PoPrice = wer.Price.Value, AsnPrice = wer.Price.Value, PoQuantity = 0, PoItemsPrice = 0 });
+                    itemsList.Add(new Item() { Id = StepAddItem, ProductMaster_fk = wer.Id, ProductMaster = wer, PoPrice = wer.FobPrice.Value, AsnPrice = wer.FobPrice.Value, PoQuantity = 0, PoItemsPrice = 0 });
                 }
-                   
+
 
                 FillDataGrid(itemsList);
             }
 
             else
             {
-                if (AddNewitemsList.Any(p => p.ProductMaster.Id == wer.Id)|| itemsList.Any(p => p.ProductMaster.Id == wer.Id))
+                if (AddNewitemsList.Any(p => p.ProductMaster.Id == wer.Id) || itemsList.Any(p => p.ProductMaster.Id == wer.Id))
                 {
 
                 }
                 else
                 {
-                    AddNewitemsList.Add(new Item() { Id = StepAddItem, ProductMaster = wer, PoPrice = wer.Price.Value, AsnPrice = wer.Price.Value, PoQuantity = 0, PoItemsPrice = 0 });
+                    AddNewitemsList.Add(new Item() { Id = StepAddItem, ProductMaster = wer, PoPrice = wer.FobPrice.Value, AsnPrice = wer.FobPrice.Value, PoQuantity = 0, PoItemsPrice = 0 });
                 }
-                    
+
                 FillDataGrid(itemsList.Concat(AddNewitemsList).ToList());
 
             }
@@ -343,6 +346,8 @@ namespace Vanme_Pro
             }
             else if (Mode == Mode.Grn)
             {
+                calculateMiscellaneous = new CalculateMiscellaneous(pOrder);
+
                 txtPoNumber.Text = pOrder.Grnumber.ShowGrnNumber();
                 cmbVendor.SelectedValue = pOrder.Vendor_fk;
                 cmbShipFrom.SelectedValue = pOrder.FromWarehouse_fk;
@@ -351,6 +356,18 @@ namespace Vanme_Pro
                 dpiOrderDate.SelectedDate = pOrder.GrnDate;
                 dpiShipDate.SelectedDate = pOrder.ShipDate;
                 dpiCancelDate.SelectedDate = pOrder.CancelDate;
+                txtFright.Text = pOrder.Freight.ToString();
+                txtDiscountPercent.Text = pOrder.DiscountPercent.ToString();
+                lblDiscountPercent.Content = pOrder.Percent;
+                txtDiscountDollers.Text = pOrder.DiscountDollers.ToString();
+                txtInsurance.Text = pOrder.Insurance.ToString();
+                txtCustomsDuty.Text = pOrder.CustomsDuty.ToString();
+                txtHandling.Text = pOrder.Handling.ToString();
+                txtForwarding.Text = pOrder.Forwarding.ToString();
+                txtLandTransport.Text = pOrder.LandTransport.ToString();
+                txtOthers.Text = pOrder.Others.ToString();
+                lblTotalChargesDetails.Content = calculateMiscellaneous.getTotalString();
+                lblTotalFreight.Content = calculateMiscellaneous.getTotalString();
                 lblPoTotal.Content = "GIT Total";
                 lblOrderDate.Content = "GRN Date ";
                 if (pOrder.LastEditDate != null)
@@ -472,7 +489,7 @@ namespace Vanme_Pro
             {
                 Mode = Mode.PO;
                 lblNewPo.Content = "New PO";
-                lvPurchase.ItemsSource = db.PurchaseOrders.Include(p => p.Items).ThenInclude(p=>p.ProductMaster).Include(p => p.Vendor).ToList();
+                lvPurchase.ItemsSource = db.PurchaseOrders.Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
                 GrdProductList.Visibility = Visibility.Hidden;
                 GrdNewPurchersOrder.Visibility = Visibility.Hidden;
                 GrdPurchesOrderList.Visibility = Visibility.Visible;
@@ -1050,6 +1067,228 @@ namespace Vanme_Pro
             {
 
             }
+        }
+
+        #region LostFocusOfFright
+
+        private void txtFrright_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtFright.Text))
+            {
+                calculateMiscellaneous.SetFright = txtFright.Text;
+                lblTotalFreight.Content = calculateMiscellaneous.getTotalString();
+                TotalCharges = calculateMiscellaneous.GetTotal();
+            }
+
+        }
+
+        private void txtDiscountPercent_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtDiscountPercent.Text))
+            {
+                calculateMiscellaneous.TotalAsnPrice = SelectedPurchaseOrder.AsnTotal.Value;
+                calculateMiscellaneous.SetDiscountPercent = txtDiscountPercent.Text;
+                lblTotalFreight.Content = calculateMiscellaneous.getTotalString();
+                lblDiscountPercent.Content = "   " + calculateMiscellaneous.Percent;
+                txtDiscountPercent.Text = "- " + calculateMiscellaneous.DiscountPercent.ToString();
+                TotalCharges = calculateMiscellaneous.GetTotal();
+            }
+
+        }
+
+        private void txtDiscountDollers_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtDiscountDollers.Text))
+            {
+                calculateMiscellaneous.SetDiscountDollers = txtDiscountDollers.Text;
+                lblTotalFreight.Content = calculateMiscellaneous.getTotalString();
+                txtDiscountDollers.Text = "- " + calculateMiscellaneous.DiscountDollers.ToString();
+                TotalCharges = calculateMiscellaneous.GetTotal();
+            }
+
+        }
+
+        private void txtInsurance_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtInsurance.Text))
+            {
+                calculateMiscellaneous.SetInsurance = txtInsurance.Text;
+                lblTotalFreight.Content = calculateMiscellaneous.getTotalString();
+                TotalCharges = calculateMiscellaneous.GetTotal();
+            }
+
+        }
+
+        private void txtCustomsDuty_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtCustomsDuty.Text))
+            {
+                calculateMiscellaneous.SetCustomsDuty = txtCustomsDuty.Text;
+                lblTotalFreight.Content = calculateMiscellaneous.getTotalString();
+                TotalCharges = calculateMiscellaneous.GetTotal();
+            }
+
+        }
+
+        private void txtHandling_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtHandling.Text))
+            {
+                calculateMiscellaneous.SetHandling = txtHandling.Text;
+                lblTotalFreight.Content = calculateMiscellaneous.getTotalString();
+                TotalCharges = calculateMiscellaneous.GetTotal();
+            }
+
+        }
+
+        private void txtForwarding_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtForwarding.Text))
+            {
+                calculateMiscellaneous.SetForwarding = txtForwarding.Text;
+                lblTotalFreight.Content = calculateMiscellaneous.getTotalString();
+                TotalCharges = calculateMiscellaneous.GetTotal();
+            }
+
+        }
+
+        private void txtLandTransport_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtLandTransport.Text))
+            {
+                calculateMiscellaneous.SetLandTransport = txtLandTransport.Text;
+                lblTotalFreight.Content = calculateMiscellaneous.getTotalString();
+                TotalCharges = calculateMiscellaneous.GetTotal();
+            }
+
+        }
+
+        private void txtOthers_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtOthers.Text))
+            {
+                calculateMiscellaneous.SetOthers = txtOthers.Text;
+                lblTotalFreight.Content = calculateMiscellaneous.getTotalString();
+                TotalCharges = calculateMiscellaneous.GetTotal();
+            }
+
+        }
+
+        #endregion
+
+        #region SetNumericFrieght
+
+        public bool SetNumeric(object sender, KeyEventArgs e, TextBox txt)
+        {
+            bool result = false;
+            var tr = (sender as TextBox).Text.IndexOf('.');
+
+            if ((e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9) || (e.Key == Key.Back) || (e.Key == Key.Decimal) || (e.Key == Key.Tab))
+            { result = false; }
+            else if ((e.Key >= Key.D0 && e.Key <= Key.D9) || (e.Key == Key.OemPeriod))
+            { result = false; }
+            else
+            { result = true; }
+
+            if (e.Key == Key.OemPeriod && ((sender as TextBox).Text.IndexOf('.') > -1))
+            {
+                result = true;
+            }
+            if (e.Key == Key.Decimal && ((sender as TextBox).Text.IndexOf('.') > -1))
+            {
+                result = true;
+            }
+            var count = txt.Text.Split('.');
+            if (count.Count() > 1)
+            {
+                if (count[1].Count() > 3 && e.Key != Key.Tab)
+                {
+                    result = true;
+                }
+            }
+            return result;
+        }
+        private void txtFright_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = SetNumeric(sender, e, txtFright);
+        }
+
+        private void txtDiscountPercent_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = SetNumeric(sender, e, txtDiscountPercent);
+        }
+
+        private void txtDiscountDollers_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = SetNumeric(sender, e, txtDiscountDollers);
+        }
+
+        private void txtInsurance_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = SetNumeric(sender, e, txtInsurance);
+        }
+
+        private void txtCustomsDuty_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = SetNumeric(sender, e, txtCustomsDuty);
+        }
+
+        private void txtHandling_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = SetNumeric(sender, e, txtHandling);
+        }
+
+        private void txtForwarding_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = SetNumeric(sender, e, txtForwarding);
+        }
+
+        private void txtLandTransport_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = SetNumeric(sender, e, txtLandTransport);
+        }
+
+        private void txtOthers_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = SetNumeric(sender, e, txtOthers);
+        }
+
+        #endregion
+
+        private void BtnTotalCharges_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (Mode == Mode.Grn)
+                GrdTotalCharges.Visibility = Visibility.Visible;
+            else
+            {
+                MessageBox.Show("You can Import Charges when Grn Mode");
+            }
+        }
+
+        private void BtnOkCharges_OnClick(object sender, RoutedEventArgs e)
+        {
+            decimal x = 0;
+            SelectedPurchaseOrder.Freight = calculateMiscellaneous.Fright;
+            SelectedPurchaseOrder.DiscountPercent = calculateMiscellaneous.DiscountPercent;
+            SelectedPurchaseOrder.Percent = calculateMiscellaneous.Percent;
+            SelectedPurchaseOrder.DiscountDollers = calculateMiscellaneous.DiscountDollers;
+            SelectedPurchaseOrder.Insurance = calculateMiscellaneous.Insurance;
+            SelectedPurchaseOrder.CustomsDuty = calculateMiscellaneous.CustomsDuty;
+            SelectedPurchaseOrder.Handling = calculateMiscellaneous.Handling;
+            SelectedPurchaseOrder.Forwarding = calculateMiscellaneous.Forwarding;
+            SelectedPurchaseOrder.LandTransport = calculateMiscellaneous.LandTransport;
+            SelectedPurchaseOrder.Others = calculateMiscellaneous.Others;
+            SelectedPurchaseOrder.TotalCharges = calculateMiscellaneous.GetTotal();
+            lblTotalChargesDetails.Content = lblTotalFreight.Content;
+            foreach (var VARIABLE in SelectedPurchaseOrder.Items)
+            {
+
+                x = (SelectedPurchaseOrder.TotalCharges.Value / SelectedPurchaseOrder.AsnTotal.Value*VARIABLE.AsnPrice) +
+                                VARIABLE.AsnPrice;
+                VARIABLE.Cost = Math.Round(x, 2, MidpointRounding.ToEven);
+            }
+            FillDataGrid(SelectedPurchaseOrder.Items.ToList());
+            GrdTotalCharges.Visibility = Visibility.Hidden;
         }
     }
 }

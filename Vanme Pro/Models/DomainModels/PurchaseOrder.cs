@@ -29,11 +29,18 @@ namespace Vanme_Pro.Models.DomainModels
         public DateTime? LastEditDate { get; set; }
         public decimal? Freight { get; set; }
         public decimal? DiscountPercent { get; set; }
+        public string Percent { get; set; }
         public decimal? DiscountDollers { get; set; }
-        public decimal? FeeType { get; set; }
-        public decimal? Fee { get; set; }
+        public decimal? Insurance { get; set; }
+        public decimal? CustomsDuty { get; set; }
+        public decimal? Handling { get; set; }
+        public decimal? Forwarding { get; set; }
+        public decimal? LandTransport { get; set; }
+        public decimal? Others { get; set; }
+        public decimal? TotalCharges { get; set; }
         public decimal? PoTotal { get; set; }
         public decimal? AsnTotal { get; set; }
+        public decimal? GrnTotal { get; set; }
         public  bool? CreatedPO { get; set; }
         public  bool? CreatedAsn { get; set; }
         public  bool? CreatedGrn { get; set; }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vanme_Pro.Models.Context;
 
 namespace Vanme_Pro.Migrations
 {
     [DbContext(typeof(dbContext))]
-    partial class dbContextModelSnapshot : ModelSnapshot
+    [Migration("20200413061610_smm154")]
+    partial class smm154
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -366,9 +368,6 @@ namespace Vanme_Pro.Migrations
                     b.Property<decimal?>("Others")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Percent")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("PoNumber")
                         .HasColumnType("int");
 
@@ -389,9 +388,6 @@ namespace Vanme_Pro.Migrations
 
                     b.Property<int?>("ToWarehouse_fk")
                         .HasColumnType("int");
-
-                    b.Property<decimal?>("TotalCharges")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("Vendor_fk")
                         .HasColumnType("int");
