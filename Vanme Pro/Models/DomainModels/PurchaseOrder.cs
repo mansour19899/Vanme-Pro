@@ -15,7 +15,6 @@ namespace Vanme_Pro.Models.DomainModels
         public int Grnumber { get; set; }
         public int? Vendor_fk { get; set; }
         public string PoType { get; set; }
-        public string ShipToStore { get; set; }
         public string Associate { get; set; }
         public string PoTerms { get; set; }
         public string Account { get; set; }

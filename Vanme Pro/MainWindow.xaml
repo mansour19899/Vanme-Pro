@@ -122,6 +122,8 @@
                 <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Goods Recive Note"></Label>
                 <Image Name="btnSale" Grid.Row="0" Grid.Column="3" Grid.RowSpan="2"   Source="Content/Images/icons8_ticket_purchase_52px_1.png" Stretch="Uniform" Margin="10 20 10 20" MouseDown="BtnAsnVorchers_OnMouseDown" />
                 <Label Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Sale"/>
+                <Image Name="btnProduct" Grid.Row="0" Grid.Column="4"   Source="Content/Images/icons8_product_100px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnProduct_OnMouseDown"/>
+                <Label Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Products"></Label>
 
             </Grid>
 
@@ -283,7 +285,8 @@
                     </Grid.ColumnDefinitions>
 
                     
-                    --><!--<Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Miscellaneous"  />
+                    -->
+                <!--<Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Miscellaneous"  />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Freight " VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Discount %" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -293,7 +296,8 @@
                     <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Fee Type" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="5" Grid.Column="0" Content="Fee $" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Style="{StaticResource txt1}" Grid.Row="5" Grid.Column="1"  VerticalAlignment="Center" />--><!--
+                    <TextBox Style="{StaticResource txt1}" Grid.Row="5" Grid.Column="1"  VerticalAlignment="Center" />-->
+                <!--
                 </Grid>-->
                 <Grid>
                     <Grid.RowDefinitions>
@@ -627,6 +631,175 @@
             </Border>
 
 
+        </Grid>
+        <Grid Name="GrdProductInformation" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
+            <Grid.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="MinWidth" Value="150"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Right"/>
+                    <Setter Property="FontSize" Value="18"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+               <system:Double x:Key="txtminwidth">300</system:Double>
+                <Thickness x:Key="stackMargin" Top="10" Left="0" Right="0" Bottom ="0" />
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <GroupBox
+                Header="Information"
+                Style="{DynamicResource MaterialDesignCardGroupBox}"
+                Margin="16" Grid.RowSpan="2">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Kind="ImageArea"
+                                Height="32"
+                                Width="32"
+                                VerticalAlignment="Center" />
+                            <TextBlock
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Name : " />
+                        <TextBox Name="txtTitleProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
+                        <Label  Content="Style Number : " />
+                        <TextBox Name="txtStyleNumberProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
+                        <Label  Content="SKU : " />
+                        <TextBox Name="txtSkuProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
+                        <Label  Content="UPC : " />
+                        <TextBox Name="txtUpcProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
+                        <Label  Content="Color : " />
+                        <TextBox Name="txtColorProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
+                        <Label  Content="Size : " />
+                        <TextBox Name="txtSizeProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
+                        <Label  Content="Made In : " />
+                        <TextBox Name="txtMadeInProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
+                        <Label  Content="ALU : " />
+                        <TextBox Name="txtAluProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox
+                Header="Price"
+                Style="{DynamicResource MaterialDesignCardGroupBox}"
+                Margin="16" Grid.Row="0" Grid.Column="1">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Kind="ImageArea"
+                                Height="32"
+                                Width="32"
+                                VerticalAlignment="Center" />
+                            <TextBlock
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="F.O.B Price : " />
+                        <TextBox Name="txtFobPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Cost : " />
+                        <TextBox Name="txtCostProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Wholesale : " />
+                        <TextBox Name="txtWholesaleProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Retail Price : " />
+                        <TextBox Name="txtRetailPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Receipt Price : " />
+                        <TextBox Name="txtReceiptPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox
+                Header="Inventory"
+                Style="{DynamicResource MaterialDesignCardGroupBox}"
+                Margin="16" Grid.Row="1" Grid.Column="1" Name="GroupBoxInventory" MouseDown="GroupBoxInventory_OnMouseDown">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Kind="ImageArea"
+                                Height="32"
+                                Width="32"
+                                VerticalAlignment="Center" />
+                            <TextBlock
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Inventory : " />
+                        <Label Name="lblInventoryProduct" Content="----------" HorizontalContentAlignment="Left" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Sale : " />
+                        <Label Name="lblSaleProduct" Content="---------- " HorizontalContentAlignment="Left" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Income : " />
+                        <Label Name="lblIncomeProduct" Content="---------- " HorizontalContentAlignment="Left" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Main  : " />
+                        <Label Name="lblMainWarehouseProduct" Content="---------- " HorizontalContentAlignment="Left" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Store 1 : " />
+                        <Label Name="lblStore1Product" Content="---------- " HorizontalContentAlignment="Left" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Store 2 : " />
+                        <Label Name="lblStore2Product" Content="---------- " HorizontalContentAlignment="Left" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
         </Grid>
 
 

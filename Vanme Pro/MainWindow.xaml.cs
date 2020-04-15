@@ -37,6 +37,7 @@ namespace Vanme_Pro
         private Mode Mode = Mode.PO;
         private State state = State.Save;
         private PurchaseOrder SelectedPurchaseOrder;
+        private ProductMaster selectedProductMaster;
         private List<Item> RemoveItemsList = new List<Item>();
         private SnackbarMessageQueue myMessageQueue;
         private bool IsViewDetail = false;
@@ -44,6 +45,7 @@ namespace Vanme_Pro
         private User user;
         private CalculateMiscellaneous calculateMiscellaneous = new CalculateMiscellaneous();
         private decimal TotalCharges = 0;
+        private bool ModeAddItem = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -90,41 +92,51 @@ namespace Vanme_Pro
 
             var wer = (ProductMaster)lvProducts.ItemContainerGenerator.ItemFromContainer(dep);
 
-            if (state == State.Save)
-
+            if (ModeAddItem)
             {
-                if (itemsList.Any(p => p.ProductMaster.Id == wer.Id))
-                {
+                if (state == State.Save)
 
+                {
+                    if (itemsList.Any(p => p.ProductMaster.Id == wer.Id))
+                    {
+
+                    }
+                    else
+                    {
+                        itemsList.Add(new Item() { Id = StepAddItem, ProductMaster_fk = wer.Id, ProductMaster = wer, PoPrice = wer.FobPrice.Value, AsnPrice = wer.FobPrice.Value, PoQuantity = 0, PoItemsPrice = 0 });
+                    }
+
+
+                    FillDataGrid(itemsList);
                 }
+
                 else
                 {
-                    itemsList.Add(new Item() { Id = StepAddItem, ProductMaster_fk = wer.Id, ProductMaster = wer, PoPrice = wer.FobPrice.Value, AsnPrice = wer.FobPrice.Value, PoQuantity = 0, PoItemsPrice = 0 });
+                    if (AddNewitemsList.Any(p => p.ProductMaster.Id == wer.Id) || itemsList.Any(p => p.ProductMaster.Id == wer.Id))
+                    {
+
+                    }
+                    else
+                    {
+                        AddNewitemsList.Add(new Item() { Id = StepAddItem, ProductMaster = wer, PoPrice = wer.FobPrice.Value, AsnPrice = wer.FobPrice.Value, PoQuantity = 0, PoItemsPrice = 0 });
+                    }
+
+                    FillDataGrid(itemsList.Concat(AddNewitemsList).ToList());
+
                 }
 
-
-                FillDataGrid(itemsList);
+                ModeAddItem = false;
+                GrdProductList.Visibility = Visibility.Hidden;
+                GrdNewPurchersOrder.Visibility = Visibility.Visible;
+                StepAddItem++;
             }
-
             else
             {
-                if (AddNewitemsList.Any(p => p.ProductMaster.Id == wer.Id) || itemsList.Any(p => p.ProductMaster.Id == wer.Id))
-                {
-
-                }
-                else
-                {
-                    AddNewitemsList.Add(new Item() { Id = StepAddItem, ProductMaster = wer, PoPrice = wer.FobPrice.Value, AsnPrice = wer.FobPrice.Value, PoQuantity = 0, PoItemsPrice = 0 });
-                }
-
-                FillDataGrid(itemsList.Concat(AddNewitemsList).ToList());
-
+                FillProductInformation(wer);
+                GrdProductList.Visibility = Visibility.Hidden;
+                GrdProductInformation.Visibility = Visibility.Visible;
             }
-
-
-            GrdProductList.Visibility = Visibility.Hidden;
-            GrdNewPurchersOrder.Visibility = Visibility.Visible;
-            StepAddItem++;
+           
         }
 
         private void LvPurchase_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -281,7 +293,7 @@ namespace Vanme_Pro
 
         private void StackPanel_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            ModeAddItem = true;
             lvProducts.ItemsSource = db.Products.ToList();
             GrdNewPurchersOrder.Visibility = Visibility.Hidden;
             GrdProductList.Visibility = Visibility.Visible;
@@ -389,6 +401,65 @@ namespace Vanme_Pro
             IsViewDetail = true;
             GrdPurchesOrderList.Visibility = Visibility.Hidden;
             GrdNewPurchersOrder.Visibility = Visibility.Visible;
+        }
+
+        private void FillProductInformation(ProductMaster product)
+        {
+            txtStyleNumberProduct.Text = product.StyleNumber;
+            txtSkuProduct.Text = product.SKU;
+            txtUpcProduct.Text = product.UPC;
+            txtColorProduct.Text = product.Color;
+            txtSizeProduct.Text = product.Size;
+            txtMadeInProduct.Text = product.MadeIn;
+            txtAluProduct.Text = product.Id.ToString();
+
+            txtFobPriceProduct.Text = product.FobPrice.ToString();
+            txtCostProduct.Text = product.Cost.ToString();
+            txtWholesaleProduct.Text = product.WholesalePrice.ToString();
+            txtRetailPriceProduct.Text = product.RetailPrice.ToString();
+            txtReceiptPriceProduct.Text = product.ReceiptPrice.ToString();
+
+            lblInventoryProduct.Content = "---------------";
+            lblSaleProduct.Content = "---------------";
+            lblIncomeProduct.Content = "---------------";
+            lblMainWarehouseProduct.Content = "---------------";
+            lblStore1Product.Content = "---------------";
+            lblStore2Product.Content = "---------------";
+
+            selectedProductMaster = product;
+        }
+
+        private void GroupBoxInventory_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            int count = 0;
+            int count1 = 0;
+            int count2 = 0;
+
+            var Store1 = db.ProductInventoryWarehouses.Where(p => p.ProductMaster_fk == selectedProductMaster.Id && p.Warehouse_fk == 3).ToList();
+
+            var Store2 = db.ProductInventoryWarehouses.Where(p => p.ProductMaster_fk == selectedProductMaster.Id && p.Warehouse_fk == 4).ToList();
+
+            var Inventory = db.ProductInventoryWarehouses.Where(p => p.ProductMaster_fk == selectedProductMaster.Id).ToList();
+            
+            foreach (var VARIABLE in Inventory)
+            {
+                count = VARIABLE.Inventory.Value + VARIABLE.OnTheWayInventory.Value + count;
+            }
+
+            foreach (var VARIABLE in Store1)
+            {
+                count1 = VARIABLE.Inventory.Value + VARIABLE.OnTheWayInventory.Value + count1;
+            }
+
+            foreach (var VARIABLE in Store2)
+            {
+                count2 = VARIABLE.Inventory.Value + VARIABLE.OnTheWayInventory.Value + count2;
+            }
+
+
+            lblInventoryProduct.Content = count.ToString();
+            lblStore1Product.Content = count1.ToString();
+            lblStore2Product.Content = count2.ToString();
         }
 
         void FillDataGrid(List<Item> list, bool Pre = true)
@@ -607,6 +678,12 @@ namespace Vanme_Pro
 
             }
 
+        }
+        private void BtnProduct_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ModeAddItem = false;
+            GrdProductInformation.Visibility = Visibility.Hidden;
+            GrdProductList.Visibility = Visibility.Visible;
         }
 
         void ShowSideBar(Mode mode, int sub = 1)
@@ -1290,5 +1367,8 @@ namespace Vanme_Pro
             FillDataGrid(SelectedPurchaseOrder.Items.ToList());
             GrdTotalCharges.Visibility = Visibility.Hidden;
         }
+
+
+
     }
 }
