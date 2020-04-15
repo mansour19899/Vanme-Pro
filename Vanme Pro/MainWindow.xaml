@@ -130,6 +130,7 @@
         </Border>
 
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="LightSlateGray" BorderThickness="2 0 0 0"/>
+        
         <UniformGrid Grid.Row="1" Grid.Column="1" Columns="1" Rows="10">
             <StackPanel Name="btnNewPurchaseOrder" Orientation="Horizontal" Margin="10 10 10 10" MouseDown="BtnNewPurchaseOrder_OnMouseDown"  >
                 <Image Source="Content/Images/icons8_create_document_60px_1.png"/>
@@ -632,6 +633,7 @@
 
 
         </Grid>
+
         <Grid Name="GrdProductInformation" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
             <Grid.Resources>
                 <Style TargetType="Label">

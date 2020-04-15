@@ -126,17 +126,18 @@ namespace Vanme_Pro
                 }
 
                 ModeAddItem = false;
-                GrdProductList.Visibility = Visibility.Hidden;
+                HidePanel();
                 GrdNewPurchersOrder.Visibility = Visibility.Visible;
                 StepAddItem++;
             }
             else
             {
                 FillProductInformation(wer);
-                GrdProductList.Visibility = Visibility.Hidden;
+                HidePanel();
+                ShowSideBar(Mode.productInformation);
                 GrdProductInformation.Visibility = Visibility.Visible;
             }
-           
+
         }
 
         private void LvPurchase_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -295,7 +296,7 @@ namespace Vanme_Pro
         {
             ModeAddItem = true;
             lvProducts.ItemsSource = db.Products.ToList();
-            GrdNewPurchersOrder.Visibility = Visibility.Hidden;
+            HidePanel();
             GrdProductList.Visibility = Visibility.Visible;
 
         }
@@ -399,7 +400,7 @@ namespace Vanme_Pro
 
 
             IsViewDetail = true;
-            GrdPurchesOrderList.Visibility = Visibility.Hidden;
+            HidePanel();
             GrdNewPurchersOrder.Visibility = Visibility.Visible;
         }
 
@@ -427,6 +428,8 @@ namespace Vanme_Pro
             lblStore2Product.Content = "---------------";
 
             selectedProductMaster = product;
+
+            GroupBoxInventory_OnMouseDown(null, null);
         }
 
         private void GroupBoxInventory_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -434,16 +437,22 @@ namespace Vanme_Pro
             int count = 0;
             int count1 = 0;
             int count2 = 0;
+            int count3 = 0;
 
             var Store1 = db.ProductInventoryWarehouses.Where(p => p.ProductMaster_fk == selectedProductMaster.Id && p.Warehouse_fk == 3).ToList();
 
             var Store2 = db.ProductInventoryWarehouses.Where(p => p.ProductMaster_fk == selectedProductMaster.Id && p.Warehouse_fk == 4).ToList();
 
             var Inventory = db.ProductInventoryWarehouses.Where(p => p.ProductMaster_fk == selectedProductMaster.Id).ToList();
-            
+            var MainWarehouse = db.ProductInventoryWarehouses.Where(p => p.ProductMaster_fk == selectedProductMaster.Id && p.Warehouse_fk == 2).ToList();
+
             foreach (var VARIABLE in Inventory)
             {
                 count = VARIABLE.Inventory.Value + VARIABLE.OnTheWayInventory.Value + count;
+            }
+            foreach (var VARIABLE in MainWarehouse)
+            {
+                count3 = VARIABLE.Inventory.Value + VARIABLE.OnTheWayInventory.Value + count3;
             }
 
             foreach (var VARIABLE in Store1)
@@ -460,6 +469,7 @@ namespace Vanme_Pro
             lblInventoryProduct.Content = count.ToString();
             lblStore1Product.Content = count1.ToString();
             lblStore2Product.Content = count2.ToString();
+            lblMainWarehouseProduct.Content = count3.ToString();
         }
 
         void FillDataGrid(List<Item> list, bool Pre = true)
@@ -519,7 +529,7 @@ namespace Vanme_Pro
             lblSave.Content = "Save";
             SelectedPurchaseOrder = new PurchaseOrder() { CreatedPO = false, CreatedAsn = false, CreatedGrn = false };
             FillPerchaseOrderPage(new PurchaseOrder());
-            GrdPurchesOrderList.Visibility = Visibility.Hidden;
+            HidePanel();
             GrdNewPurchersOrder.Visibility = Visibility.Visible;
 
         }
@@ -533,8 +543,7 @@ namespace Vanme_Pro
                 {
 
                     lvPurchase.ItemsSource = db.PurchaseOrders.Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
-                    GrdNewPurchersOrder.Visibility = Visibility.Hidden;
-                    GrdProductList.Visibility = Visibility.Hidden;
+                    HidePanel();
                     GrdPurchesOrderList.Visibility = Visibility.Visible;
                     ShowSideBar(Mode.PO);
                     IsViewDetail = false;
@@ -561,8 +570,7 @@ namespace Vanme_Pro
                 Mode = Mode.PO;
                 lblNewPo.Content = "New PO";
                 lvPurchase.ItemsSource = db.PurchaseOrders.Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
-                GrdProductList.Visibility = Visibility.Hidden;
-                GrdNewPurchersOrder.Visibility = Visibility.Hidden;
+                HidePanel();
                 GrdPurchesOrderList.Visibility = Visibility.Visible;
                 ShowSideBar(Mode.PO);
 
@@ -585,8 +593,7 @@ namespace Vanme_Pro
                         {
                             lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedPO == true)
                                 .Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
-                            GrdNewPurchersOrder.Visibility = Visibility.Hidden;
-                            GrdProductList.Visibility = Visibility.Hidden;
+                            HidePanel();
                             GrdPurchesOrderList.Visibility = Visibility.Visible;
                             IsViewDetail = false;
                             ShowSideBar(Mode.Asn);
@@ -621,8 +628,7 @@ namespace Vanme_Pro
 
                 lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedPO == true)
                     .Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
-                GrdProductList.Visibility = Visibility.Hidden;
-                GrdNewPurchersOrder.Visibility = Visibility.Hidden;
+                HidePanel();
                 GrdPurchesOrderList.Visibility = Visibility.Visible;
                 ShowSideBar(Mode.Asn);
             }
@@ -643,8 +649,7 @@ namespace Vanme_Pro
 
                     lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedAsn == true)
                         .Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
-                    GrdNewPurchersOrder.Visibility = Visibility.Hidden;
-                    GrdProductList.Visibility = Visibility.Hidden;
+                    HidePanel();
                     GrdPurchesOrderList.Visibility = Visibility.Visible;
                     IsViewDetail = false;
                     ShowSideBar(Mode.Grn);
@@ -671,8 +676,7 @@ namespace Vanme_Pro
 
                 lvPurchase.ItemsSource = db.PurchaseOrders.Where(p => p.CreatedAsn == true)
                     .Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
-                GrdProductList.Visibility = Visibility.Hidden;
-                GrdNewPurchersOrder.Visibility = Visibility.Hidden;
+                HidePanel();
                 GrdPurchesOrderList.Visibility = Visibility.Visible;
                 ShowSideBar(Mode.Grn);
 
@@ -682,7 +686,7 @@ namespace Vanme_Pro
         private void BtnProduct_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             ModeAddItem = false;
-            GrdProductInformation.Visibility = Visibility.Hidden;
+            HidePanel();
             GrdProductList.Visibility = Visibility.Visible;
         }
 
@@ -749,7 +753,27 @@ namespace Vanme_Pro
                 case Mode.Sale:
 
                     break;
+                case Mode.productInformation:
+                    btnNewPurchaseOrder.Visibility = Visibility.Collapsed;
+                    btnAddItem.Visibility = Visibility.Collapsed;
+                    btnSave.Visibility = Visibility.Collapsed;
+                    btnRemove.Visibility = Visibility.Collapsed;
+                    btnDone.Visibility = Visibility.Collapsed;
+                    break;
+                case Mode.Nothong:
+
+                    break;
             }
+        }
+
+        void HidePanel()
+        {
+            GrdNewPurchersOrder.Visibility = Visibility.Hidden;
+            GrdSale.Visibility = Visibility.Hidden;
+            GrdPurchesOrderList.Visibility = Visibility.Hidden;
+            GrdProductList.Visibility = Visibility.Hidden;
+            GrdTotalCharges.Visibility = Visibility.Hidden;
+            GrdProductInformation.Visibility = Visibility.Hidden;
         }
 
         private void BtnSave_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -848,7 +872,6 @@ namespace Vanme_Pro
                         db.SaveChanges();
                         SelectedPurchaseOrder = Po;
                         int lastId = db.Items.Max(p => p.Id);
-
                         foreach (Item VARIABLE in itemsList)
                         {
                             lastId++;
@@ -1040,6 +1063,7 @@ namespace Vanme_Pro
                             ProductInventoryWarehouse re = db.ProductInventoryWarehouses.SingleOrDefault(p =>
                                 p.ProductMaster_fk == VARIABLE.ProductMaster_fk &&
                                 p.Warehouse_fk == VARIABLE.PurchaseOrder.ToWarehouse_fk);
+
                             if (re != null)
                             {
                                 re.OnTheWayInventory += VARIABLE.AsnQuantity;
@@ -1054,7 +1078,19 @@ namespace Vanme_Pro
                                 re.OnTheWayInventory = VARIABLE.AsnQuantity;
                                 db.ProductInventoryWarehouses.Add(re);
                             }
-                            VARIABLE.ProductMaster.OnTheWayInventory += VARIABLE.AsnQuantity;
+                            // VARIABLE.ProductMaster.OnTheWayInventory += VARIABLE.AsnQuantity;
+
+                            if (Convert.ToInt16(cmbShipToStore.SelectedValue) != 2)
+                            {
+                                ProductInventoryWarehouse reee = db.ProductInventoryWarehouses.SingleOrDefault(p =>
+                                    p.ProductMaster_fk == VARIABLE.ProductMaster_fk &&
+                                    p.Warehouse_fk == VARIABLE.PurchaseOrder.FromWarehouse_fk);
+
+                                reee.Inventory -= VARIABLE.AsnQuantity;
+
+
+                            }
+
 
                         }
                     }
@@ -1360,12 +1396,12 @@ namespace Vanme_Pro
             foreach (var VARIABLE in SelectedPurchaseOrder.Items)
             {
 
-                x = (SelectedPurchaseOrder.TotalCharges.Value / SelectedPurchaseOrder.AsnTotal.Value*VARIABLE.AsnPrice) +
+                x = (SelectedPurchaseOrder.TotalCharges.Value / SelectedPurchaseOrder.AsnTotal.Value * VARIABLE.AsnPrice) +
                                 VARIABLE.AsnPrice;
                 VARIABLE.Cost = Math.Round(x, 2, MidpointRounding.ToEven);
             }
             FillDataGrid(SelectedPurchaseOrder.Items.ToList());
-            GrdTotalCharges.Visibility = Visibility.Hidden;
+            HidePanel();
         }
 
 
