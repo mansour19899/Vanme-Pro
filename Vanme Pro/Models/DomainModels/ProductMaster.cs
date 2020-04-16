@@ -31,7 +31,13 @@ namespace Vanme_Pro.Models.DomainModels
         public int Income { get; set; }
         public int Outcome { get; set; }
         public int OnTheWayInventory { get; set; }
-        public string Image { get; set; }
+
+        private string _imageName;
+        public string Image
+        {
+            get=>string.IsNullOrEmpty(_imageName)? "\\ProductImages\\NoImage.jpeg" : $"\\ProductImages\\{_imageName}";
+            set=>_imageName=value;
+        }
         public Nullable<bool> Active { get; set; }
 
         public string Note { get; set; }

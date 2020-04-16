@@ -432,6 +432,8 @@ namespace Vanme_Pro
             lblStore2Product.Content = "---------------";
 
             selectedProductMaster = product;
+            var salam= System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            imgProductMaster.Source= new BitmapImage(new Uri(salam+selectedProductMaster.Image));
 
             GroupBoxInventory_OnMouseDown(null, null);
         }
@@ -1400,6 +1402,7 @@ namespace Vanme_Pro
 
         private void BtnTotalCharges_OnClick(object sender, RoutedEventArgs e)
         {
+            
             if (Mode == Mode.Grn)
                 GrdTotalCharges.Visibility = Visibility.Visible;
             else

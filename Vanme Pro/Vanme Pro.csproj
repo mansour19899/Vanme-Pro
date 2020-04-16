@@ -198,6 +198,10 @@
     <Compile Include="Migrations\20200415191705_smm569.designer.cs">
       <DependentUpon>20200415191705_smm569.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200416023455_smm560.cs" />
+    <Compile Include="Migrations\20200416023455_smm560.designer.cs">
+      <DependentUpon>20200416023455_smm560.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\dbContextModelSnapshot.cs" />
     <Compile Include="Models\Context\dbContext.cs" />
     <Compile Include="Models\DomainModels\Customer.cs" />

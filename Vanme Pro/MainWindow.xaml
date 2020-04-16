@@ -708,6 +708,7 @@
                         <Label  Content="ALU : " />
                         <TextBox Name="txtAluProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
+                    <Image Margin="0 20 0 0" Name="imgProductMaster" Source="Content/Images/LOGO-GOLD_WHITE_BLACK.jpg" MinHeight="100" MaxHeight="200"/>
                 </StackPanel>
             </GroupBox>
             <GroupBox
