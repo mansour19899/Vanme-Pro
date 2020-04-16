@@ -44,8 +44,9 @@ namespace Vanme_Pro.Models.Context
             modelBuilder.Entity<Item>().Ignore(p => p.PreviousQuantity);
             modelBuilder.Entity<Item>().Ignore(p => p.CurrentQuantity);
             modelBuilder.Entity<Item>().Ignore(p => p.TotalItemPrice);
+            modelBuilder.Entity<Item>().Property(a => a.RowVersion).IsRowVersion();
 
-           // modelBuilder.Entity<Item>().Property(b => b.Note).HasColumnType("text").HasDefaultValue("Note :  ");
+            // modelBuilder.Entity<Item>().Property(b => b.Note).HasColumnType("text").HasDefaultValue("Note :  ");
 
             modelBuilder.Entity<Item>()
                 .HasOne<ProductMaster>(s => s.ProductMaster)
@@ -86,6 +87,8 @@ namespace Vanme_Pro.Models.Context
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.CreateOrder).HasDefaultValueSql("getdate()");
+                entity.Property(a => a.RowVersion).IsRowVersion();
 
                 entity.HasOne<Vendor>(s => s.Vendor)
                     .WithMany(g => g.PurchaseOrders)

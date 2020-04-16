@@ -51,6 +51,7 @@ namespace Vanme_Pro.Models.DomainModels
         public int? ApprovePoUser_fk{ get; set; }
         public int? ApproveAsnUser_fk { get; set; }
         public int? ApproveGrnUser_fk { get; set; }
+        public byte[] RowVersion { get; set; }
 
 
         public ICollection<Item> Items { get; set; }

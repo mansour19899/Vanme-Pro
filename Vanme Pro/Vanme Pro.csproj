@@ -190,6 +190,14 @@
     <Compile Include="Migrations\20200414171048_smm180.designer.cs">
       <DependentUpon>20200414171048_smm180.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200415184059_smm564.cs" />
+    <Compile Include="Migrations\20200415184059_smm564.designer.cs">
+      <DependentUpon>20200415184059_smm564.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200415191705_smm569.cs" />
+    <Compile Include="Migrations\20200415191705_smm569.designer.cs">
+      <DependentUpon>20200415191705_smm569.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\dbContextModelSnapshot.cs" />
     <Compile Include="Models\Context\dbContext.cs" />
     <Compile Include="Models\DomainModels\Customer.cs" />
