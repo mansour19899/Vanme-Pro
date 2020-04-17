@@ -35,7 +35,7 @@ namespace Vanme_Pro.Models.DomainModels
         private string _imageName;
         public string Image
         {
-            get=>string.IsNullOrEmpty(_imageName)? "\\ProductImages\\NoImage.jpeg" : $"\\ProductImages\\{_imageName}";
+            get=>string.IsNullOrEmpty(_imageName)? "NoImage.jpeg" : _imageName;
             set=>_imageName=value;
         }
         public Nullable<bool> Active { get; set; }

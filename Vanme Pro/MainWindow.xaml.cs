@@ -134,6 +134,7 @@ namespace Vanme_Pro
             {
                 FillProductInformation(wer);
                 HidePanel();
+                
                 ShowSideBar(Mode.productInformation);
                 GrdProductInformation.Visibility = Visibility.Visible;
             }
@@ -369,7 +370,7 @@ namespace Vanme_Pro
                 cmbVendor.SelectedValue = pOrder.Vendor_fk;
                 cmbShipFrom.SelectedValue = pOrder.FromWarehouse_fk;
                 cmbShipToStore.SelectedValue = pOrder.ToWarehouse_fk;
-                TxtTotalPrice.Text = pOrder.AsnTotal.ToString();
+                TxtTotalPrice.Text = pOrder.GrnTotal.ToString();
                 dpiOrderDate.SelectedDate = pOrder.GrnDate;
                 dpiShipDate.SelectedDate = pOrder.ShipDate;
                 dpiCancelDate.SelectedDate = pOrder.CancelDate;
@@ -410,36 +411,48 @@ namespace Vanme_Pro
 
         private void FillProductInformation(ProductMaster product)
         {
-            txtStyleNumberProduct.Text = product.StyleNumber;
-            txtSkuProduct.Text = product.SKU;
-            txtUpcProduct.Text = product.UPC;
-            txtColorProduct.Text = product.Color;
-            txtSizeProduct.Text = product.Size;
-            txtMadeInProduct.Text = product.MadeIn;
-            txtAluProduct.Text = product.Id.ToString();
+           
+            selectedProductMaster = product;
+            this.DataContext = product;
+            lblSave.Content = "Edit";
+            //txtStyleNumberProduct.Text = product.StyleNumber;
+            //txtSkuProduct.Text = product.SKU;
+            //txtUpcProduct.Text = product.UPC;
+            //txtColorProduct.Text = product.Color;
+            //txtSizeProduct.Text = product.Size;
+            //txtMadeInProduct.Text = product.MadeIn;
+            // txtAluProduct.Text = product.Id.ToString();
 
-            txtFobPriceProduct.Text = product.FobPrice.ToString();
-            txtCostProduct.Text = product.Cost.ToString();
-            txtWholesaleProduct.Text = product.WholesalePrice.ToString();
-            txtRetailPriceProduct.Text = product.RetailPrice.ToString();
-            txtReceiptPriceProduct.Text = product.ReceiptPrice.ToString();
+            // txtFobPriceProduct.Text = product.FobPrice.ToString();
+            //txtCostProduct.Text = product.Cost.ToString();
+            //txtWholesaleProduct.Text = product.WholesalePrice.ToString();
+            //txtRetailPriceProduct.Text = product.RetailPrice.ToString();
+            //txtReceiptPriceProduct.Text = product.ReceiptPrice.ToString();
 
-            lblInventoryProduct.Content = "---------------";
+            //lblInventoryProduct.Content = "---------------";
             lblSaleProduct.Content = "---------------";
             lblIncomeProduct.Content = "---------------";
-            lblMainWarehouseProduct.Content = "---------------";
-            lblStore1Product.Content = "---------------";
-            lblStore2Product.Content = "---------------";
+            //lblMainWarehouseProduct.Content = "---------------";
+            //lblStore1Product.Content = "---------------";
+            //lblStore2Product.Content = "---------------";
 
-            selectedProductMaster = product;
-            var salam= System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-            imgProductMaster.Source= new BitmapImage(new Uri(salam+selectedProductMaster.Image));
+
+            var addressDebug = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            imgProductMaster.Source = new BitmapImage(new Uri(addressDebug + "\\ProductImages\\" + selectedProductMaster.Image));
 
             GroupBoxInventory_OnMouseDown(null, null);
+        }
+        private void GrdProductInformation_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (lblSave.Content.ToString() == "Update")
+            {
+                SaveAndUpdateProductInformation();
+            }
         }
 
         private void GroupBoxInventory_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+
             int InventoryCount = 0;
             int[] MainWarehouseCount = { 0, 0 };
             int[] Store1Count = { 0, 0 };
@@ -600,9 +613,9 @@ namespace Vanme_Pro
                 switch (Mode)
                 {
                     case Mode.Asn:
-                    {
-                        lvPurchase.ItemsSource = GivePurchaseOrdersList();
-                                HidePanel();
+                        {
+                            lvPurchase.ItemsSource = GivePurchaseOrdersList();
+                            HidePanel();
                             GrdPurchesOrderList.Visibility = Visibility.Visible;
                             IsViewDetail = false;
                             ShowSideBar(Mode.Asn);
@@ -636,7 +649,7 @@ namespace Vanme_Pro
                 lblNewPo.Content = "New GIT";
 
                 lvPurchase.ItemsSource = GivePurchaseOrdersList();
-                    HidePanel();
+                HidePanel();
                 GrdPurchesOrderList.Visibility = Visibility.Visible;
                 ShowSideBar(Mode.Asn);
             }
@@ -692,6 +705,8 @@ namespace Vanme_Pro
         }
         private void BtnProduct_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            Mode = Mode.productInformation;
+            IsViewDetail = false;
             ModeAddItem = false;
             HidePanel();
             GrdProductList.Visibility = Visibility.Visible;
@@ -763,7 +778,7 @@ namespace Vanme_Pro
                 case Mode.productInformation:
                     btnNewPurchaseOrder.Visibility = Visibility.Collapsed;
                     btnAddItem.Visibility = Visibility.Collapsed;
-                    btnSave.Visibility = Visibility.Collapsed;
+                    btnSave.Visibility = Visibility.Visible;
                     btnRemove.Visibility = Visibility.Collapsed;
                     btnDone.Visibility = Visibility.Collapsed;
                     break;
@@ -782,7 +797,7 @@ namespace Vanme_Pro
             GrdTotalCharges.Visibility = Visibility.Hidden;
             GrdProductInformation.Visibility = Visibility.Hidden;
 
-                
+
         }
 
         private List<PurchaseOrder> GivePurchaseOrdersList()
@@ -790,14 +805,14 @@ namespace Vanme_Pro
             UnchangedAllEntities();
             switch (Mode)
             {
-                 case Mode.PO:
-                   return  db.PurchaseOrders.Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
+                case Mode.PO:
+                    return db.PurchaseOrders.Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
                     break;
-                 case Mode.Asn:
+                case Mode.Asn:
                     return db.PurchaseOrders.Where(p => p.CreatedPO == true)
                          .Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
-                     break;
-                 case Mode.Grn:
+                    break;
+                case Mode.Grn:
                     return db.PurchaseOrders.Where(p => p.CreatedAsn == true)
                          .Include(p => p.Items).ThenInclude(p => p.ProductMaster).Include(p => p.Vendor).ToList();
                     break;
@@ -807,7 +822,15 @@ namespace Vanme_Pro
         }
         private void BtnSave_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            SaveAndUpdate(false);
+            if (Mode == Mode.productInformation)
+            {
+                SaveAndUpdateProductInformation(true);
+            }
+            else
+            {
+                SaveAndUpdate(false);
+
+            }
 
         }
 
@@ -1150,12 +1173,12 @@ namespace Vanme_Pro
                     {
                         Po.Grnumber = db.PurchaseOrders.Max(p => p.Grnumber) + 1;
                         Po.ApproveGrnUser_fk = user.Id;
-                        Po.GrnTotal = Po.TotalCharges + Po.AsnTotal;
                         Po.CreatedGrn = true;
                     }
 
                     vendorfk = Convert.ToInt32(cmbVendor.SelectedValue);
                     Po.GrnDate = dpiOrderDate.SelectedDate;
+                    Po.GrnTotal = Po.TotalCharges + Po.AsnTotal;
                     Po.LastEditDate = DateTime.Now;
                     CalculateTotalPriceItemsCount(Po.Items.ToList());
                     if (ItemsCountInPO != 0)
@@ -1212,6 +1235,60 @@ namespace Vanme_Pro
             {
 
             }
+        }
+
+        void SaveAndUpdateProductInformation(bool True=false)
+        {
+            List<TextBox> list = new List<TextBox>()
+            {
+                txtStyleNumberProduct,txtSkuProduct,txtUpcProduct,txtColorProduct,txtSizeProduct,txtMadeInProduct
+                ,txtAluProduct,txtFobPriceProduct,txtCostProduct,txtWholesaleProduct,txtRetailPriceProduct,txtReceiptPriceProduct
+            };
+
+            if (!True)
+            {
+                foreach (var VARIABLE in list)
+                {
+                    VARIABLE.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
+                    MakeReadOnly();
+                }
+            }
+            else
+            {
+                if (lblSave.Content.ToString() == "Edit")
+                {
+                    lblSave.Content = "Update";
+                    foreach (var VARIABLE in list)
+                    {
+                        VARIABLE.IsReadOnly = false;
+                    }
+
+                    txtAluProduct.IsReadOnly = true;
+                }
+                else if (lblSave.Content.ToString() == "Update")
+                {
+                    foreach (var VARIABLE in list)
+                    {
+                        VARIABLE.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                    }
+
+                    db.Update(selectedProductMaster);
+                    db.SaveChanges();
+                    myMessageQueue.Enqueue("Product Updated");
+                    MakeReadOnly();
+                    lblSave.Content = "Edit";
+                }
+            }
+
+
+            void MakeReadOnly()
+            {
+                foreach (var VARIABLE in list)
+                {
+                    VARIABLE.IsReadOnly = true;
+                }
+            }
+
         }
 
         #region LostFocusOfFright
@@ -1402,7 +1479,7 @@ namespace Vanme_Pro
 
         private void BtnTotalCharges_OnClick(object sender, RoutedEventArgs e)
         {
-            
+
             if (Mode == Mode.Grn)
                 GrdTotalCharges.Visibility = Visibility.Visible;
             else
@@ -1434,6 +1511,7 @@ namespace Vanme_Pro
                 VARIABLE.Cost = Math.Round(x, 2, MidpointRounding.ToEven);
             }
             FillDataGrid(SelectedPurchaseOrder.Items.ToList());
+            TxtTotalPrice.Text = (SelectedPurchaseOrder.TotalCharges + SelectedPurchaseOrder.AsnTotal).ToString();
             GrdTotalCharges.Visibility = Visibility.Hidden;
         }
 
@@ -1448,7 +1526,6 @@ namespace Vanme_Pro
             foreach (var entry in changedEntriesCopy)
                 entry.State = EntityState.Unchanged;
         }
-
 
 
     }

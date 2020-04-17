@@ -91,7 +91,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="0.15*" />
         </Grid.ColumnDefinitions>
-        <materialDesign:Snackbar Grid.Row="1" x:Name="SnackbarResult" />
+        <materialDesign:Snackbar Grid.Row="1" x:Name="SnackbarResult" Panel.ZIndex="99999"  />
         <Border Grid.Column="1" Grid.Row="0" BorderBrush="LightSlateGray" BorderThickness="2 0 0 2">
             <Image Name="btnLogo" Grid.Column="1" Grid.Row="0" Source="Content/Images/LOGO-GOLD_WHITE_BLACK.jpg" MouseDown="BtnLogo_OnMouseDown" />
         </Border>
@@ -634,7 +634,7 @@
 
         </Grid>
 
-        <Grid Name="GrdProductInformation" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
+        <Grid Name="GrdProductInformation" Grid.Row="1" Grid.Column="0" Visibility="Hidden" IsVisibleChanged="GrdProductInformation_IsVisibleChanged">
             <Grid.Resources>
                 <Style TargetType="Label">
                     <Setter Property="MinWidth" Value="150"/>
@@ -654,6 +654,11 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
+            <Grid.BindingGroup>
+                <BindingGroup>
+
+                </BindingGroup>
+            </Grid.BindingGroup>
             <GroupBox
                 Header="Information"
                 Style="{DynamicResource MaterialDesignCardGroupBox}"
@@ -678,35 +683,35 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Content="Name : " />
-                        <TextBox Name="txtTitleProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding Name,UpdateSourceTrigger=Explicit}"  Name="txtTitleProduct" IsReadOnly="True" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
                         <Label  Content="Style Number : " />
-                        <TextBox Name="txtStyleNumberProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Name="txtStyleNumberProduct" Text="{Binding StyleNumber,UpdateSourceTrigger=Explicit}" IsReadOnly="True" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
                         <Label  Content="SKU : " />
-                        <TextBox Name="txtSkuProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding SKU,UpdateSourceTrigger=Explicit}" Name="txtSkuProduct" IsReadOnly="True" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
                         <Label  Content="UPC : " />
-                        <TextBox Name="txtUpcProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding UPC,UpdateSourceTrigger=Explicit}" Name="txtUpcProduct" IsReadOnly="True" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
                         <Label  Content="Color : " />
-                        <TextBox Name="txtColorProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding Color,UpdateSourceTrigger=Explicit}" Name="txtColorProduct" IsReadOnly="True" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
                         <Label  Content="Size : " />
-                        <TextBox Name="txtSizeProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding Size,UpdateSourceTrigger=Explicit}" Name="txtSizeProduct" IsReadOnly="True" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
                         <Label  Content="Made In : " />
-                        <TextBox Name="txtMadeInProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding MadeIn,UpdateSourceTrigger=Explicit}" Name="txtMadeInProduct" IsReadOnly="True" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="{StaticResource stackMargin}">
                         <Label  Content="ALU : " />
-                        <TextBox Name="txtAluProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding Id,UpdateSourceTrigger=Explicit}" Name="txtAluProduct" IsReadOnly="True" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <Image Margin="0 20 0 0" Name="imgProductMaster" Source="Content/Images/LOGO-GOLD_WHITE_BLACK.jpg" MinHeight="100" MaxHeight="200"/>
                 </StackPanel>
@@ -735,23 +740,23 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Content="F.O.B Price : " />
-                        <TextBox Name="txtFobPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding FobPrice,UpdateSourceTrigger=Explicit}" IsReadOnly="True" Name="txtFobPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Content="Cost : " />
-                        <TextBox Name="txtCostProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding Cost,UpdateSourceTrigger=Explicit}" IsReadOnly="True" Name="txtCostProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Content="Wholesale : " />
-                        <TextBox Name="txtWholesaleProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding WholesalePrice,UpdateSourceTrigger=Explicit}" IsReadOnly="True" Name="txtWholesaleProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Content="Retail Price : " />
-                        <TextBox Name="txtRetailPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding RetailPrice,UpdateSourceTrigger=Explicit}" IsReadOnly="True" Name="txtRetailPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Content="Receipt Price : " />
-                        <TextBox Name="txtReceiptPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding ReceiptPrice,UpdateSourceTrigger=Explicit}" IsReadOnly="True" Name="txtReceiptPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
