@@ -202,14 +202,36 @@
     <Compile Include="Migrations\20200416023455_smm560.designer.cs">
       <DependentUpon>20200416023455_smm560.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200417191829_smm190.cs" />
+    <Compile Include="Migrations\20200417191829_smm190.designer.cs">
+      <DependentUpon>20200417191829_smm190.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200418221145_smm191.cs" />
+    <Compile Include="Migrations\20200418221145_smm191.designer.cs">
+      <DependentUpon>20200418221145_smm191.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200418221737_smm192.cs" />
+    <Compile Include="Migrations\20200418221737_smm192.designer.cs">
+      <DependentUpon>20200418221737_smm192.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200419041136_smm193.cs" />
+    <Compile Include="Migrations\20200419041136_smm193.designer.cs">
+      <DependentUpon>20200419041136_smm193.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200419042141_smm195.cs" />
+    <Compile Include="Migrations\20200419042141_smm195.designer.cs">
+      <DependentUpon>20200419042141_smm195.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\dbContextModelSnapshot.cs" />
     <Compile Include="Models\Context\dbContext.cs" />
     <Compile Include="Models\DomainModels\Customer.cs" />
     <Compile Include="Models\DomainModels\Item.cs" />
     <Compile Include="Models\DomainModels\ProductInventoryWarehouse.cs" />
     <Compile Include="Models\DomainModels\ProductMaster.cs" />
+    <Compile Include="Models\DomainModels\Province.cs" />
     <Compile Include="Models\DomainModels\PurchaseOrder.cs" />
-    <Compile Include="Models\DomainModels\Receipt.cs" />
+    <Compile Include="Models\DomainModels\SaleOrder.cs" />
+    <Compile Include="Models\DomainModels\SoItem.cs" />
     <Compile Include="Models\DomainModels\User.cs" />
     <Compile Include="Models\DomainModels\Vendor.cs" />
     <Compile Include="Models\DomainModels\Warehouse.cs" />

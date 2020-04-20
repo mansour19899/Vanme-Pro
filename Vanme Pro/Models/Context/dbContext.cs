@@ -19,6 +19,8 @@ namespace Vanme_Pro.Models.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<ProductInventoryWarehouse> ProductInventoryWarehouses { get; set; }
+        public DbSet<SaleOrder> SaleOrders { get; set; }
+        public DbSet<Province> Provinces  { get; set; }
 
 
 
@@ -156,6 +158,54 @@ namespace Vanme_Pro.Models.Context
             });
 
 
+            //----------------------------------- SaleOrder ---------------------------------------
+            modelBuilder.Entity<SaleOrder>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.OrderedDate).HasColumnType("smalldatetime");
+                entity.Property(e => e.CancelDate).HasColumnType("smalldatetime");
+
+                entity.HasOne<User>(s => s.User)
+                    .WithMany(g => g.SaleOrders)
+                    .HasForeignKey(s => s.Cashier_fk);
+
+                entity.HasOne<Customer>(s => s.Customer)
+                    .WithMany(g => g.SaleOrders)
+                    .HasForeignKey(s => s.Customer_fk);
+
+                entity.HasOne<Province>(s => s.TaxArea)
+                    .WithMany(g => g.SaleOrders)
+                    .HasForeignKey(s => s.TaxArea_fk);
+            });
+
+            //----------------------------------- Province ---------------------------------------
+            modelBuilder.Entity<Province>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+            });
+            //----------------------------------- Customer ---------------------------------------
+            modelBuilder.Entity<Customer>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne<User>(s => s.User)
+                    .WithMany(g => g.Customers)
+                    .HasForeignKey(s => s.CreatedBy_fk);
+            });
+            //----------------------------------- SoItem ---------------------------------------
+            modelBuilder.Entity<SoItem>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne<SaleOrder>(s => s.SaleOrder)
+                    .WithMany(g => g.SoItems)
+                    .HasForeignKey(s => s.So_fk);
+
+                entity.HasOne<ProductMaster>(s => s.ProductMaster)
+                    .WithMany(g => g.SoItems)
+                    .HasForeignKey(s => s.ProductMaster_fk);
+            });
             //----------------------------------- new ---------------------------------------
         }
 

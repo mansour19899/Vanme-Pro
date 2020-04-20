@@ -34,5 +34,8 @@ namespace Vanme_Pro.Models.DomainModels
         public DateTime? LastSaleDate { get; set; }
         public bool Active { get; set; }
 
+        public ICollection<SaleOrder> SaleOrders { get; set; }
+        public  User User { get; set; }
+
     }
 }

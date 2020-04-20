@@ -24,6 +24,8 @@ namespace Vanme_Pro.Models.DomainModels
         public ICollection<PurchaseOrder> CreatePo { get; set; }
         public ICollection<PurchaseOrder> CreateAsn { get; set; }
         public ICollection<PurchaseOrder> CreateGrn { get; set; }
+        public ICollection<SaleOrder> SaleOrders { get; set; }
+        public ICollection<Customer> Customers { get; set; }
 
     }
 }

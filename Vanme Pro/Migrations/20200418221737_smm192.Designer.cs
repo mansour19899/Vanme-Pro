@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vanme_Pro.Models.Context;
 
 namespace Vanme_Pro.Migrations
 {
     [DbContext(typeof(dbContext))]
-    partial class dbContextModelSnapshot : ModelSnapshot
+    [Migration("20200418221737_smm192")]
+    partial class smm192
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,8 +83,6 @@ namespace Vanme_Pro.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy_fk");
 
                     b.ToTable("Customers");
                 });
@@ -285,9 +285,6 @@ namespace Vanme_Pro.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("Hst")
                         .HasColumnType("int");
 
@@ -459,58 +456,37 @@ namespace Vanme_Pro.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("CancelDate")
-                        .HasColumnType("smalldatetime");
-
-                    b.Property<int?>("Cashier_fk")
+                    b.Property<int>("Cashier_fk")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Customer_fk")
+                    b.Property<int>("Customer_fk")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Freight")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<byte>("Doscount")
+                        .HasColumnType("tinyint");
 
-                    b.Property<decimal?>("Handling")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("FeeName")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("OrderedDate")
-                        .HasColumnType("smalldatetime");
+                        .HasColumnType("datetime2");
 
-                    b.Property<int?>("Quantity")
+                    b.Property<int>("SalesOrderNumber")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SalesOrderNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ShipMethod_fk")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ShipToAddressNam1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShipToAddressNam2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShipToAddressName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShipToPostalCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShipToPostalPhone1")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte>("Shipping")
+                        .HasColumnType("tinyint");
 
                     b.Property<decimal?>("SoTotal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("Subtotal")
+                    b.Property<decimal>("Subtotal")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Tax")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TaxArea_fk")
+                    b.Property<int>("TaxArea_fk")
                         .HasColumnType("int");
 
                     b.Property<bool>("Type")
@@ -518,50 +494,7 @@ namespace Vanme_Pro.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Cashier_fk");
-
-                    b.HasIndex("Customer_fk");
-
-                    b.HasIndex("TaxArea_fk");
-
                     b.ToTable("SaleOrders");
-                });
-
-            modelBuilder.Entity("Vanme_Pro.Models.DomainModels.SoItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Discount")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductMaster_fk")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("So_fk")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductMaster_fk");
-
-                    b.HasIndex("So_fk");
-
-                    b.ToTable("SoItem");
                 });
 
             modelBuilder.Entity("Vanme_Pro.Models.DomainModels.User", b =>
@@ -703,15 +636,6 @@ namespace Vanme_Pro.Migrations
                     b.ToTable("Warehouses");
                 });
 
-            modelBuilder.Entity("Vanme_Pro.Models.DomainModels.Customer", b =>
-                {
-                    b.HasOne("Vanme_Pro.Models.DomainModels.User", "User")
-                        .WithMany("Customers")
-                        .HasForeignKey("CreatedBy_fk")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Vanme_Pro.Models.DomainModels.Item", b =>
                 {
                     b.HasOne("Vanme_Pro.Models.DomainModels.PurchaseOrder", "PurchaseOrder")
@@ -763,36 +687,6 @@ namespace Vanme_Pro.Migrations
                     b.HasOne("Vanme_Pro.Models.DomainModels.Vendor", "Vendor")
                         .WithMany("PurchaseOrders")
                         .HasForeignKey("Vendor_fk");
-                });
-
-            modelBuilder.Entity("Vanme_Pro.Models.DomainModels.SaleOrder", b =>
-                {
-                    b.HasOne("Vanme_Pro.Models.DomainModels.User", "User")
-                        .WithMany("SaleOrders")
-                        .HasForeignKey("Cashier_fk");
-
-                    b.HasOne("Vanme_Pro.Models.DomainModels.Customer", "Customer")
-                        .WithMany("SaleOrders")
-                        .HasForeignKey("Customer_fk");
-
-                    b.HasOne("Vanme_Pro.Models.DomainModels.Province", "TaxArea")
-                        .WithMany("SaleOrders")
-                        .HasForeignKey("TaxArea_fk");
-                });
-
-            modelBuilder.Entity("Vanme_Pro.Models.DomainModels.SoItem", b =>
-                {
-                    b.HasOne("Vanme_Pro.Models.DomainModels.ProductMaster", "ProductMaster")
-                        .WithMany("SoItems")
-                        .HasForeignKey("ProductMaster_fk")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Vanme_Pro.Models.DomainModels.SaleOrder", "SaleOrder")
-                        .WithMany("SoItems")
-                        .HasForeignKey("So_fk")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
