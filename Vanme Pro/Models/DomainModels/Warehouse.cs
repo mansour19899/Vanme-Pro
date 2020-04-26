@@ -17,5 +17,6 @@ namespace Vanme_Pro.Models.DomainModels
         public ICollection<PurchaseOrder> PoToWareHose { get; set; }
         public ICollection<PurchaseOrder> POFromWarehouse { get; set; }
         public ICollection<ProductInventoryWarehouse> ProductInventoryWarehouses { get; set; }
+        public ICollection<SaleOrder> SaleOrders { get; set; }
     }
 }

@@ -3,40 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Vanme_Pro.Migrations
 {
-    public partial class smm51 : Migration
+    public partial class smm108 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Customers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Company = table.Column<string>(nullable: true),
-                    Gender = table.Column<bool>(nullable: true),
-                    BirthDate = table.Column<DateTime>(nullable: true),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Address1 = table.Column<string>(nullable: true),
-                    Address2 = table.Column<string>(nullable: true),
-                    Address3 = table.Column<string>(nullable: true),
-                    PostalCode = table.Column<string>(nullable: true),
-                    Phone1 = table.Column<string>(nullable: true),
-                    Phone2 = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    ImageName = table.Column<string>(nullable: true),
-                    Note = table.Column<string>(nullable: true),
-                    CreatedBy_fk = table.Column<int>(nullable: false),
-                    EditedDate = table.Column<DateTime>(nullable: true),
-                    LastSaleDate = table.Column<DateTime>(nullable: true),
-                    Active = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
@@ -51,8 +21,12 @@ namespace Vanme_Pro.Migrations
                     Color = table.Column<string>(nullable: true),
                     MadeIn = table.Column<string>(nullable: true),
                     Cost = table.Column<decimal>(nullable: true),
-                    Price = table.Column<decimal>(nullable: true),
-                    ReceiptPrice = table.Column<decimal>(nullable: true),
+                    FobPrice = table.Column<decimal>(nullable: true),
+                    RetailPrice = table.Column<decimal>(nullable: true),
+                    WholesalePrice = table.Column<decimal>(nullable: true),
+                    SalePrice = table.Column<decimal>(nullable: true),
+                    SaleStartDate = table.Column<DateTime>(nullable: true),
+                    SaleEndDate = table.Column<DateTime>(nullable: true),
                     Margin = table.Column<string>(nullable: true),
                     Inventory = table.Column<int>(nullable: false),
                     LastUpdateInventory = table.Column<DateTime>(nullable: false),
@@ -66,6 +40,22 @@ namespace Vanme_Pro.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Provinces",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    HST = table.Column<decimal>(nullable: true),
+                    GST = table.Column<decimal>(nullable: true),
+                    QST = table.Column<decimal>(nullable: true),
+                    Active = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Provinces", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -135,14 +125,49 @@ namespace Vanme_Pro.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    Company = table.Column<string>(nullable: true),
+                    Gender = table.Column<bool>(nullable: true),
+                    BirthDate = table.Column<DateTime>(nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    Address1 = table.Column<string>(nullable: true),
+                    Address2 = table.Column<string>(nullable: true),
+                    Address3 = table.Column<string>(nullable: true),
+                    PostalCode = table.Column<string>(nullable: true),
+                    Phone1 = table.Column<string>(nullable: true),
+                    Phone2 = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    ImageName = table.Column<string>(nullable: true),
+                    Note = table.Column<string>(nullable: true),
+                    CreatedBy_fk = table.Column<int>(nullable: false),
+                    EditedDate = table.Column<DateTime>(nullable: true),
+                    LastSaleDate = table.Column<DateTime>(nullable: true),
+                    Active = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Customers_Users_CreatedBy_fk",
+                        column: x => x.CreatedBy_fk,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductInventoryWarehouses",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false),
-                    ProductMaster_fk = table.Column<int>(nullable: false),
-                    Warehouse_fk = table.Column<int>(nullable: false),
-                    Inventory = table.Column<int>(nullable: false),
-                    OnTheWayInventory = table.Column<int>(nullable: false),
+                    ProductMaster_fk = table.Column<int>(nullable: true),
+                    Warehouse_fk = table.Column<int>(nullable: true),
+                    Inventory = table.Column<int>(nullable: true, defaultValue: 0),
+                    OnTheWayInventory = table.Column<int>(nullable: true, defaultValue: 0),
                     Aile = table.Column<string>(nullable: true),
                     Bin = table.Column<string>(nullable: true)
                 },
@@ -154,13 +179,13 @@ namespace Vanme_Pro.Migrations
                         column: x => x.ProductMaster_fk,
                         principalTable: "Products",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProductInventoryWarehouses_Warehouses_Warehouse_fk",
                         column: x => x.Warehouse_fk,
                         principalTable: "Warehouses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -173,7 +198,6 @@ namespace Vanme_Pro.Migrations
                     Grnumber = table.Column<int>(nullable: false),
                     Vendor_fk = table.Column<int>(nullable: true),
                     PoType = table.Column<string>(nullable: true),
-                    ShipToStore = table.Column<string>(nullable: true),
                     Associate = table.Column<string>(nullable: true),
                     PoTerms = table.Column<string>(nullable: true),
                     Account = table.Column<string>(nullable: true),
@@ -183,15 +207,22 @@ namespace Vanme_Pro.Migrations
                     GrnDate = table.Column<DateTime>(nullable: true),
                     ShipDate = table.Column<DateTime>(nullable: true),
                     CancelDate = table.Column<DateTime>(nullable: true),
-                    CreateOrder = table.Column<DateTime>(nullable: true),
+                    CreateOrder = table.Column<DateTime>(nullable: true, defaultValueSql: "getdate()"),
                     LastEditDate = table.Column<DateTime>(nullable: true),
                     Freight = table.Column<decimal>(nullable: true),
                     DiscountPercent = table.Column<decimal>(nullable: true),
+                    Percent = table.Column<string>(nullable: true),
                     DiscountDollers = table.Column<decimal>(nullable: true),
-                    FeeType = table.Column<decimal>(nullable: true),
-                    Fee = table.Column<decimal>(nullable: true),
+                    Insurance = table.Column<decimal>(nullable: true),
+                    CustomsDuty = table.Column<decimal>(nullable: true),
+                    Handling = table.Column<decimal>(nullable: true),
+                    Forwarding = table.Column<decimal>(nullable: true),
+                    LandTransport = table.Column<decimal>(nullable: true),
+                    Others = table.Column<decimal>(nullable: true),
+                    TotalCharges = table.Column<decimal>(nullable: true),
                     PoTotal = table.Column<decimal>(nullable: true),
                     AsnTotal = table.Column<decimal>(nullable: true),
+                    GrnTotal = table.Column<decimal>(nullable: true),
                     CreatedPO = table.Column<bool>(nullable: true),
                     CreatedAsn = table.Column<bool>(nullable: true),
                     CreatedGrn = table.Column<bool>(nullable: true),
@@ -202,7 +233,8 @@ namespace Vanme_Pro.Migrations
                     FromWarehouse_fk = table.Column<int>(nullable: true),
                     ApprovePoUser_fk = table.Column<int>(nullable: true),
                     ApproveAsnUser_fk = table.Column<int>(nullable: true),
-                    ApproveGrnUser_fk = table.Column<int>(nullable: true)
+                    ApproveGrnUser_fk = table.Column<int>(nullable: true),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -246,6 +278,56 @@ namespace Vanme_Pro.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SaleOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    Type = table.Column<bool>(nullable: false),
+                    OrderedDate = table.Column<DateTime>(type: "smalldatetime", nullable: true),
+                    ShipDate = table.Column<DateTime>(nullable: true),
+                    CancelDate = table.Column<DateTime>(type: "smalldatetime", nullable: true),
+                    SalesOrderNumber = table.Column<int>(nullable: true),
+                    Cashier_fk = table.Column<int>(nullable: true),
+                    Customer_fk = table.Column<int>(nullable: true),
+                    ShipMethod_fk = table.Column<int>(nullable: true),
+                    Subtotal = table.Column<decimal>(nullable: false),
+                    SoTotalPrice = table.Column<decimal>(nullable: false),
+                    TaxArea_fk = table.Column<int>(nullable: true),
+                    Tax = table.Column<decimal>(nullable: false),
+                    Handling = table.Column<decimal>(nullable: false),
+                    Freight = table.Column<decimal>(nullable: false),
+                    TotalDiscount = table.Column<decimal>(nullable: false),
+                    ShipToAddressName = table.Column<string>(nullable: true),
+                    ShipToAddressNam1 = table.Column<string>(nullable: true),
+                    ShipToAddressNam2 = table.Column<string>(nullable: true),
+                    ShipToPostalCode = table.Column<string>(nullable: true),
+                    ShipToPostalPhone1 = table.Column<string>(nullable: true),
+                    Quantity = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SaleOrders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SaleOrders_Users_Cashier_fk",
+                        column: x => x.Cashier_fk,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SaleOrders_Customers_Customer_fk",
+                        column: x => x.Customer_fk,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SaleOrders_Provinces_TaxArea_fk",
+                        column: x => x.TaxArea_fk,
+                        principalTable: "Provinces",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Items",
                 columns: table => new
                 {
@@ -263,7 +345,8 @@ namespace Vanme_Pro.Migrations
                     Diffrent = table.Column<int>(nullable: true),
                     Alert = table.Column<bool>(nullable: true, defaultValue: false),
                     Note = table.Column<string>(nullable: true),
-                    Checked = table.Column<bool>(nullable: true, defaultValue: false)
+                    Checked = table.Column<bool>(nullable: true, defaultValue: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -281,6 +364,57 @@ namespace Vanme_Pro.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "SoItem",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    So_fk = table.Column<int>(nullable: false),
+                    ProductMaster_fk = table.Column<int>(nullable: false),
+                    Cost = table.Column<decimal>(nullable: false),
+                    Discount = table.Column<decimal>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    Price = table.Column<decimal>(nullable: false),
+                    TotalPrice = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SoItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SoItem_Products_ProductMaster_fk",
+                        column: x => x.ProductMaster_fk,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SoItem_SaleOrders_So_fk",
+                        column: x => x.So_fk,
+                        principalTable: "SaleOrders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Vendors",
+                columns: new[] { "ID", "Acountsharp", "Address1", "Address2", "Address3", "Country", "Currency", "Email", "FirstName", "Info1", "Info2", "LastName", "LeadTime", "Name", "Note", "PaymentTerms", "Phone1", "Phone2", "PostalCode", "Title", "TradeDiscountPercent" },
+                values: new object[] { 1, null, null, null, null, null, null, null, null, null, null, null, null, "ClubJummana", null, null, null, null, null, null, null });
+
+            migrationBuilder.InsertData(
+                table: "Vendors",
+                columns: new[] { "ID", "Acountsharp", "Address1", "Address2", "Address3", "Country", "Currency", "Email", "FirstName", "Info1", "Info2", "LastName", "LeadTime", "Name", "Note", "PaymentTerms", "Phone1", "Phone2", "PostalCode", "Title", "TradeDiscountPercent" },
+                values: new object[] { 2, null, null, null, null, null, null, null, null, null, null, null, null, "Anzir", null, null, null, null, null, null, null });
+
+            migrationBuilder.InsertData(
+                table: "Vendors",
+                columns: new[] { "ID", "Acountsharp", "Address1", "Address2", "Address3", "Country", "Currency", "Email", "FirstName", "Info1", "Info2", "LastName", "LeadTime", "Name", "Note", "PaymentTerms", "Phone1", "Phone2", "PostalCode", "Title", "TradeDiscountPercent" },
+                values: new object[] { 3, null, null, null, null, null, null, null, null, null, null, null, null, "Noman", null, null, null, null, null, null, null });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_CreatedBy_fk",
+                table: "Customers",
+                column: "CreatedBy_fk");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Items_Po_fk",
@@ -331,18 +465,43 @@ namespace Vanme_Pro.Migrations
                 name: "IX_PurchaseOrders_Vendor_fk",
                 table: "PurchaseOrders",
                 column: "Vendor_fk");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SaleOrders_Cashier_fk",
+                table: "SaleOrders",
+                column: "Cashier_fk");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SaleOrders_Customer_fk",
+                table: "SaleOrders",
+                column: "Customer_fk");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SaleOrders_TaxArea_fk",
+                table: "SaleOrders",
+                column: "TaxArea_fk");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SoItem_ProductMaster_fk",
+                table: "SoItem",
+                column: "ProductMaster_fk");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SoItem_So_fk",
+                table: "SoItem",
+                column: "So_fk");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Customers");
-
-            migrationBuilder.DropTable(
                 name: "Items");
 
             migrationBuilder.DropTable(
                 name: "ProductInventoryWarehouses");
+
+            migrationBuilder.DropTable(
+                name: "SoItem");
 
             migrationBuilder.DropTable(
                 name: "PurchaseOrders");
@@ -351,13 +510,22 @@ namespace Vanme_Pro.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "SaleOrders");
 
             migrationBuilder.DropTable(
                 name: "Warehouses");
 
             migrationBuilder.DropTable(
                 name: "Vendors");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "Provinces");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

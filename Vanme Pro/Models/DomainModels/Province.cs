@@ -10,8 +10,9 @@ namespace Vanme_Pro.Models.DomainModels
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int? Hst { get; set; }
-        public int? PSt { get; set; }
+        public decimal? HST { get; set; }
+        public decimal? GST { get; set; }
+        public decimal? QST { get; set; }
         public bool Active { get; set; }
 
         public ICollection<SaleOrder> SaleOrders { get; set; }

@@ -12,6 +12,8 @@ namespace Vanme_Pro.Models.DomainModels
         public int? ProductMaster_fk { get; set; }
         public int? Warehouse_fk { get; set; }
         public int? Inventory { get; set; }
+        public int? Income { get; set; }
+        public int? OutCome { get; set; }
         public int? OnTheWayInventory { get; set; }
         public string Aile { get; set; }
         public string Bin { get; set; }

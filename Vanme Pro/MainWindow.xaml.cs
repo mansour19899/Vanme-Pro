@@ -17,9 +17,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MaterialDesignThemes.Wpf;
 using Microsoft.EntityFrameworkCore;
+using Vanme_Pro.Annotations;
 using Vanme_Pro.Models.Context;
 using Vanme_Pro.Models.DomainModels;
 using Vanme_Pro.Models.ViewModels;
+using Vanme_Pro.Utility;
 using DataGridTextColumn = System.Windows.Controls.DataGridTextColumn;
 
 namespace Vanme_Pro
@@ -49,6 +51,7 @@ namespace Vanme_Pro
         private decimal TotalCharges = 0;
         private bool ModeAddItem = false;
         private ObservableCollection<SoItem> listSoItems;
+        private SaleOrder saleOrder;
         public MainWindow()
         {
             InitializeComponent();
@@ -61,8 +64,8 @@ namespace Vanme_Pro
             ShowSideBar(Mode);
             itemsList = new List<Item>();
             AddNewitemsList = new List<Item>();
-            listSoItems = new ObservableCollection<SoItem>();
-            dgSoItems.ItemsSource = listSoItems;
+            //listSoItems = new ObservableCollection<SoItem>();
+            //dgSoItems.ItemsSource = listSoItems;
 
             //   var productlList = db.Products.ToList();
             var productlList = db.Products;
@@ -102,8 +105,19 @@ namespace Vanme_Pro
             {
                 if (Mode == Mode.Sale)
                 {
+                    decimal price = 0;
+                    price = (rdoWholesale.IsChecked == true) ? wer.WholesalePrice.Value : wer.RetailPrice.Value;
                     if (!listSoItems.Any(p => p.ProductMaster_fk == wer.Id))
-                        listSoItems.Add(new SoItem() { ProductMaster = wer, ProductMaster_fk = wer.Id,Quantity = 0,TotalPrice = 0m});
+                        listSoItems.Add(new SoItem()
+                        {
+                            ProductMaster = wer,
+                            ProductMaster_fk = wer.Id,
+                            Quantity = 0,
+                            TotalPrice = 0m
+                            ,
+                            Price = price,
+                            Cost = wer.Cost.Value
+                        });
 
                     HidePanel();
                     GrdOrder.Visibility = Visibility.Visible;
@@ -187,7 +201,7 @@ namespace Vanme_Pro
 
 
 
-            
+
             DataGridColumn col1 = e.Column;
             DataGridRow row1 = e.Row;
             Item t = e.Row.DataContext as Item;
@@ -727,10 +741,56 @@ namespace Vanme_Pro
         }
         private void BtnSaleOrder_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            saleOrder = new SaleOrder();
+            listSoItems = new ObservableCollection<SoItem>();
+            dgSoItems.ItemsSource = listSoItems;
+            saleOrder.TaxArea_fk = 2;
+            saleOrder.SoItems = listSoItems;
+            saleOrder.User = user;
+            saleOrder.IsSaveDatabase = false;
+            saleOrder.Warehouse = db.Warehouses.Skip(1).FirstOrDefault();
+            saleOrder.OrderedDate=DateTime.Today;
+            this.DataContext = saleOrder;
             Mode = Mode.Sale;
+            List<Province> pro= db.Provinces.ToList();
+            cmbTaxAreaSo.ItemsSource = pro;
+            cmbTaxAreaSo.SelectedIndex = 1;
+            PrepareTaxitem(pro.ElementAt(1));
             HidePanel();
             ShowSideBar(Mode.Sale);
             GrdOrder.Visibility = Visibility.Visible;
+        }
+
+        private void PrepareTaxitem( Province province)
+        {
+            saleOrder.TaxName = "";
+            var taxrate= new List<decimal>();
+            if (province != null)
+            {
+                if (province.HST != 0 && province.HST != null)
+                {
+                    saleOrder.TaxName = saleOrder.TaxName + "HST";
+                    taxrate.Add(province.HST.Value);
+                    cmbTaxAreaSo.ToolTip = saleOrder.TaxName + " : " + (province.HST.Value * 100).ToString() + " %";
+                }
+
+                if (province.GST != 0 && province.GST != null)
+                {
+                    saleOrder.TaxName = saleOrder.TaxName + "GST";
+                    taxrate.Add(province.GST.Value);
+                    cmbTaxAreaSo.ToolTip = saleOrder.TaxName + " : " + (province.GST.Value * 100).ToString() + " %";
+                }
+
+                if (province.QST != 0 && province.QST != null)
+                {
+                    saleOrder.TaxName = saleOrder.TaxName + ",QST";
+                    taxrate.Add(province.QST.Value);
+                    cmbTaxAreaSo.ToolTip = saleOrder.TaxName + " : " + (province.GST.Value * 100).ToString() + " %  ," + (province.QST.Value * 100).ToString() + " %";
+                }
+                saleOrder.TaxRate = taxrate;
+            }
+
+
         }
         void ShowSideBar(Mode mode, int sub = 1)
         {
@@ -851,7 +911,7 @@ namespace Vanme_Pro
             {
                 SaveAndUpdateProductInformation(true);
             }
-            else if (Mode==Mode.Sale)
+            else if (Mode == Mode.Sale)
             {
                 SaveSaleOrder();
             }
@@ -892,6 +952,7 @@ namespace Vanme_Pro
 
         private void BtnLogo_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            var ttt = saleOrder;
             dgSoItems.Columns[0].Header = "Mansour";
             var t = dgSoItems.Columns[0] as DataGridTextColumn;
             t.Binding = new Binding("ProductMaster.RetailPrice");
@@ -1333,7 +1394,7 @@ namespace Vanme_Pro
 
         void SaveSaleOrder()
         {
-
+            db.SaleOrders.Add(saleOrder);
         }
 
         #region LostFocusOfFright
@@ -1445,10 +1506,9 @@ namespace Vanme_Pro
 
         #region SetNumericFrieght
 
-        public bool SetNumeric(object sender, KeyEventArgs e, TextBox txt)
+        public bool SetNumeric(object sender, KeyEventArgs e)
         {
             bool result = false;
-            var tr = (sender as TextBox).Text.IndexOf('.');
 
             if ((e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9) || (e.Key == Key.Back) || (e.Key == Key.Decimal) || (e.Key == Key.Tab))
             { result = false; }
@@ -1465,7 +1525,10 @@ namespace Vanme_Pro
             {
                 result = true;
             }
-            var count = txt.Text.Split('.');
+            var hi = sender as TextBox;
+            var hii = hi.Text;
+            var count = hi.Text.Split('.');
+
             if (count.Count() > 1)
             {
                 if (count[1].Count() > 3 && e.Key != Key.Tab)
@@ -1475,49 +1538,50 @@ namespace Vanme_Pro
             }
             return result;
         }
+
         private void txtFright_KeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = SetNumeric(sender, e, txtFright);
+            e.Handled = SetNumeric(sender, e);
         }
 
         private void txtDiscountPercent_KeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = SetNumeric(sender, e, txtDiscountPercent);
+            e.Handled = SetNumeric(sender, e);
         }
 
         private void txtDiscountDollers_KeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = SetNumeric(sender, e, txtDiscountDollers);
+            e.Handled = SetNumeric(sender, e);
         }
 
         private void txtInsurance_KeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = SetNumeric(sender, e, txtInsurance);
+            e.Handled = SetNumeric(sender, e);
         }
 
         private void txtCustomsDuty_KeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = SetNumeric(sender, e, txtCustomsDuty);
+            e.Handled = SetNumeric(sender, e);
         }
 
         private void txtHandling_KeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = SetNumeric(sender, e, txtHandling);
+            e.Handled = SetNumeric(sender, e);
         }
 
         private void txtForwarding_KeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = SetNumeric(sender, e, txtForwarding);
+            e.Handled = SetNumeric(sender, e);
         }
 
         private void txtLandTransport_KeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = SetNumeric(sender, e, txtLandTransport);
+            e.Handled = SetNumeric(sender, e);
         }
 
         private void txtOthers_KeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = SetNumeric(sender, e, txtOthers);
+            e.Handled = SetNumeric(sender, e);
         }
 
         #endregion
@@ -1575,21 +1639,21 @@ namespace Vanme_Pro
 
         private void RdoWholesale_OnChecked(object sender, RoutedEventArgs e)
         {
-            if (dgSoItems != null)
-            {
-                var t = dgSoItems.Columns[4] as DataGridTextColumn;
-                t.Binding = new Binding("ProductMaster.WholesalePrice");
-            }
+            //if (dgSoItems != null)
+            //{
+            //    var t = dgSoItems.Columns[4] as DataGridTextColumn;
+            //    t.Binding = new Binding("ProductMaster.WholesalePrice");
+            //}
+
+
+            ConvertRetailWholesale();
+
 
         }
 
         private void RdoRetail_OnChecked(object sender, RoutedEventArgs e)
         {
-            if (dgSoItems != null)
-            {
-                var t = dgSoItems.Columns[4] as DataGridTextColumn;
-                t.Binding = new Binding("ProductMaster.RetailPrice");
-            }
+            ConvertRetailWholesale(true);
 
             //DataGridTextColumn textColumn = new DataGridTextColumn();
             //textColumn.Header = "First Name";
@@ -1601,24 +1665,164 @@ namespace Vanme_Pro
             //DataGridSoItems.Items.Refresh();
         }
 
+        private void ConvertRetailWholesale(bool retail = false)
+        {
+            if (listSoItems != null)
+            {
+                saleOrder.Subtotal = 0;
+                saleOrder.SoTotalPrice = 0;
+                saleOrder.TotalDiscount = 0;
+                if (retail)
+                {
+                    foreach (var VARIABLE in listSoItems)
+                    {
+                        VARIABLE.Price = VARIABLE.ProductMaster.RetailPrice.Value;
+                        saleOrder.Subtotal = VARIABLE.TotalPrice + saleOrder.Subtotal;
+                        saleOrder.TotalDiscount = (VARIABLE.Quantity * VARIABLE.Price - VARIABLE.TotalPrice) + saleOrder.TotalDiscount;
+                    }
+                }
+                else
+                {
+                    foreach (var VARIABLE in listSoItems)
+                    {
+                        VARIABLE.Price = VARIABLE.ProductMaster.WholesalePrice.Value;
+                        saleOrder.Subtotal = VARIABLE.TotalPrice + saleOrder.Subtotal;
+                        saleOrder.TotalDiscount = (VARIABLE.Quantity * VARIABLE.Price - VARIABLE.TotalPrice) + saleOrder.TotalDiscount;
+                    }
+                }
+
+            }
+        }
+
         private void DgSoItems_OnCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             DataGridColumn col1 = e.Column;
             DataGridRow row1 = e.Row;
-            SoItem t = e.Row.DataContext as SoItem;
+            // SoItem t = e.Row.DataContext as SoItem;
+            string header = col1.Header as string;
 
             int row_index = ((DataGrid)sender).ItemContainerGenerator.IndexFromContainer(row1);
             int col_index = col1.DisplayIndex;
 
-            var Qyt = Convert.ToInt32(((TextBox)e.EditingElement).Text);
-            var tt = listSoItems.ElementAt(row_index);
-            listSoItems.ElementAt(row_index).Quantity=Qyt;
-            listSoItems.ElementAt(row_index).TotalPrice= listSoItems.ElementAt(row_index).ProductMaster.WholesalePrice.Value*Qyt;
-            //dgSoItems.ItemsSource = null;
-            //dgSoItems.ItemsSource = listSoItems;
-            //tt.Quantity = Qyt;
-            //tt.TotalPrice = tt.ProductMaster.WholesalePrice.Value * Qyt;
+            switch (header)
+            {
+                case "Style Number":
+                    break;
+                case "Quantity":
+                    var qytStr = ((TextBox) e.EditingElement).Text;
+                    if (qytStr.Count(x => x == '.') > 0)
+                    {
+                        MessageBox.Show("Enter Integer Number Please");
+                        listSoItems.ElementAt(row_index).Quantity = 0;
+                        break;
+                    }
+                    int Qyt =(!string.IsNullOrWhiteSpace(qytStr))? Convert.ToInt32(qytStr):0;
+                    if (Qyt < 0)
+                        Qyt = Qyt * -1;
+                    listSoItems.ElementAt(row_index).Quantity = Qyt;
+                    break;
+                case "Discount":
+                    if (listSoItems.ElementAt(row_index).Quantity == 0)
+                    {
+                        MessageBox.Show("First Input Quantity");
+                        listSoItems.ElementAt(row_index).Discount = 0;
+                    }
+                    else
+                    {
+                        var discountStr = (((TextBox) e.EditingElement).Text).Replace("%", "");
+                        if (discountStr.Count(x => x == '.') > 1)
+                        {
+                            MessageBox.Show("Enter Correct Number");
+                            listSoItems.ElementAt(row_index).Discount = 0;
+                            break;
+                        }
+                        else
+                        {
+                            decimal Discount =(!string.IsNullOrWhiteSpace(discountStr))? Convert.ToDecimal(discountStr):0m;
+                            listSoItems.ElementAt(row_index).Discount = Discount;
+                        }
 
+                    }
+                    break;
+
+            }
+
+            saleOrder.Subtotal = 0;
+            saleOrder.SoTotalPrice = 0;
+            saleOrder.TotalDiscount = 0;
+            foreach (var item in listSoItems)
+            {
+                saleOrder.Subtotal = item.TotalPrice + saleOrder.Subtotal;
+                saleOrder.TotalDiscount = (item.Quantity * item.Price - item.TotalPrice) + saleOrder.TotalDiscount;
+            }
+            
+        }
+
+      
+        private void SetTextboxNumeric(TextCompositionEventArgs e, TextBox txt)
+        {
+            if (!char.IsDigit(e.Text, e.Text.Length - 1) && e.Text != ".")
+                e.Handled = true;
+            if (txt.Text.Count(x => x == '.') > 0)
+            {
+                if (e.Text == ".")
+                    e.Handled = true;
+                else if (txt.Text.Split('.')[1].Length > 3)
+                {
+                    e.Handled = true;
+                }
+            }
+        }
+        private void txtHandlingSo_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            SetTextboxNumeric(e,txtHandlingSo);
+        }
+
+     
+
+        private void txtFreightSo_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            SetTextboxNumeric(e, txtFreightSo);
+        }
+
+        private void cmbTaxAreaSo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PrepareTaxitem(cmbTaxAreaSo.SelectedItem as Province);
+        }
+
+
+        private void TxtHandlingSo_OnGotMouseCapture(object sender, MouseEventArgs e)
+        {
+            txtHandlingSo.SelectAll();
+        }
+
+        private void TxtHandlingSo_OnGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            txtHandlingSo.SelectAll();
+        }
+
+        private void TxtFreightSo_OnGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+           txtFreightSo.SelectAll();
+        }
+
+        private void TxtFreightSo_OnGotMouseCapture(object sender, MouseEventArgs e)
+        {
+            txtFreightSo.SelectAll();
+        }
+
+        private void dgSoItems_KeyDown(object sender, KeyEventArgs e)
+        {
+            bool result = false;
+
+            if ((e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9) || (e.Key == Key.Back) || (e.Key == Key.Decimal) || (e.Key == Key.Tab))
+            { result = false; }
+            else if ((e.Key >= Key.D0 && e.Key <= Key.D9) || (e.Key == Key.OemPeriod))
+            { result = false; }
+            else
+            { result = true; }
+
+            e.Handled = result;
         }
     }
 }

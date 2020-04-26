@@ -158,69 +158,33 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Migrations\20200411195737_smm51.cs" />
-    <Compile Include="Migrations\20200411195737_smm51.designer.cs">
-      <DependentUpon>20200411195737_smm51.cs</DependentUpon>
+    <Compile Include="Migrations\20200423233833_smm108.cs" />
+    <Compile Include="Migrations\20200423233833_smm108.designer.cs">
+      <DependentUpon>20200423233833_smm108.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20200411232916_smm53.cs" />
-    <Compile Include="Migrations\20200411232916_smm53.designer.cs">
-      <DependentUpon>20200411232916_smm53.cs</DependentUpon>
+    <Compile Include="Migrations\20200425232348_smm235.cs" />
+    <Compile Include="Migrations\20200425232348_smm235.designer.cs">
+      <DependentUpon>20200425232348_smm235.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20200412000545_smm54.cs" />
-    <Compile Include="Migrations\20200412000545_smm54.designer.cs">
-      <DependentUpon>20200412000545_smm54.cs</DependentUpon>
+    <Compile Include="Migrations\20200425232931_smm240.cs" />
+    <Compile Include="Migrations\20200425232931_smm240.designer.cs">
+      <DependentUpon>20200425232931_smm240.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20200413023304_smm151.cs" />
-    <Compile Include="Migrations\20200413023304_smm151.designer.cs">
-      <DependentUpon>20200413023304_smm151.cs</DependentUpon>
+    <Compile Include="Migrations\20200425233036_smm241.cs" />
+    <Compile Include="Migrations\20200425233036_smm241.designer.cs">
+      <DependentUpon>20200425233036_smm241.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20200413024146_smm152.cs" />
-    <Compile Include="Migrations\20200413024146_smm152.designer.cs">
-      <DependentUpon>20200413024146_smm152.cs</DependentUpon>
+    <Compile Include="Migrations\20200425233128_smm242.cs" />
+    <Compile Include="Migrations\20200425233128_smm242.designer.cs">
+      <DependentUpon>20200425233128_smm242.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20200413061610_smm154.cs" />
-    <Compile Include="Migrations\20200413061610_smm154.designer.cs">
-      <DependentUpon>20200413061610_smm154.cs</DependentUpon>
+    <Compile Include="Migrations\20200426001347_smm244.cs" />
+    <Compile Include="Migrations\20200426001347_smm244.designer.cs">
+      <DependentUpon>20200426001347_smm244.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20200414030446_smm172.cs" />
-    <Compile Include="Migrations\20200414030446_smm172.designer.cs">
-      <DependentUpon>20200414030446_smm172.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200414171048_smm180.cs" />
-    <Compile Include="Migrations\20200414171048_smm180.designer.cs">
-      <DependentUpon>20200414171048_smm180.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200415184059_smm564.cs" />
-    <Compile Include="Migrations\20200415184059_smm564.designer.cs">
-      <DependentUpon>20200415184059_smm564.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200415191705_smm569.cs" />
-    <Compile Include="Migrations\20200415191705_smm569.designer.cs">
-      <DependentUpon>20200415191705_smm569.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200416023455_smm560.cs" />
-    <Compile Include="Migrations\20200416023455_smm560.designer.cs">
-      <DependentUpon>20200416023455_smm560.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200417191829_smm190.cs" />
-    <Compile Include="Migrations\20200417191829_smm190.designer.cs">
-      <DependentUpon>20200417191829_smm190.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200418221145_smm191.cs" />
-    <Compile Include="Migrations\20200418221145_smm191.designer.cs">
-      <DependentUpon>20200418221145_smm191.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200418221737_smm192.cs" />
-    <Compile Include="Migrations\20200418221737_smm192.designer.cs">
-      <DependentUpon>20200418221737_smm192.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200419041136_smm193.cs" />
-    <Compile Include="Migrations\20200419041136_smm193.designer.cs">
-      <DependentUpon>20200419041136_smm193.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200419042141_smm195.cs" />
-    <Compile Include="Migrations\20200419042141_smm195.designer.cs">
-      <DependentUpon>20200419042141_smm195.cs</DependentUpon>
+    <Compile Include="Migrations\20200426051837_smm246.cs" />
+    <Compile Include="Migrations\20200426051837_smm246.designer.cs">
+      <DependentUpon>20200426051837_smm246.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\dbContextModelSnapshot.cs" />
     <Compile Include="Models\Context\dbContext.cs" />
@@ -237,7 +201,9 @@
     <Compile Include="Models\DomainModels\Warehouse.cs" />
     <Compile Include="Models\Enums\PurchaseStatus.cs" />
     <Compile Include="Models\ViewModels\CalculateMiscellaneous.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="TempDatabase.cs" />
+    <Compile Include="Utility\Converter.cs" />
     <Compile Include="Utility\CreateID.cs" />
     <Compile Include="Utility\ImageResizer.cs" />
     <Page Include="MainWindow.xaml">

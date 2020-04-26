@@ -255,11 +255,11 @@
                     <DataGridTextColumn Header="UPC" Binding="{Binding ProductMaster.UPC}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Color" Binding="{Binding ProductMaster.Color}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Size" Binding="{Binding ProductMaster.Size}" Width="*" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="*"/>
+                    <DataGridTextColumn Header="Price" Binding="{Binding Price,StringFormat=N2}" Width="*"/>
                     <DataGridTextColumn Header="Previous Quantity" Binding="{Binding PreviousQuantity}" Width="*" Foreground="#FF9C8F8F" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Quantity ( PO )" Binding="{Binding CurrentQuantity}" Width="*"/>
-                    <DataGridTextColumn Header="TotalPrice" Binding="{Binding TotalItemPrice}" Width="*" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Cost" Binding="{Binding Cost}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="TotalPrice" Binding="{Binding TotalItemPrice,StringFormat=N2}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Cost" Binding="{Binding Cost,StringFormat=N2}" Width="*" IsReadOnly="True"/>
                 </DataGrid.Columns>
             </DataGrid>
             <UniformGrid Grid.Row="2" Columns="3" Rows="1">
@@ -330,7 +330,7 @@
                     <StackPanel>
                         <TextBox MinWidth="300" FontSize="18" IsReadOnly="True" />
                         <TextBox Name="TxtTotalPrice" FontSize="40" HorizontalContentAlignment="Center" IsReadOnly="True"/>
-                        <Label Name="lblPoTotal" Content=" PO Total" FontSize="30" HorizontalAlignment="Center"></Label>
+                        <Label Name="lblPoTotal"  Content=" PO Total" FontSize="30" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
             </UniformGrid>
@@ -402,7 +402,7 @@
                     <DataGridTextColumn Header="Lookup" Binding="{Binding ProductMaster.StyleNumber}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="UPC" Binding="{Binding ProductMaster.UPC}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Desc1" Binding="{Binding ProductMaster.UPC}" Width="*" IsReadOnly="True"/>
-                    <DataGridTextColumn Header=" Rcpt Price" Binding="{Binding PoPrice}" Width="*"/>
+                    <DataGridTextColumn Header=" Rcpt Price" Binding="{Binding PoPrice,StringFormat=N2}" Width="*"/>
                     <DataGridTextColumn Header="Quantity" Binding="{Binding CurrentQuantity}" Width="*"/>
                     <DataGridTextColumn Header="Color" Binding="{Binding ProductMaster.Color}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Size" Binding="{Binding ProductMaster.Size}" Width="*" IsReadOnly="True"/>
@@ -834,9 +834,9 @@
                     <Label  Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Customer Lookup " VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Name="txtCustomerLookup" Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="ShipDate" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <DatePicker Name="dpiShipDateSo" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center"/>
+                    <DatePicker Name="dpiShipDateSo" SelectedDate="{Binding ShipDate}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center"/>
                     <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="CancelDate" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <DatePicker Name="dpiCancelDateSo" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center"/>
+                    <DatePicker Name="dpiCancelDateSo" SelectedDate="{Binding CancelDate}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center"/>
                     <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Ship Method" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Name="txtShipMethod" Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="5" Grid.Column="0" Content="SO#" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -870,9 +870,9 @@
                     </StackPanel>
 
                     <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Order Date" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <DatePicker Name="dpiOrderDateSo" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center"/>
+                    <DatePicker Name="dpiOrderDateSo" SelectedDate="{Binding OrderedDate}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center"/>
                     <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Associate" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Name="txtAssociate" Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
+                    <TextBox Name="txtAssociate" Text="{Binding User.NickName}" Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Account #" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <TextBox Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" />
 
@@ -892,28 +892,28 @@
                     </Grid.ColumnDefinitions>
                     <Label Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Customer Info" />
                     <Label  Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Bill To Full Name" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Name="txtFullNameSo" Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center"/>
+                    <TextBox Name="txtFullNameSo" Text="{Binding Customer.FirstName}"   Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True"/>
                     <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Bill To Address1" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Name="txtAddress1So" Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" />
+                    <TextBox Name="txtAddress1So" Text="{Binding Customer.Address1}" Style="{StaticResource txt1}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Bill To Address2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Name="txtAddress2So" Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
-                    <Label Style="{StaticResource lbl1 }" Grid.Row="4" Grid.Column="0" Content="Bill To Phone1" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Name="txtPhone1So"  Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center"  />
+                    <TextBox Name="txtAddress2So" Text="{Binding Customer.Address2}" Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
+                    <Label Style="{StaticResource lbl1 }"  Grid.Row="4" Grid.Column="0" Content="Bill To Phone1" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Name="txtPhone1So" Text="{Binding Customer.Phone1}"  Style="{StaticResource txt1}" Grid.Row="4" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
                     <Label Style="{StaticResource lbl1 }" Grid.Row="5" Grid.Column="0" Content="Bill To E-mail" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Name="txtEmailSo"  Style="{StaticResource txt1}" Grid.Row="5" Grid.Column="1"  VerticalAlignment="Center"  />
+                    <TextBox Name="txtEmailSo" Text="{Binding Customer.Email}"  Style="{StaticResource txt1}" Grid.Row="5" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
 
                 </Grid>
             </UniformGrid>
-            <DataGrid  Name="dgSoItems" Margin="50 20 50 0" Grid.Row="1"  AutoGenerateColumns="False" CanUserAddRows="True" FontSize="20"  SelectionUnit="FullRow" AlternatingRowBackground="LightBlue"  CellEditEnding="DgSoItems_OnCellEditEnding" >
+            <DataGrid  Name="dgSoItems" Margin="50 20 50 0" Grid.Row="1"  AutoGenerateColumns="False" CanUserAddRows="True" FontSize="20"  SelectionUnit="FullRow" AlternatingRowBackground="LightBlue"  CellEditEnding="DgSoItems_OnCellEditEnding" KeyDown="dgSoItems_KeyDown" >
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Style Number" Binding="{Binding ProductMaster.StyleNumber}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Style Number" Binding="{Binding ProductMaster.StyleNumber}" Width="*" IsReadOnly="False"/>
                     <DataGridTextColumn Header="UPC" Binding="{Binding ProductMaster.UPC}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Color" Binding="{Binding ProductMaster.Color}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Size" Binding="{Binding ProductMaster.Size}" Width="*" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Price" Binding="{Binding ProductMaster.WholesalePrice}" Width="*"/>
+                    <DataGridTextColumn Header="Price" Binding="{Binding Price,StringFormat=N2}" Width="*" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*"/>
                     <DataGridTextColumn Header="Discount" Binding="{Binding Discount}" Width="*" />
-                    <DataGridTextColumn Header="TotalPrice" Binding="{Binding TotalPrice}" Width="*" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="TotalPrice" Binding="{Binding TotalPrice,StringFormat=N2}" Width="*" IsReadOnly="True"/>
 
                 </DataGrid.Columns>
             </DataGrid>
@@ -944,35 +944,48 @@
                             <ColumnDefinition Width="0.3*" />
                         </Grid.ColumnDefinitions>
                         <Label Style="{StaticResource lbl1 }" Grid.Row="0" Grid.Column="0" Content="Freight" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        <TextBox Name="txtFreightSo" Style="{StaticResource txt1}" Grid.Row="0" Grid.Column="1"  VerticalAlignment="Center" />
+                        <TextBox  Name="txtFreightSo" Text="{Binding Freight,UpdateSourceTrigger=PropertyChanged,StringFormat=N2}" Style="{StaticResource txt1}" Grid.Row="0" Grid.Column="1" Margin="0,6,0,7"  PreviewTextInput="txtFreightSo_PreviewTextInput" GotKeyboardFocus="TxtFreightSo_OnGotKeyboardFocus" GotMouseCapture="TxtFreightSo_OnGotMouseCapture" />
                         <Label Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Handling" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        <TextBox Name="txtHandlingSo" Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" />
+                        <TextBox Name="txtHandlingSo" Text="{Binding Handling, UpdateSourceTrigger=PropertyChanged,StringFormat=N2}" Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" PreviewTextInput="txtHandlingSo_PreviewTextInput"  GotMouseCapture="TxtHandlingSo_OnGotMouseCapture" GotKeyboardFocus="TxtHandlingSo_OnGotKeyboardFocus" />
                         <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="Tax Area" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         <ComboBox Name="cmbTaxAreaSo" Grid.Row="2" Grid.Column="1"
                               materialDesign:TextFieldAssist.HasClearButton="True"
                               IsEditable="True"
                               Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                               materialDesign:TextFieldAssist.SuffixText="sw"
-                              DisplayMemberPath="Name" SelectedValuePath="Id"/>
+                              DisplayMemberPath="Name" SelectedValuePath="Id" SelectionChanged="cmbTaxAreaSo_SelectionChanged"/>
                         <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="Total Discount" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        <TextBox Name="txtTotalDiscountSo" Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" />
+                        <TextBox Name="txtTotalDiscountSo" Text="{Binding TotalDiscount,StringFormat=N2}" Style="{StaticResource txt1}" Grid.Row="3" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
 
                     </Grid>
                 </GroupBox>
                 <StackPanel>
                     <GroupBox
-                        Header="SubTotal"
-                        Margin="16" >
-                        <TextBlock HorizontalAlignment="Center" FontSize="25">
-                          230.23
-                        </TextBlock>
-                    </GroupBox>
-                    <GroupBox
-                        Header="SoTotal"
-                        Margin="16">
-                        <TextBlock HorizontalAlignment="Center" FontSize="35">
-                            350.33
-                        </TextBlock>
+                        Header=""
+                        Margin="15" >
+                        <StackPanel>
+                            <StackPanel.Resources>
+                                <Thickness x:Key="Marginso" Top="0" Left="0" Right="0" Bottom ="20" />
+                            </StackPanel.Resources>
+                            <UniformGrid Rows="1" Columns="2"  Margin="{StaticResource Marginso}">
+                                <TextBlock Text="Subtotal:" TextAlignment="Center"  HorizontalAlignment="Left" FontSize="20"/>
+                                <TextBlock Text="{Binding SubtotalwithServices,StringFormat=N2}" Name="txtSubtotalSo"  HorizontalAlignment="Left" FontSize="20"/>
+                            </UniformGrid>
+                            <UniformGrid Rows="1" Columns="2"  Margin="{StaticResource Marginso}">
+                               <TextBlock Text="Tax:" TextAlignment="Left"  HorizontalAlignment="Left" FontSize="20"/>
+                                <TextBlock Text="{Binding Tax,StringFormat=N2}" Name="txtSoTax" HorizontalAlignment="Left" FontSize="20"/>
+                            </UniformGrid>
+                            <UniformGrid Rows="1" Columns="2"  Margin="{StaticResource Marginso}">
+                               <TextBlock Text="Total:" TextAlignment="Left"  HorizontalAlignment="Left" FontSize="35"/>
+                                <TextBlock Text="{Binding SoTotalPrice,StringFormat=N2}" Name="txtSoTotal" TextAlignment="Left" HorizontalAlignment="Left" FontSize="35"/>
+                            </UniformGrid>
+
+
+
+
+                        </StackPanel>
+
+
                     </GroupBox>
                 </StackPanel>
             </UniformGrid>

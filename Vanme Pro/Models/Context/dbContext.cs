@@ -27,7 +27,7 @@ namespace Vanme_Pro.Models.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EFCore-smm18;Trusted_Connection=True");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EFCore-smm24;Trusted_Connection=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,6 +47,11 @@ namespace Vanme_Pro.Models.Context
             modelBuilder.Entity<Item>().Ignore(p => p.CurrentQuantity);
             modelBuilder.Entity<Item>().Ignore(p => p.TotalItemPrice);
             modelBuilder.Entity<Item>().Property(a => a.RowVersion).IsRowVersion();
+            //modelBuilder.Entity<Item>().HasData(new Item
+            //{
+            //    Id = 100, Po_fk = 1, ProductMaster_fk = 1, PoQuantity = 0, AsnQuantity = 0, GrnQuantity = 0,
+            //    PoPrice = 0, AsnPrice = 0, Cost = 0, PoItemsPrice = 0, AsnItemsPrice = 0, Alert = false, Checked = false
+            //});
 
             // modelBuilder.Entity<Item>().Property(b => b.Note).HasColumnType("text").HasDefaultValue("Note :  ");
 
@@ -80,6 +85,9 @@ namespace Vanme_Pro.Models.Context
                 entity.Property(e=>e.Id).ValueGeneratedNever();
                 entity.Property(e => e.Note).HasColumnName("Note");
                 entity.Property(e => e.Id).HasColumnName("ID");
+                entity.HasData(new Vendor{Id = 1,Name = "ClubJummana"});
+                entity.HasData(new Vendor{Id = 2,Name = "Anzir"});
+                entity.HasData(new Vendor{Id = 3,Name = "Noman"});
                 
             });
 
@@ -91,6 +99,7 @@ namespace Vanme_Pro.Models.Context
                 entity.Property(e => e.Id).ValueGeneratedNever();
                 entity.Property(e => e.CreateOrder).HasDefaultValueSql("getdate()");
                 entity.Property(a => a.RowVersion).IsRowVersion();
+                //entity.HasData();
 
                 entity.HasOne<Vendor>(s => s.Vendor)
                     .WithMany(g => g.PurchaseOrders)
@@ -162,9 +171,12 @@ namespace Vanme_Pro.Models.Context
             modelBuilder.Entity<SaleOrder>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).ValueGeneratedNever();
                 entity.Property(e => e.OrderedDate).HasColumnType("smalldatetime");
                 entity.Property(e => e.CancelDate).HasColumnType("smalldatetime");
+                entity.Ignore(e => e.TaxName);
+                entity.Ignore(e => e.TaxRate);
+                entity.Ignore(e => e.SubtotalwithServices);
+                entity.Ignore(e => e.IsSaveDatabase);
 
                 entity.HasOne<User>(s => s.User)
                     .WithMany(g => g.SaleOrders)
@@ -177,17 +189,26 @@ namespace Vanme_Pro.Models.Context
                 entity.HasOne<Province>(s => s.TaxArea)
                     .WithMany(g => g.SaleOrders)
                     .HasForeignKey(s => s.TaxArea_fk);
+
+                entity.HasOne<Warehouse>(s => s.Warehouse)
+                    .WithMany(g => g.SaleOrders)
+                    .HasForeignKey(s => s.Warehouse_fk);
             });
 
             //----------------------------------- Province ---------------------------------------
             modelBuilder.Entity<Province>(entity =>
             {
                 entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedNever();
+                //entity.Property(e => e.HST).HasColumnType("real");
+                //entity.Property(e => e.GST).HasColumnType("real");
+                //entity.Property(e => e.QST).HasColumnType("real");
             });
             //----------------------------------- Customer ---------------------------------------
             modelBuilder.Entity<Customer>(entity =>
             {
                 entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.HasOne<User>(s => s.User)
                     .WithMany(g => g.Customers)
