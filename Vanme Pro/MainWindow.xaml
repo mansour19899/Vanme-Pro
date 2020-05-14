@@ -81,6 +81,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -124,6 +125,9 @@
                 <Label Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Sale"/>
                 <Image Name="btnProduct" Grid.Row="0" Grid.Column="4"   Source="Content/Images/icons8_product_100px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnProduct_OnMouseDown"/>
                 <Label Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Products"></Label>
+                <Image Name="btnOrders" Grid.Row="0" Grid.Column="5"   Source="Content/Images/icons8_downloads_100px.png" Stretch="Uniform" Margin="10 5 10 0" MouseDown="BtnOrders_OnMouseDown"/>
+                <Label Grid.Row="1" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Orders"></Label>
+
 
             </Grid>
 
@@ -136,14 +140,15 @@
                 <Image Source="Content/Images/icons8_create_document_60px_1.png"/>
                 <Label Name="lblNewPo" Content="New PO" Style="{StaticResource lbl2}"/>
             </StackPanel>
-            <StackPanel Name="btnAddItem" Orientation="Horizontal" Margin="10 10 10 10" MouseDown="btnAddItem_MouseDown" >
-                <Image Source="Content/Images/icons8_add_new_52px_3.png"/>
-                <Label Content="Add Item" Style="{StaticResource lbl2}"/>
-            </StackPanel>
             <StackPanel Name="btnSave" Orientation="Horizontal" Margin="10 10 10 10" MouseDown="BtnSave_OnMouseDown"  >
                 <Image Source="Content/Images/icons8_save_60px.png"/>
                 <Label Name="lblSave" Content="Save" Style="{StaticResource lbl2}"/>
             </StackPanel>
+            <StackPanel Name="btnAddItem" Orientation="Horizontal" Margin="10 10 10 10" MouseDown="btnAddItem_MouseDown" >
+                <Image Source="Content/Images/icons8_add_new_52px_3.png"/>
+                <Label Content="Add Item" Style="{StaticResource lbl2}"/>
+            </StackPanel>
+            
             <StackPanel Name="btnRemove" Orientation="Horizontal" Margin="10 10 10 10" MouseDown="BtnRemove_OnMouseDown"  >
                 <Image Source="Content/Images/icons8_remove_60px_2.png"/>
                 <Label Name="lblRemove" Content="Remove" Style="{StaticResource lbl2}"/>
@@ -740,23 +745,23 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Content="F.O.B Price : " />
-                        <TextBox Text="{Binding FobPrice,UpdateSourceTrigger=Explicit}" IsReadOnly="True" Name="txtFobPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding FobPrice,UpdateSourceTrigger=Explicit,StringFormat=N2}" IsReadOnly="True" Name="txtFobPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Content="Cost : " />
-                        <TextBox Text="{Binding Cost,UpdateSourceTrigger=Explicit}" IsReadOnly="True" Name="txtCostProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding Cost,UpdateSourceTrigger=Explicit,StringFormat=N2}" IsReadOnly="True" Name="txtCostProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Content="Wholesale : " />
-                        <TextBox Text="{Binding WholesalePrice,UpdateSourceTrigger=Explicit}" IsReadOnly="True" Name="txtWholesaleProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding WholesalePrice,UpdateSourceTrigger=Explicit,StringFormat=N2}" IsReadOnly="True" Name="txtWholesaleProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Content="Retail Price : " />
-                        <TextBox Text="{Binding RetailPrice,UpdateSourceTrigger=Explicit}" IsReadOnly="True" Name="txtRetailPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <TextBox Text="{Binding RetailPrice,UpdateSourceTrigger=Explicit,StringFormat=N2}" IsReadOnly="True" Name="txtRetailPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label  Content="Receipt Price : " />
-                        <TextBox Text="{Binding ReceiptPrice,UpdateSourceTrigger=Explicit}" IsReadOnly="True" Name="txtReceiptPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
+                        <Label  Content="Sale Price : " />
+                        <TextBox Text="{Binding SalePrice,UpdateSourceTrigger=Explicit,StringFormat=N2}" IsReadOnly="True" Name="txtReceiptPriceProduct" Style="{StaticResource txtMain}" MinWidth="{StaticResource txtminwidth}"  />
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
@@ -810,13 +815,13 @@
             </GroupBox>
         </Grid>
 
-        <Grid Name="GrdOrder" Grid.Row="1" Grid.Column="0" >
+        <Grid Name="GrdSaleOrder" Grid.Row="1" Grid.Column="0" Visibility="Visible" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.3*" />
                 <RowDefinition Height="0.4*" />
                 <RowDefinition Height="0.3*" />
             </Grid.RowDefinitions>
-            <UniformGrid Columns="4" Rows="1" Margin="0 5 0 0">
+            <UniformGrid Columns="4" Rows="1" Margin="0 5 0 0" ZIndex="300">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -832,7 +837,56 @@
                     </Grid.ColumnDefinitions>
                     <Label Name="llblSubHeader1" Style="{StaticResource lbl0 }" Grid.Row="0" Grid.Column="0" Content="Required Info" />
                     <Label  Style="{StaticResource lbl1 }" Grid.Row="1" Grid.Column="0" Content="Customer Lookup " VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBox Name="txtCustomerLookup" Style="{StaticResource txt1}" Grid.Row="1" Grid.Column="1"  VerticalAlignment="Center" IsReadOnly="True" />
+                    <StackPanel  Grid.Row="1" Grid.Column="1"  Grid.RowSpan="6" ZIndex="2214200"  >
+                        <TextBox Name="txtCustomerLookup" Style="{StaticResource txt1}" VerticalAlignment="Center" IsReadOnly="False" TextChanged="txtCustomerLookup_TextChanged" KeyDown="TxtCustomerLookup_OnKeyDown" />
+                        <Border Name="lvCustomerLookupBorder" Panel.ZIndex="300" Background="White" BorderBrush="Blue" BorderThickness="1" Margin="0 3 0 0"  KeyDown="lvCustomerLookupBorder_KeyDown">
+                            <Border.Style>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="Visibility" Value="Hidden"></Setter>
+                                    <Setter Property="Height" Value="0"></Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=IsVisible}" Value="True">
+
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Storyboard.TargetProperty="Height"
+                                                                         From="0.0" To="150.0"
+                                                                         Duration="0:0:0.3"
+                                                                          />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.EnterActions>
+
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <ScrollViewer Height="190">
+                                <ListView Name="lvCustomerLookup" BorderBrush="Blue" BorderThickness="3" MouseDoubleClick="lvCustomerLookup_MouseDoubleClick" >
+                                    <ListView.ItemTemplate >
+                                        <DataTemplate >
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock>
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0}  {1}">
+                                                            <Binding Path="FirstName" />
+                                                            <Binding Path="LastName" />
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                                <TextBlock Text="{Binding Phone1}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+
+                                </ListView>
+                            </ScrollViewer>
+                      
+                        </Border>
+
+                    </StackPanel>
+                    
                     <Label Style="{StaticResource lbl1 }" Grid.Row="2" Grid.Column="0" Content="ShipDate" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                     <DatePicker Name="dpiShipDateSo" SelectedDate="{Binding ShipDate}" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center" FontSize="18" HorizontalContentAlignment="Center"/>
                     <Label Style="{StaticResource lbl1 }" Grid.Row="3" Grid.Column="0" Content="CancelDate" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -989,6 +1043,33 @@
                     </GroupBox>
                 </StackPanel>
             </UniformGrid>
+        </Grid>
+
+        <Grid  Name="GrdOrder" Grid.Row="1" Grid.Column="0" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.2*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+            <materialDesign:Card
+                materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                materialDesign:ShadowAssist.ShadowEdges="Bottom,Left" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="35" FontWeight="Bold" Foreground="Navy"
+                Padding="32">
+                Orders
+            </materialDesign:Card>
+
+            <ListView SelectionMode="Single" Name="lvOrders" Grid.Row="1" Margin="40 0 40 40" FontSize="20" MouseDoubleClick="LvOrders_OnMouseDoubleClick">
+                <ListView.View>
+                    <GridView >
+                        <GridViewColumn Header="ALU" Width="120" DisplayMemberBinding="{Binding Path=Id}" />
+                        <GridViewColumn Header="Order" Width="200" DisplayMemberBinding="{Binding Path=SalesOrderNumber}" />
+                        <GridViewColumn Header="Date" Width="300" DisplayMemberBinding="{Binding Path=OrderedDate}" />
+                        <GridViewColumn Header="Customer" Width="350" DisplayMemberBinding="{Binding Path=Customer.FullName}" />
+                        <GridViewColumn Header="Associate" Width="150" DisplayMemberBinding="{Binding Path=User.NickName}" />
+                        <GridViewColumn Header="Status" Width="200" DisplayMemberBinding="{Binding Path=Color}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
         </Grid>
 
 

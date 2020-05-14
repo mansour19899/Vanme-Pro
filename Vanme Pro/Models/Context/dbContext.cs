@@ -74,6 +74,11 @@ namespace Vanme_Pro.Models.Context
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Ignore(e => e.TempBalance);
+                entity.Property(b => b.StockOnHand).HasDefaultValue(0);
+                entity.Property(b => b.GoodsReserved).HasDefaultValue(0);
+                entity.Property(b => b.Income).HasDefaultValue(0);
+                entity.Property(b => b.Outcome).HasDefaultValue(0);
 
             });
 
@@ -209,6 +214,7 @@ namespace Vanme_Pro.Models.Context
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Ignore(p => p.FullName);
 
                 entity.HasOne<User>(s => s.User)
                     .WithMany(g => g.Customers)

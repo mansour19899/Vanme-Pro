@@ -73,15 +73,8 @@ namespace Vanme_Pro.Models.DomainModels
 
         private decimal _totalPrice;
 
-        public decimal TotalPrice
-        {
-            get { return _totalPrice; }
-            set
-            {
-                _totalPrice = value;
-                OnPropertyChanged();
-            }
-        }
+        public decimal TotalPrice;
+        public bool? IsReserved { get; set; }
 
 
         public SaleOrder SaleOrder { get; set; }

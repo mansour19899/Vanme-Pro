@@ -37,5 +37,11 @@ namespace Vanme_Pro.Models.DomainModels
         public ICollection<SaleOrder> SaleOrders { get; set; }
         public  User User { get; set; }
 
+        //--------------------------- Noy map --------------------------
+
+        public string FullName
+        {
+            get { return FirstName + " " + LastName; }
+        }
     }
 }

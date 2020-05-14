@@ -31,7 +31,7 @@ namespace Vanme_Pro.Models.DomainModels
             get
             {
                 if (IsSaveDatabase)
-                   return _subtotal;
+                    return _subtotal;
                 else
                     return Math.Round(_subtotal, 2, MidpointRounding.ToEven);
 
@@ -39,7 +39,6 @@ namespace Vanme_Pro.Models.DomainModels
             set
             {
                 _subtotal = value;
-                _subtotalwithServices = _subtotal + _freight + _handling;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(SubtotalwithServices));
                 CalculateTotalPrice();
@@ -160,7 +159,18 @@ namespace Vanme_Pro.Models.DomainModels
 
         public ICollection<SoItem> SoItems { get; set; }
         public User User { get; set; }
-        public Customer Customer { get; set; }
+
+        private Customer _customer;
+        public Customer Customer
+        {
+            get { return _customer; }
+            set
+            {
+                _customer = value;
+                OnPropertyChanged();
+
+            }
+        }
         public Province TaxArea { get; set; }
         public Warehouse Warehouse { get; set; }
 
@@ -200,11 +210,11 @@ namespace Vanme_Pro.Models.DomainModels
         private void CalculateTotalPrice()
         {
             _tax = 0;
+            _subtotalwithServices = _subtotal + _freight + _handling;
             foreach (var VARIABLE in TaxRate)
             {
                 _tax = VARIABLE * _subtotalwithServices + _tax;
             }
-
             _soTotalPrice = _subtotalwithServices + _tax;
             OnPropertyChanged(nameof(Tax));
             OnPropertyChanged(nameof(SoTotalPrice));

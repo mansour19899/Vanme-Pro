@@ -12,8 +12,9 @@ namespace Vanme_Pro
             Asn = 2,
             Grn = 3,
             Sale=4,
-            Nothong = 6,
-        productInformation = 5
+            productInformation = 5,
+            Order = 6,
+            Nothong = 7
 
     }
 

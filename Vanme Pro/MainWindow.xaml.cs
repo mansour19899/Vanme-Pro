@@ -34,6 +34,7 @@ namespace Vanme_Pro
         private List<ItemTemp> GrdItemsTemp;
         private List<Item> itemsList;
         private List<Item> AddNewitemsList;
+        private List<Customer> CustomersList;
         private dbContext db;
         private int StepAddItem = 1;
         decimal SumPrice = 0;
@@ -66,7 +67,8 @@ namespace Vanme_Pro
             AddNewitemsList = new List<Item>();
             //listSoItems = new ObservableCollection<SoItem>();
             //dgSoItems.ItemsSource = listSoItems;
-
+            CustomersList = db.Customers.ToList();
+            lvCustomerLookup.ItemsSource = CustomersList;
             //   var productlList = db.Products.ToList();
             var productlList = db.Products;
 
@@ -103,7 +105,7 @@ namespace Vanme_Pro
 
             if (ModeAddItem)
             {
-                if (Mode == Mode.Sale)
+                if (Mode == Mode.Sale|| Mode == Mode.Order)
                 {
                     decimal price = 0;
                     price = (rdoWholesale.IsChecked == true) ? wer.WholesalePrice.Value : wer.RetailPrice.Value;
@@ -120,7 +122,7 @@ namespace Vanme_Pro
                         });
 
                     HidePanel();
-                    GrdOrder.Visibility = Visibility.Visible;
+                    GrdSaleOrder.Visibility = Visibility.Visible;
                 }
                 else
                 {
@@ -587,6 +589,8 @@ namespace Vanme_Pro
         {
             AddNewitemsList.Clear();
             RemoveItemsList.Clear();
+            lblSave.Content = "Save";
+            lblDone.Content = "Done";
             if (IsViewDetail)
             {
                 if (Mode == Mode.PO)
@@ -634,6 +638,8 @@ namespace Vanme_Pro
         {
             AddNewitemsList.Clear();
             RemoveItemsList.Clear();
+            lblSave.Content = "Save";
+            lblDone.Content = "Done";
             if (IsViewDetail)
             {
 
@@ -690,7 +696,8 @@ namespace Vanme_Pro
 
             AddNewitemsList.Clear();
             RemoveItemsList.Clear();
-
+            lblSave.Content = "Save";
+            lblDone.Content = "Done";
             if (IsViewDetail)
             {
                 if (Mode == Mode.Grn)
@@ -736,7 +743,7 @@ namespace Vanme_Pro
             IsViewDetail = false;
             ModeAddItem = false;
             HidePanel();
-            ShowSideBar(Mode.productInformation);
+            ShowSideBar(Mode);
             GrdProductList.Visibility = Visibility.Visible;
         }
         private void BtnSaleOrder_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -749,22 +756,36 @@ namespace Vanme_Pro
             saleOrder.User = user;
             saleOrder.IsSaveDatabase = false;
             saleOrder.Warehouse = db.Warehouses.Skip(1).FirstOrDefault();
-            saleOrder.OrderedDate=DateTime.Today;
+            saleOrder.OrderedDate = DateTime.Today;
             this.DataContext = saleOrder;
+            lblSave.Content = "Save";
+            lblDone.Content = "Create Invoice";
             Mode = Mode.Sale;
-            List<Province> pro= db.Provinces.ToList();
+            List<Province> pro = db.Provinces.ToList();
             cmbTaxAreaSo.ItemsSource = pro;
             cmbTaxAreaSo.SelectedIndex = 1;
             PrepareTaxitem(pro.ElementAt(1));
             HidePanel();
             ShowSideBar(Mode.Sale);
+            GrdSaleOrder.Visibility = Visibility.Visible;
+        }
+        private void BtnOrders_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            HidePanel();
+            Mode = Mode.Order;
+            ShowSideBar(Mode);
+            lvOrders.ItemsSource = db.SaleOrders.Include(p=>p.SoItems).Include(p=>p.TaxArea).ToList();
+            List<Province> pro = db.Provinces.ToList();
+            cmbTaxAreaSo.ItemsSource = pro;
+            lblSave.Content = "Edit";
+            lblDone.Content = "Create Invoice";
             GrdOrder.Visibility = Visibility.Visible;
         }
 
-        private void PrepareTaxitem( Province province)
+        private void PrepareTaxitem(Province province)
         {
             saleOrder.TaxName = "";
-            var taxrate= new List<decimal>();
+            var taxrate = new List<decimal>();
             if (province != null)
             {
                 if (province.HST != 0 && province.HST != null)
@@ -856,8 +877,8 @@ namespace Vanme_Pro
                     btnNewPurchaseOrder.Visibility = Visibility.Collapsed;
                     btnAddItem.Visibility = Visibility.Visible;
                     btnSave.Visibility = Visibility.Visible;
-                    btnRemove.Visibility = Visibility.Collapsed;
-                    btnDone.Visibility = Visibility.Collapsed;
+                    btnRemove.Visibility = Visibility.Visible;
+                    btnDone.Visibility = Visibility.Visible;
                     break;
                 case Mode.productInformation:
                     btnNewPurchaseOrder.Visibility = Visibility.Collapsed;
@@ -865,6 +886,13 @@ namespace Vanme_Pro
                     btnSave.Visibility = Visibility.Visible;
                     btnRemove.Visibility = Visibility.Collapsed;
                     btnDone.Visibility = Visibility.Collapsed;
+                    break;
+                case Mode.Order:
+                    btnNewPurchaseOrder.Visibility = Visibility.Collapsed;
+                    btnAddItem.Visibility = Visibility.Collapsed;
+                    btnSave.Visibility = Visibility.Visible;
+                    btnRemove.Visibility = Visibility.Collapsed;
+                    btnDone.Visibility = Visibility.Visible;
                     break;
                 case Mode.Nothong:
 
@@ -880,6 +908,7 @@ namespace Vanme_Pro
             GrdProductList.Visibility = Visibility.Hidden;
             GrdTotalCharges.Visibility = Visibility.Hidden;
             GrdProductInformation.Visibility = Visibility.Hidden;
+            GrdSaleOrder.Visibility = Visibility.Hidden;
             GrdOrder.Visibility = Visibility.Hidden;
 
 
@@ -915,6 +944,24 @@ namespace Vanme_Pro
             {
                 SaveSaleOrder();
             }
+            else if (Mode == Mode.Order)
+            {
+                if (lblSave.Content == "Update")
+                {
+                    btnAddItem.Visibility = Visibility.Collapsed;
+                    btnRemove.Visibility = Visibility.Collapsed;
+                    dgSoItems.IsReadOnly = true;
+                    lblSave.Content = "Edit";
+                }
+                else
+                {
+                    dgSoItems.IsReadOnly = false;
+                    lblSave.Content = "Update";
+                    btnAddItem.Visibility = Visibility.Visible;
+                    btnRemove.Visibility = Visibility.Visible;
+                }
+
+            }
             else
             {
                 SaveAndUpdate(false);
@@ -933,21 +980,30 @@ namespace Vanme_Pro
 
         private void BtnRemove_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            RemoveItemsList.Clear();
-            RemoveItemsList = DataGridItems.SelectedItems.Cast<Item>().ToList();
-            List<Item> tempRemove = RemoveItemsList.ToList();
-            bool tt = false;
-            foreach (Item VARIABLE in tempRemove)
+            if (Mode == Mode.Order)
             {
-                itemsList.Remove(VARIABLE);
-                tt = AddNewitemsList.Remove(VARIABLE);
-                if (tt)
-                    RemoveItemsList.Remove(VARIABLE);
-
+                MessageBox.Show("Write Code for this");
             }
-            List<Item> t = itemsList.Concat(AddNewitemsList).ToList();
-            CalculateTotalPriceItemsCount(t);
-            DataGridItems.ItemsSource = t;
+            else
+            {
+                RemoveItemsList.Clear();
+                RemoveItemsList = DataGridItems.SelectedItems.Cast<Item>().ToList();
+                List<Item> tempRemove = RemoveItemsList.ToList();
+                bool tt = false;
+                foreach (Item VARIABLE in tempRemove)
+                {
+                    itemsList.Remove(VARIABLE);
+                    tt = AddNewitemsList.Remove(VARIABLE);
+                    if (tt)
+                        RemoveItemsList.Remove(VARIABLE);
+
+                }
+                List<Item> t = itemsList.Concat(AddNewitemsList).ToList();
+                CalculateTotalPriceItemsCount(t);
+                DataGridItems.ItemsSource = t;
+            }
+
+
         }
 
         private void BtnLogo_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -1319,8 +1375,8 @@ namespace Vanme_Pro
                                 ree.OnTheWayInventory -= VARIABLE.AsnQuantity;
                             }
                             VARIABLE.ProductMaster.Income += VARIABLE.GrnQuantity;
-                            VARIABLE.ProductMaster.Inventory += VARIABLE.GrnQuantity;
-                            VARIABLE.ProductMaster.OnTheWayInventory -= VARIABLE.AsnQuantity;
+                            VARIABLE.ProductMaster.StockOnHand += VARIABLE.GrnQuantity;
+                           // VARIABLE.ProductMaster.OnTheWayInventory -= VARIABLE.AsnQuantity;
 
                         }
                     }
@@ -1394,7 +1450,9 @@ namespace Vanme_Pro
 
         void SaveSaleOrder()
         {
+            saleOrder.OrderedDate=DateTime.Now;
             db.SaleOrders.Add(saleOrder);
+            db.SaveChanges();
         }
 
         #region LostFocusOfFright
@@ -1709,14 +1767,14 @@ namespace Vanme_Pro
                 case "Style Number":
                     break;
                 case "Quantity":
-                    var qytStr = ((TextBox) e.EditingElement).Text;
+                    var qytStr = ((TextBox)e.EditingElement).Text;
                     if (qytStr.Count(x => x == '.') > 0)
                     {
                         MessageBox.Show("Enter Integer Number Please");
                         listSoItems.ElementAt(row_index).Quantity = 0;
                         break;
                     }
-                    int Qyt =(!string.IsNullOrWhiteSpace(qytStr))? Convert.ToInt32(qytStr):0;
+                    int Qyt = (!string.IsNullOrWhiteSpace(qytStr)) ? Convert.ToInt32(qytStr) : 0;
                     if (Qyt < 0)
                         Qyt = Qyt * -1;
                     listSoItems.ElementAt(row_index).Quantity = Qyt;
@@ -1729,7 +1787,7 @@ namespace Vanme_Pro
                     }
                     else
                     {
-                        var discountStr = (((TextBox) e.EditingElement).Text).Replace("%", "");
+                        var discountStr = (((TextBox)e.EditingElement).Text).Replace("%", "");
                         if (discountStr.Count(x => x == '.') > 1)
                         {
                             MessageBox.Show("Enter Correct Number");
@@ -1738,7 +1796,7 @@ namespace Vanme_Pro
                         }
                         else
                         {
-                            decimal Discount =(!string.IsNullOrWhiteSpace(discountStr))? Convert.ToDecimal(discountStr):0m;
+                            decimal Discount = (!string.IsNullOrWhiteSpace(discountStr)) ? Convert.ToDecimal(discountStr) : 0m;
                             listSoItems.ElementAt(row_index).Discount = Discount;
                         }
 
@@ -1755,10 +1813,10 @@ namespace Vanme_Pro
                 saleOrder.Subtotal = item.TotalPrice + saleOrder.Subtotal;
                 saleOrder.TotalDiscount = (item.Quantity * item.Price - item.TotalPrice) + saleOrder.TotalDiscount;
             }
-            
+
         }
 
-      
+
         private void SetTextboxNumeric(TextCompositionEventArgs e, TextBox txt)
         {
             if (!char.IsDigit(e.Text, e.Text.Length - 1) && e.Text != ".")
@@ -1775,10 +1833,10 @@ namespace Vanme_Pro
         }
         private void txtHandlingSo_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            SetTextboxNumeric(e,txtHandlingSo);
+            SetTextboxNumeric(e, txtHandlingSo);
         }
 
-     
+
 
         private void txtFreightSo_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
@@ -1803,7 +1861,7 @@ namespace Vanme_Pro
 
         private void TxtFreightSo_OnGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-           txtFreightSo.SelectAll();
+            txtFreightSo.SelectAll();
         }
 
         private void TxtFreightSo_OnGotMouseCapture(object sender, MouseEventArgs e)
@@ -1823,6 +1881,87 @@ namespace Vanme_Pro
             { result = true; }
 
             e.Handled = result;
+        }
+
+        private void txtCustomerLookup_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var resalt = CustomersList.Where(p => p.FirstName.ToLower().Contains(txtCustomerLookup.Text.ToLower())
+                                                                   || p.LastName.ToLower().Contains(txtCustomerLookup.Text.ToLower())
+                                                                   || p.Phone1.ToLower().Contains(txtCustomerLookup.Text.ToLower()));
+            if (resalt.Count() == 0)
+                lvCustomerLookup.ItemsSource=new List<Customer>(){ new Customer() { FirstName = "Not Find Any Customer" } };
+            else
+                lvCustomerLookup.ItemsSource = resalt;
+
+            lvCustomerLookupBorder.Visibility = Visibility.Visible;
+        }
+        private void TxtCustomerLookup_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                txtCustomerLookup.Text = "";
+                lvCustomerLookupBorder.Visibility = Visibility.Hidden;
+                dpiShipDateSo.Focus();
+            }
+        }
+
+        private void lvCustomerLookup_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+            while ((dep != null) && !(dep is ListViewItem))
+            {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+
+            if (dep == null)
+                return;
+
+            var wer = (Customer)lvCustomerLookup.ItemContainerGenerator.ItemFromContainer(dep);
+            saleOrder.Customer = wer;
+            txtCustomerLookup.Text = "";
+            lvCustomerLookupBorder.Visibility = Visibility.Hidden;
+            dpiShipDateSo.Focus();
+        }
+
+        private void lvCustomerLookupBorder_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (lvCustomerLookup.SelectedIndex != -1)
+            {
+                saleOrder.Customer = lvCustomerLookup.SelectedItem as Customer;
+            }
+            else
+            {
+                saleOrder.Customer = lvCustomerLookup.ItemsSource.Cast<Customer>().FirstOrDefault();
+            }
+            txtCustomerLookup.Text = "";
+            lvCustomerLookupBorder.Visibility = Visibility.Hidden;
+            dpiShipDateSo.Focus();
+        }
+
+
+        private void LvOrders_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+            while ((dep != null) && !(dep is ListViewItem))
+            {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+
+            if (dep == null)
+                return;
+
+            saleOrder = (SaleOrder)lvOrders.ItemContainerGenerator.ItemFromContainer(dep);
+            dgSoItems.IsReadOnly = true;
+            listSoItems = new ObservableCollection<SoItem>(saleOrder.SoItems);
+            cmbTaxAreaSo.SelectedItem = saleOrder.TaxArea;
+            PrepareTaxitem((Province)cmbTaxAreaSo.SelectedItem);
+            dgSoItems.ItemsSource = listSoItems;
+            this.DataContext = saleOrder;
+            HidePanel();
+            ShowSideBar(Mode.Order);
+            GrdSaleOrder.Visibility = Visibility.Visible;
+
         }
     }
 }
